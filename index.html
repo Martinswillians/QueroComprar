@@ -217,10 +217,10 @@ h1,h2,h3,.syne{font-family:'Syne',sans-serif;font-weight:700}
 <script>
 /* ── CONFIGURAÇÃO SUPABASE ── */
 const SUPABASE_URL = 'https://ylkhhylumtewwxivebez.supabase.co';
-// Cole aqui a sua Anon Key copiada do painel "Project Settings > API" do Supabase
 const SUPABASE_ANON_KEY = 'sb_publishable_wtmqB-s1-wtOaX7VVqUhpQ_hDJS-BrN'; 
 
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Mude o nome da variável aqui de 'supabase' para 'supabaseClient'
+const supabaseClient = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ── ESTADO DA APLICAÇÃO ── */
 let CU = null; // Current User (Perfil completo do usuário logado)
@@ -230,7 +230,7 @@ let currentView = 'feed';
 /* ── INICIALIZAÇÃO ── */
 window.addEventListener('DOMContentLoaded', async () => {
   // Verifica se o usuário já possui uma sessão ativa salva no navegador
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (session && session.user) {
     await fetchUserProfile(session.user.id);
   }
@@ -242,7 +242,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 // Busca os metadados do usuário na tabela de perfis
 async function fetchUserProfile(uid) {
-  const { data, error } = await supabase.from('profiles').select('*').eq('id', uid).single();
+  const { data, error } = await supabaseClient.from('profiles').select('*').eq('id', uid).single();
   if (!error && data) {
     CU = data;
   } else {
