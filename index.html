@@ -104,6 +104,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .si-pill.red{background:var(--c);color:#fff}
 .si-pill.green{background:var(--g);color:#fff}
 .cnt{padding:1.8rem;overflow-y:auto;max-height:calc(100vh - 56px)}
+.cnt.msgs-view{padding:0;overflow:hidden;max-height:calc(100vh - 56px)}
 
 /* ── FEED ── */
 .fhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:.7rem}
@@ -163,7 +164,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .insight-item{display:flex;gap:8px;padding:.65rem .9rem;background:rgba(255,255,255,.75);border-radius:8px;margin-bottom:.5rem;font-size:13.5px;align-items:flex-start;line-height:1.5}
 
 /* ── MSGS ── */
-.mlayout{display:grid;grid-template-columns:272px 1fr;height:calc(100vh - 56px)}
+.mlayout{display:grid;grid-template-columns:272px 1fr;height:calc(100vh - 56px);overflow:hidden}
 .mlist{background:#fff;border-right:.5px solid var(--bd);overflow-y:auto;display:flex;flex-direction:column}
 .mlh{padding:.95rem 1rem;border-bottom:.5px solid var(--bd);font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;position:sticky;top:0;background:#fff}
 .mi{display:flex;align-items:center;gap:9px;padding:11px 1rem;cursor:pointer;border-bottom:.5px solid var(--bd);transition:.15s}
@@ -183,11 +184,34 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .bubble.them{background:#fff;color:var(--tx);margin-right:auto;border-bottom-left-radius:4px;border:.5px solid var(--bd)}
 .btime{font-size:10.5px;margin-top:4px;opacity:.65;text-align:right}
 .bubble.them .btime{text-align:left}
-.chinput{background:#fff;border-top:.5px solid var(--bd);padding:.8rem 1rem;display:flex;gap:8px;align-items:center}
-.chinput input{flex:1;border-radius:20px;padding:9px 14px;border:1px solid var(--bd);font-size:14px;outline:none;transition:.2s}
-.chinput input:focus{border-color:var(--g)}
+.chinput{background:#fff;border-top:.5px solid var(--bd);padding:.6rem .9rem;display:flex;flex-direction:column;gap:6px}
+.chinput-toolbar{display:flex;gap:6px;align-items:center}
+.chinput-toolbar input.msgtxt{flex:1;border-radius:20px;padding:9px 14px;border:1px solid var(--bd);font-size:14px;outline:none;transition:.2s}
+.chinput-toolbar input.msgtxt:focus{border-color:var(--g)}
 .sbtn{width:38px;height:38px;border-radius:50%;background:var(--g);color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;flex-shrink:0;transition:.2s}
 .sbtn:hover{background:var(--gd)}
+.icobtn{width:34px;height:34px;border-radius:50%;background:var(--bg);color:var(--txm);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;transition:.2s}
+.icobtn:hover{background:var(--gl);color:var(--gd);border-color:var(--gm)}
+.offer-bar{display:flex;align-items:center;gap:8px;background:#fff9ee;border:1px solid #f0c97a;border-radius:10px;padding:.55rem .9rem;animation:fi .2s ease}
+.offer-bar label{font-size:12.5px;font-weight:600;color:var(--a);white-space:nowrap;margin:0}
+.offer-bar .opw{position:relative;flex:1}
+.offer-bar .opw span{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--a);pointer-events:none;font-weight:600}
+.offer-bar .opw input{width:100%;padding:6px 10px 6px 26px;border:1px solid #f0c97a;border-radius:8px;font-size:14px;font-weight:600;color:var(--a);background:#fff;outline:none}
+.offer-bar .opw input:focus{border-color:var(--a)}
+.offer-bar .cls{background:none;border:none;cursor:pointer;color:var(--txm);font-size:17px;padding:2px;flex-shrink:0}
+.img-strip{display:flex;gap:6px;flex-wrap:wrap;padding:.3rem 0 .1rem}
+.img-thumb{position:relative;width:58px;height:58px;border-radius:8px;overflow:hidden;border:1px solid var(--bd);flex-shrink:0}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb .rm{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
+.bubble-offer{border:1.5px solid #f0c97a;border-radius:12px;padding:.75rem 1rem;max-width:240px;background:#fff9ee}
+.bubble-offer.me{margin-left:auto;border-bottom-right-radius:4px}
+.bubble-offer.them{margin-right:auto;border-bottom-left-radius:4px}
+.boffer-lbl{font-size:11px;font-weight:600;color:var(--a);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.boffer-val{font-family:"Syne",sans-serif;font-weight:800;font-size:1.2rem;color:var(--a)}
+.bubble-img{border-radius:10px;overflow:hidden;cursor:pointer;max-width:220px}
+.bubble-img.me{margin-left:auto}
+.bubble-img.them{margin-right:auto}
+.bubble-img img{width:100%;display:block;border-radius:10px;border:.5px solid var(--bd)}
 .echat{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--txl);gap:10px;text-align:center;padding:2rem}
 .echat i{font-size:48px;opacity:.18}
 
@@ -296,7 +320,8 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
       <div class="fld"><label>E-mail</label><input type="email" id="le" placeholder="seu@email.com"></div>
       <div class="fld"><label>Senha</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
       <button class="btn g full" onclick="login()">Entrar na plataforma</button>
-      <p style="font-size:12px;color:var(--txl);text-align:center;margin-top:.75rem">Contas de teste: <b>ana@q.com</b> / 123 &nbsp;·&nbsp; <b>carlos@q.com</b> / 123</p>
+      <p style="font-size:12px;color:var(--txl);text-align:center;margin-top:.75rem">Contas de teste: <b>ana@q.com</b> / 123 &nbsp;&middot;& <b>carlos@q.com</b> / 123</p>
+      <div style="font-size:11.5px;color:var(--txm);background:var(--bl);border:1px solid #c5dbf5;border-radius:8px;padding:.6rem .85rem;margin-top:.7rem;line-height:1.5"><i class="ti ti-info-circle" style="color:var(--b)"></i> Para simular dois usuários no mesmo dispositivo: faça login como Carlos, envie uma mensagem, clique em Sair, depois entre como Ana para ver a mensagem recebida.</div>
       <div class="aswitch">Sem conta? <a onclick="show('reg')">Criar gratuitamente</a></div>
     </div>
   </div>
@@ -387,24 +412,28 @@ let nwid=8, ncid=3, nuid=4, nnid=5;
 /* ── PERSISTENCE ── */
 function sv(){
   try{
-    localStorage.setItem('qc3_w',JSON.stringify(WISHES));
-    localStorage.setItem('qc3_c',JSON.stringify(CONVS));
-    localStorage.setItem('qc3_u',JSON.stringify(USERS));
-    localStorage.setItem('qc3_n',JSON.stringify(NOTIFS));
+    localStorage.setItem("qc3_w",JSON.stringify(WISHES));
+    localStorage.setItem("qc3_c",JSON.stringify(CONVS));
+    localStorage.setItem("qc3_u",JSON.stringify(USERS));
+    localStorage.setItem("qc3_n",JSON.stringify(NOTIFS));
+    if(CU) localStorage.setItem("qc3_cu",String(CU.id));
   }catch(e){}
 }
 (function ld(){
   try{
-    const w=localStorage.getItem('qc3_w'),c=localStorage.getItem('qc3_c'),
-          u=localStorage.getItem('qc3_u'),n=localStorage.getItem('qc3_n');
+    const w=localStorage.getItem("qc3_w"),c=localStorage.getItem("qc3_c"),
+          u=localStorage.getItem("qc3_u"),n=localStorage.getItem("qc3_n");
     if(w)WISHES=JSON.parse(w);
     if(c)CONVS=JSON.parse(c);
     if(n)NOTIFS=JSON.parse(n);
     if(u){const pu=JSON.parse(u);pu.forEach(x=>{if(!USERS.find(y=>y.id===x.id))USERS.push(x)})}
     if(WISHES.length)nwid=Math.max(...WISHES.map(x=>x.id))+1;
     if(CONVS.length)ncid=Math.max(...CONVS.map(x=>x.id))+1;
+    const cuid=localStorage.getItem("qc3_cu");
+    if(cuid){const u2=USERS.find(x=>x.id===parseInt(cuid));if(u2)CU=u2;}
   }catch(e){}
 })();
+window.addEventListener("DOMContentLoaded",()=>{if(CU)enter();});
 
 /* ── AUTH ── */
 function show(s){
@@ -417,10 +446,10 @@ function setRole(r){
   document.getElementById('tb-sel').classList.toggle('on',r==='seller');
 }
 function login(){
-  const e=document.getElementById('le').value.trim(), p=document.getElementById('lp').value;
+  const e=document.getElementById("le").value.trim(), p=document.getElementById("lp").value;
   const u=USERS.find(x=>x.email===e&&x.pass===p);
-  if(!u){toast('E-mail ou senha incorretos','er');return}
-  CU=u; enter();
+  if(!u){toast("E-mail ou senha incorretos","er");return}
+  CU=u; activeConv=null; enter();
 }
 function register(){
   const n=val('rn'), e=val('re'), p=val('rp');
@@ -431,13 +460,14 @@ function register(){
 }
 function logout(){
   CU=null; activeConv=null;
-  document.getElementById('navSearch').style.display='none';
-  show('login');
+  try{localStorage.removeItem("qc3_cu");}catch(e){}
+  document.getElementById("navSearch").style.display="none";
+  show("login");
 }
 function enter(){
-  document.getElementById('navSearch').style.display='flex';
-  document.getElementById('matchpill').style.display='inline';
-  refreshNav(); show('app'); view('feed');
+  document.getElementById("navSearch").style.display="flex";
+  document.getElementById("matchpill").style.display="inline";
+  sv(); refreshNav(); show("app"); view("feed");
 }
 
 function getUnread(){return CONVS.filter(c=>c.to===CU.id).length}
@@ -526,13 +556,17 @@ function view(vn){
   });
   const s=document.getElementById('sn-'+vn); if(s) s.classList.add('on');
   const el=document.getElementById('cnt');
-  el.style.padding='1.8rem'; el.style.margin='';
   notifOpen=false; document.getElementById('notifPanel').classList.remove('on');
+  if(vn==='msgs'){
+    el.classList.add('msgs-view');
+  } else {
+    el.classList.remove('msgs-view');
+  }
   if(vn==='feed')      renderFeed(el);
   else if(vn==='match')renderMatch(el);
   else if(vn==='mine') renderMine(el);
   else if(vn==='new')  renderNew(el);
-  else if(vn==='msgs') {el.style.padding='0';el.style.margin='-1.8rem';renderMsgs(el);}
+  else if(vn==='msgs') renderMsgs(el);
   else if(vn==='dash') renderDash(el);
   else if(vn==='prof') renderProf(el);
 }
@@ -718,7 +752,7 @@ function publish(){
 
 /* ── MSGS ── */
 function renderMsgs(el){
-  el.innerHTML=`<div class="mlayout fi">
+  el.innerHTML=`<div class="mlayout">
     <div class="mlist"><div class="mlh">Mensagens</div><div id="mlistin"></div></div>
     <div class="chat" id="chatarea">${ecHTML()}</div>
   </div>`;
@@ -761,25 +795,122 @@ function openConv(cid){
       </div>
     </div>
     <div class="chscroll" id="chscroll">${activeConv.msgs.map(bubHTML).join('')}</div>
-    <div class="chinput">
-      <input type="text" id="chin" placeholder="Escreva uma mensagem..." onkeydown="if(event.key==='Enter')sendMsg()">
-      <button class="sbtn" onclick="sendMsg()"><i class="ti ti-send" style="font-size:15px"></i></button>
+    <div class="chinput" id="chinput">
+      <div id="imgStrip" class="img-strip" style="display:none"></div>
+      <div id="offerBar" class="offer-bar" style="display:none">
+        <label><i class="ti ti-tag" style="font-size:13px"></i> Sua oferta</label>
+        <div class="opw"><span>R$</span><input type="number" id="offerVal" placeholder="0" min="0"></div>
+        <button class="cls" onclick="toggleOffer()" title="Fechar"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="chinput-toolbar">
+        <button class="icobtn" onclick="document.getElementById('fileInp').click()" title="Enviar foto"><i class="ti ti-photo"></i></button>
+        <button class="icobtn" id="offerToggleBtn" onclick="toggleOffer()" title="Fazer oferta de preço"><i class="ti ti-currency-dollar"></i></button>
+        <input type="file" id="fileInp" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+        <input class="msgtxt" type="text" id="chin" placeholder="Escreva uma mensagem..." onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="sbtn" onclick="sendMsg()"><i class="ti ti-send" style="font-size:15px"></i></button>
+      </div>
     </div>`;
   scrollChat();
 }
 function bubHTML(m){
   const me=m.uid===CU.id;
+  if(m.type==='offer'){
+    return `<div class="bubble-offer ${me?'me':'them'}" style="margin-bottom:2px">
+      <div class="boffer-lbl"><i class="ti ti-tag" style="font-size:12px"></i>Oferta de preço</div>
+      <div class="boffer-val">R$ ${fmt(m.price)}</div>
+      ${m.text?`<div style="font-size:13px;color:var(--txm);margin-top:5px">${esc(m.text)}</div>`:''}
+      <div class="btime">${fmtT(m.ts)}</div>
+    </div>`;
+  }
+  if(m.type==='img'){
+    return `<div class="bubble-img ${me?'me':'them'}" style="margin-bottom:2px">
+      <img src="${m.src}" alt="Foto" onclick="openImg('${m.src}')">
+      <div class="btime" style="padding:2px 6px;font-size:10px;color:var(--txl)">${fmtT(m.ts)}</div>
+    </div>`;
+  }
   return `<div><div class="bubble ${me?'me':'them'}">${esc(m.text)}<div class="btime">${fmtT(m.ts)}</div></div></div>`;
 }
 function ecHTML(){return`<div class="echat"><i class="ti ti-message-2"></i><p style="font-size:14px;font-weight:500">Selecione uma conversa</p><p style="font-size:13px;color:var(--txl);margin-top:4px">ou use "Tenho isso!" em qualquer anúncio</p></div>`}
+let pendingImgs=[];
+let offerOpen=false;
+
+function toggleOffer(){
+  offerOpen=!offerOpen;
+  const bar=document.getElementById('offerBar');
+  const btn=document.getElementById('offerToggleBtn');
+  if(bar){bar.style.display=offerOpen?'flex':'none';}
+  if(btn){btn.classList.toggle('icobtn',true);btn.style.background=offerOpen?'var(--al)':'';}
+  if(offerOpen) setTimeout(()=>{const v=document.getElementById('offerVal');if(v)v.focus();},50);
+}
+
+function handleFiles(files){
+  Array.from(files).forEach(f=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      pendingImgs.push(e.target.result);
+      renderImgStrip();
+    };
+    r.readAsDataURL(f);
+  });
+  document.getElementById('fileInp').value='';
+}
+
+function renderImgStrip(){
+  const strip=document.getElementById('imgStrip');
+  if(!strip) return;
+  if(!pendingImgs.length){strip.style.display='none';strip.innerHTML='';return;}
+  strip.style.display='flex';
+  strip.innerHTML=pendingImgs.map((src,i)=>`
+    <div class="img-thumb">
+      <img src="${src}">
+      <button class="rm" onclick="removeImg(${i})"><i class="ti ti-x" style="font-size:9px"></i></button>
+    </div>`).join('');
+}
+
+function removeImg(i){pendingImgs.splice(i,1);renderImgStrip();}
+
+function openImg(src){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  ov.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.5)">`;
+  ov.onclick=()=>document.body.removeChild(ov);
+  document.body.appendChild(ov);
+}
+
 function sendMsg(){
   const inp=document.getElementById('chin');
-  const text=inp&&inp.value.trim(); if(!text) return;
-  activeConv.msgs.push({uid:CU.id,text,ts:Date.now()});
-  inp.value=''; sv();
+  const text=inp?inp.value.trim():'';
+  const offerVal=document.getElementById('offerVal');
+  const price=offerVal?parseFloat(offerVal.value):null;
+  const hasOffer=offerOpen&&price&&price>0;
+  const hasImgs=pendingImgs.length>0;
+  if(!text&&!hasOffer&&!hasImgs){return;}
+
   const sc=document.getElementById('chscroll');
-  if(sc){sc.innerHTML+=bubHTML(activeConv.msgs[activeConv.msgs.length-1]);scrollChat();}
-  buildConvList(); refreshNav();
+  function pushAndRender(msg){
+    activeConv.msgs.push(msg);
+    if(sc){sc.innerHTML+=bubHTML(msg);scrollChat();}
+  }
+
+  // send images first
+  pendingImgs.forEach(src=>{
+    pushAndRender({uid:CU.id,type:'img',src,ts:Date.now()});
+  });
+  pendingImgs=[];renderImgStrip();
+
+  // send offer
+  if(hasOffer){
+    pushAndRender({uid:CU.id,type:'offer',price,text,ts:Date.now()});
+    offerVal.value='';
+    offerOpen=false;
+    const bar=document.getElementById('offerBar');if(bar)bar.style.display='none';
+  } else if(text){
+    // plain text
+    pushAndRender({uid:CU.id,text,ts:Date.now()});
+  }
+
+  if(inp) inp.value='';
+  sv(); buildConvList(); refreshNav();
 }
 function scrollChat(){const s=document.getElementById('chscroll');if(s)setTimeout(()=>{s.scrollTop=s.scrollHeight},50)}
 
