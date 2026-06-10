@@ -3,1158 +3,678 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>querocomprar — v3</title>
+<title>querocomprar — v4 (Supabase)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --g:#1D9E75;--gl:#E1F5EE;--gd:#085041;--gm:#5DCAA5;
-  --a:#BA7517;--al:#FAEEDA;
-  --c:#D85A30;--cl:#FAECE7;
-  --b:#378ADD;--bl:#E8F2FC;
-  --bg:#F0EEE7;--bd:#D3D1C7;
-  --tx:#2C2C2A;--txm:#5F5E5A;--txl:#888780;
-  --dk:#1C1C1A;
-  --r:10px;
-}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:15px}
-button,input,select,textarea{font-family:inherit}
-*{scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
-
-/* ── NAV ── */
-nav{background:var(--dk);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:12px;position:sticky;top:0;z-index:300}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;letter-spacing:-.5px;cursor:pointer;text-decoration:none}
-.logo em{color:var(--g);font-style:normal}
-.nsearch{flex:1;max-width:320px;position:relative;margin-left:auto}
-.nsearch input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:20px;padding:7px 14px 7px 34px;font-size:13px;outline:none;transition:.2s}
-.nsearch input::placeholder{color:rgba(255,255,255,.35)}
-.nsearch input:focus{background:rgba(255,255,255,.13);border-color:var(--gm)}
-.nsearch .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);font-size:15px;pointer-events:none}
-.sdrop{display:none;position:absolute;top:40px;left:0;right:0;background:#fff;border:.5px solid var(--bd);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:400;max-height:280px;overflow-y:auto}
-.sdrop.on{display:block}
-.sitem{display:flex;align-items:center;gap:9px;padding:.65rem .9rem;cursor:pointer;border-bottom:.5px solid var(--bd);transition:.15s}
-.sitem:hover{background:var(--bg)}
-.sitem:last-child{border-bottom:none}
-.nbtn{background:transparent;border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:.2s}
-.nbtn:hover{background:rgba(255,255,255,.1)}
-.nbtn.p{background:var(--g);border-color:var(--g)}
-.nbtn.p:hover{background:var(--gd)}
-.upill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer;border:1px solid rgba(255,255,255,.1);transition:.2s}
-.upill:hover{background:rgba(255,255,255,.15)}
-.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
-.uname{font-size:13px;color:#fff}
-.nbadge{background:var(--c);color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:1px 7px;margin-left:3px}
-.navico{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.6);font-size:20px;padding:4px;position:relative;display:flex;align-items:center;transition:.2s}
-.navico:hover{color:#fff}
-.navico .ndot{position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--c);border:1.5px solid var(--dk)}
-
-/* ── NOTIF PANEL ── */
-.notif-panel{position:fixed;top:56px;right:12px;width:320px;background:#fff;border:.5px solid var(--bd);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.15);z-index:500;display:none;max-height:440px;overflow-y:auto}
-.notif-panel.on{display:block}
-.np-hd{padding:.9rem 1rem;border-bottom:.5px solid var(--bd);display:flex;align-items:center;justify-content:space-between;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;position:sticky;top:0;background:#fff}
-.np-all{font-size:12px;color:var(--g);cursor:pointer;font-weight:400}
-.ni{display:flex;gap:.8rem;padding:.85rem 1rem;border-bottom:.5px solid var(--bd);cursor:pointer;transition:.15s}
-.ni:hover{background:var(--bg)}
-.ni.unread{background:#f4fff9}
-.niico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.nitxt{font-size:13px;line-height:1.4}
-.nitime{font-size:11px;color:var(--txl);margin-top:2px}
-
-/* ── SCREENS ── */
-.scr{display:none;min-height:calc(100vh - 56px)}
-.scr.on{display:block}
-
-/* ── AUTH ── */
-.auth-bg{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 65% 35%,#d3f5e8,var(--bg) 58%)}
-.acard{background:#fff;border-radius:14px;padding:2.3rem;width:100%;max-width:390px;border:.5px solid var(--bd);box-shadow:0 8px 32px rgba(0,0,0,.07)}
-.atitle{font-family:'Syne',sans-serif;font-weight:800;font-size:1.45rem;margin-bottom:.3rem}
-.asub{font-size:13px;color:var(--txm);margin-bottom:1.6rem}
-.role-tabs{display:flex;gap:7px;margin-bottom:1.5rem}
-.rtab{flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-weight:500;color:var(--txm);background:#fff;cursor:pointer;transition:.2s}
-.rtab.on{background:var(--gl);border-color:var(--g);color:var(--gd)}
-.fld{margin-bottom:1rem}
-label{display:block;font-size:13px;font-weight:500;margin-bottom:5px}
-input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:8px;font-size:14px;outline:none;transition:.2s;background:#fff;color:var(--tx)}
-input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(29,158,117,.08)}
-textarea{resize:vertical;min-height:78px;line-height:1.5}
-.fld2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:8px;font-weight:500;font-size:14px;border:none;cursor:pointer;transition:.2s;white-space:nowrap}
-.btn.full{width:100%}
-.btn.g{background:var(--g);color:#fff}
-.btn.g:hover{background:var(--gd)}
-.btn.out{background:transparent;border:1px solid var(--bd);color:var(--tx)}
-.btn.out:hover{background:var(--bg)}
-.btn.sm{padding:6px 13px;font-size:13px}
-.btn.xs{padding:4px 10px;font-size:12px}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.aswitch{text-align:center;margin-top:1rem;font-size:13px;color:var(--txm)}
-.aswitch a{color:var(--g);cursor:pointer;font-weight:500}
-
-/* ── APP LAYOUT ── */
-.lay{display:grid;grid-template-columns:216px 1fr;min-height:calc(100vh - 56px)}
-.side{background:#fff;border-right:.5px solid var(--bd);padding:1.1rem .75rem;display:flex;flex-direction:column;gap:2px}
-.ssec{font-size:10px;font-weight:600;color:var(--txl);text-transform:uppercase;letter-spacing:.06em;padding:.8rem .8rem .3rem}
-.si-btn{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--txm);cursor:pointer;transition:.15s;border:none;background:none;width:100%;text-align:left}
-.si-btn:hover{background:var(--bg);color:var(--tx)}
-.si-btn.on{background:var(--gl);color:var(--gd)}
-.si-btn i{font-size:17px;width:19px;text-align:center;flex-shrink:0}
-.si-pill{font-size:11px;font-weight:600;border-radius:8px;padding:1px 7px;margin-left:auto}
-.si-pill.red{background:var(--c);color:#fff}
-.si-pill.green{background:var(--g);color:#fff}
-.cnt{padding:1.8rem;overflow-y:auto;max-height:calc(100vh - 56px)}
-.cnt.msgs-view{padding:0;overflow:hidden;max-height:calc(100vh - 56px)}
-
-/* ── FEED ── */
-.fhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:.7rem}
-.ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:1.25rem}
-.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.1rem}
-.chip{padding:5px 13px;border-radius:14px;border:1px solid var(--bd);font-size:12.5px;cursor:pointer;background:#fff;color:var(--tx);transition:.2s}
-.chip.on{background:var(--g);color:#fff;border-color:var(--g)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(244px,1fr));gap:.9rem}
-.wcard{background:#fff;border-radius:var(--r);border:.5px solid var(--bd);padding:1.05rem;transition:border-color .2s,box-shadow .2s}
-.wcard:hover{border-color:var(--gm);box-shadow:0 4px 18px rgba(29,158,117,.09)}
-.wch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.7rem}
-.wcu{display:flex;align-items:center;gap:7px}
-.wun{font-size:13px;font-weight:500;line-height:1.2}
-.wt{font-size:11px;color:var(--txl)}
-.cat{font-size:11px;font-weight:600;padding:2px 9px;border-radius:8px;background:var(--al);color:var(--a);white-space:nowrap}
-.wtitle{font-family:'Syne',sans-serif;font-weight:600;font-size:.9rem;margin-bottom:.3rem;cursor:pointer;transition:color .15s}
-.wtitle:hover{color:var(--g)}
-.wdesc{font-size:12.5px;color:var(--txm);line-height:1.5;margin-bottom:.65rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.wcf{display:flex;justify-content:space-between;align-items:center;padding-top:.65rem;border-top:.5px solid var(--bd)}
-.price{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--gd)}
-.psub{font-size:11px;color:var(--txl);margin-top:1px}
-.msgbtn{display:flex;align-items:center;gap:5px;background:var(--gl);color:var(--gd);border:none;border-radius:7px;padding:6px 11px;font-size:13px;font-weight:500;transition:.2s;cursor:pointer}
-.msgbtn:hover{background:var(--g);color:#fff}
-.own{font-size:11px;color:var(--txl);background:var(--bg);padding:3px 9px;border-radius:7px}
-
-/* ── MATCH ── */
-.match-banner{background:linear-gradient(120deg,var(--gd),#1a5f7a);border-radius:var(--r);padding:1.2rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1rem;color:#fff}
-.match-banner i{font-size:32px;opacity:.8;flex-shrink:0}
-.match-banner h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:3px}
-.match-banner p{font-size:13px;opacity:.75}
-.match-list{display:flex;flex-direction:column;gap:.8rem}
-.mcard{background:#fff;border:.5px solid var(--bd);border-radius:var(--r);padding:1rem;display:flex;align-items:center;gap:1rem;transition:border-color .2s}
-.mcard:hover{border-color:var(--gm)}
-.mscore{width:50px;height:50px;border-radius:50%;background:var(--gl);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;color:var(--gd);flex-shrink:0;text-align:center;line-height:1.2}
-.minfo{flex:1;min-width:0}
-.mtit{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.msub{font-size:12px;color:var(--txm);margin-top:2px}
-.mreason{font-size:12px;color:var(--g);margin-top:4px;display:flex;align-items:flex-start;gap:4px}
-
-/* ── ANALYTICS ── */
-.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.1rem}
-.dcard{background:#fff;border:.5px solid var(--bd);border-radius:var(--r);padding:1rem}
-.dnum{font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;line-height:1;margin-top:.4rem}
-.dlbl{font-size:12px;color:var(--txm)}
-.dtag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:7px;display:inline-block;margin-top:6px}
-.dtag.up{background:var(--gl);color:var(--gd)}
-.dtag.dn{background:var(--cl);color:var(--c)}
-.chart-card{background:#fff;border:.5px solid var(--bd);border-radius:var(--r);padding:1.2rem}
-.chart-title{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;margin-bottom:1rem}
-.bar-chart{display:flex;align-items:flex-end;gap:8px;height:110px}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.bar{width:100%;border-radius:5px 5px 0 0;min-height:4px;transition:.4s}
-.bar-lbl{font-size:10px;color:var(--txl);text-align:center}
-.bar-val{font-size:10px;color:var(--txm);font-weight:500}
-.ai-insights{background:linear-gradient(135deg,#edfaf4,#e3f1fd);border:1px solid #aad9c3;border-radius:var(--r);padding:1.2rem}
-.ai-ins-hd{display:flex;align-items:center;gap:7px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--gd);margin-bottom:.8rem}
-.insight-item{display:flex;gap:8px;padding:.65rem .9rem;background:rgba(255,255,255,.75);border-radius:8px;margin-bottom:.5rem;font-size:13.5px;align-items:flex-start;line-height:1.5}
-
-/* ── MSGS ── */
-.mlayout{display:grid;grid-template-columns:272px 1fr;height:calc(100vh - 56px);overflow:hidden}
-.mlist{background:#fff;border-right:.5px solid var(--bd);overflow-y:auto;display:flex;flex-direction:column}
-.mlh{padding:.95rem 1rem;border-bottom:.5px solid var(--bd);font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;position:sticky;top:0;background:#fff}
-.mi{display:flex;align-items:center;gap:9px;padding:11px 1rem;cursor:pointer;border-bottom:.5px solid var(--bd);transition:.15s}
-.mi:hover{background:var(--bg)}
-.mi.on{background:var(--gl)}
-.min{font-size:13.5px;font-weight:500}
-.mip{font-size:12px;color:var(--txm);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:155px}
-.miwish{font-size:11px;color:var(--g);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:155px}
-.unrd{width:8px;height:8px;border-radius:50%;background:var(--g);margin-left:auto;flex-shrink:0}
-.chat{display:flex;flex-direction:column;background:var(--bg)}
-.chh{background:#fff;padding:.9rem 1.3rem;border-bottom:.5px solid var(--bd);display:flex;align-items:center;gap:10px}
-.chname{font-weight:600;font-size:15px}
-.chwish{font-size:12px;color:var(--txm);margin-top:2px}
-.chscroll{flex:1;overflow-y:auto;padding:1.2rem;display:flex;flex-direction:column;gap:10px}
-.bubble{max-width:70%;padding:9px 13px;border-radius:12px;font-size:14px;line-height:1.5}
-.bubble.me{background:var(--g);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
-.bubble.them{background:#fff;color:var(--tx);margin-right:auto;border-bottom-left-radius:4px;border:.5px solid var(--bd)}
-.btime{font-size:10.5px;margin-top:4px;opacity:.65;text-align:right}
-.bubble.them .btime{text-align:left}
-.chinput{background:#fff;border-top:.5px solid var(--bd);padding:.6rem .9rem;display:flex;flex-direction:column;gap:6px}
-.chinput-toolbar{display:flex;gap:6px;align-items:center}
-.chinput-toolbar input.msgtxt{flex:1;border-radius:20px;padding:9px 14px;border:1px solid var(--bd);font-size:14px;outline:none;transition:.2s}
-.chinput-toolbar input.msgtxt:focus{border-color:var(--g)}
-.sbtn{width:38px;height:38px;border-radius:50%;background:var(--g);color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;flex-shrink:0;transition:.2s}
-.sbtn:hover{background:var(--gd)}
-.icobtn{width:34px;height:34px;border-radius:50%;background:var(--bg);color:var(--txm);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;transition:.2s}
-.icobtn:hover{background:var(--gl);color:var(--gd);border-color:var(--gm)}
-.offer-bar{display:flex;align-items:center;gap:8px;background:#fff9ee;border:1px solid #f0c97a;border-radius:10px;padding:.55rem .9rem;animation:fi .2s ease}
-.offer-bar label{font-size:12.5px;font-weight:600;color:var(--a);white-space:nowrap;margin:0}
-.offer-bar .opw{position:relative;flex:1}
-.offer-bar .opw span{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--a);pointer-events:none;font-weight:600}
-.offer-bar .opw input{width:100%;padding:6px 10px 6px 26px;border:1px solid #f0c97a;border-radius:8px;font-size:14px;font-weight:600;color:var(--a);background:#fff;outline:none}
-.offer-bar .opw input:focus{border-color:var(--a)}
-.offer-bar .cls{background:none;border:none;cursor:pointer;color:var(--txm);font-size:17px;padding:2px;flex-shrink:0}
-.img-strip{display:flex;gap:6px;flex-wrap:wrap;padding:.3rem 0 .1rem}
-.img-thumb{position:relative;width:58px;height:58px;border-radius:8px;overflow:hidden;border:1px solid var(--bd);flex-shrink:0}
-.img-thumb img{width:100%;height:100%;object-fit:cover}
-.img-thumb .rm{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
-.bubble-offer{border:1.5px solid #f0c97a;border-radius:12px;padding:.75rem 1rem;max-width:240px;background:#fff9ee}
-.bubble-offer.me{margin-left:auto;border-bottom-right-radius:4px}
-.bubble-offer.them{margin-right:auto;border-bottom-left-radius:4px}
-.boffer-lbl{font-size:11px;font-weight:600;color:var(--a);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;display:flex;align-items:center;gap:4px}
-.boffer-val{font-family:"Syne",sans-serif;font-weight:800;font-size:1.2rem;color:var(--a)}
-.bubble-img{border-radius:10px;overflow:hidden;cursor:pointer;max-width:220px}
-.bubble-img.me{margin-left:auto}
-.bubble-img.them{margin-right:auto}
-.bubble-img img{width:100%;display:block;border-radius:10px;border:.5px solid var(--bd)}
-.echat{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--txl);gap:10px;text-align:center;padding:2rem}
-.echat i{font-size:48px;opacity:.18}
-
-/* ── PROFILE ── */
-.phero{background:linear-gradient(135deg,var(--dk),#1a3a2e);border-radius:var(--r);padding:1.8rem;margin-bottom:1.1rem;display:flex;align-items:center;gap:1.3rem}
-.pbav{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:#fff;flex-shrink:0}
-.pname{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;color:#fff}
-.pemail{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px}
-.prole{font-size:11.5px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);padding:3px 12px;border-radius:14px;display:inline-block;margin-top:7px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.1rem}
-.stat{background:#fff;border-radius:var(--r);border:.5px solid var(--bd);padding:1rem;text-align:center}
-.snum{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--gd)}
-.slbl{font-size:12px;color:var(--txm);margin-top:3px}
-.fcard{background:#fff;border-radius:var(--r);border:.5px solid var(--bd);padding:1.4rem}
-.fctitle{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;margin-bottom:1.1rem}
-
-/* ── MODAL ── */
-.mover{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;align-items:center;justify-content:center;padding:1rem}
-.mover.on{display:flex}
-.modal{background:#fff;border-radius:14px;padding:1.8rem;width:100%;max-width:460px;border:.5px solid var(--bd);max-height:90vh;overflow-y:auto}
-.mhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.3rem}
-.mtitle{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem}
-.xbtn{background:none;border:none;color:var(--txm);font-size:19px;cursor:pointer;padding:2px;transition:.2s}
-.xbtn:hover{color:var(--tx)}
-
-/* ── AI PANEL ── */
-.aipanel{background:linear-gradient(135deg,#edfaf4,#e3f1fd);border:1px solid #aad9c3;border-radius:9px;padding:1rem;margin-bottom:1rem}
-.aihd{display:flex;align-items:center;gap:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--gd);margin-bottom:.65rem}
-.aiuse{display:inline-flex;align-items:center;gap:4px;margin-top:.55rem;background:var(--g);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;transition:.2s}
-.aiuse:hover{background:var(--gd)}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:20px;right:20px;background:var(--dk);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;z-index:9999;transform:translateY(80px);opacity:0;transition:.3s;display:flex;align-items:center;gap:8px;max-width:310px;box-shadow:0 8px 28px rgba(0,0,0,.2)}
-.toast.on{transform:translateY(0);opacity:1}
-.toast.ok i{color:var(--g)}
-.toast.er i{color:var(--c)}
-
-.empty{text-align:center;padding:3.5rem 2rem;color:var(--txl);grid-column:1/-1}
-.empty i{font-size:50px;opacity:.16;margin-bottom:.8rem;display:block}
-.empty p{font-size:14px;line-height:1.6}
-.pricewrap{position:relative}
-.pricewrap span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--txm);font-size:14px;pointer-events:none}
-.pricewrap input{padding-left:32px}
-
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin{animation:spin .7s linear infinite}
-@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.fi{animation:fi .22s ease forwards}
+:root{\n  --g:#1D9E75;--gl:#E1F5EE;--gd:#085041;--gm:#5DCAA5;\n  --a:#BA7517;--al:#FAEEDA;\n  --c:#D85A30;--cl:#FAECE7;\n  --b:#378ADD;--bl:#E8F2FC;\n  --bg:#F0EEE7;--bd:#D3D1C7;\n  --tx:#2C2C2A;--txm:#5F5E5A;--txl:#888780;\n  --dk:#1C1C1A;\n  --r:10px;\n}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden}
+h1,h2,h3,.syne{font-family:'Syne',sans-serif;font-weight:700}
+.nav{background:var(--dk);color:#fff;padding:15px 20px;display:flex;justify-content:between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+.nav-brand{font-size:22px;font-weight:800;color:var(--gm);cursor:pointer;display:flex;align-items:center;gap:8px}
+.nav-brand i{font-size:24px}
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-btn{background:transparent;border:none;color:#fff;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--r);transition:all 0.2s}
+.nav-btn:hover{background:rgba(255,255,255,0.1)}
+.nav-btn.act{background:var(--g);color:#fff}
+.container{max-width:1000px;margin:30px auto;padding:0 20px;min-height:calc(100vh - 160px)}
+.view{display:none}
+.view.active{display:block}
+.btn{background:var(--g);color:#fff;border:none;padding:12px 20px;font-size:15px;font-weight:600;border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;text-decoration:none}
+.btn:hover{background:var(--gd);transform:translateY(-1px)}
+.btn-sec{background:transparent;border:2px solid var(--bd);color:var(--tx);padding:10px 18px}
+.btn-sec:hover{background:rgba(0,0,0,0.05);border-color:var(--tx)}
+.btn-c{background:var(--c)} .btn-c:hover{background:#b0431f}
+.btn-a{background:var(--a)} .btn-a:hover{background:#945b10}
+.card{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,0.02)}
+.form-g{margin-bottom:16px}
+.form-g label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;color:var(--txm)}
+.form-g input,.form-g select,.form-g textarea{width:100%;padding:12px;border:1px solid var(--bd);border-radius:var(--r);font-family:inherit;font-size:15px;color:var(--tx);transition:all 0.2s;background:#fff}
+.form-g input:focus,.form-g select:focus,.form-g textarea:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 3px var(--gl)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}.nav-links span{display:none}}
+.hero{text-align:center;padding:60px 20px;background:var(--gl);border-radius:20px;margin-bottom:30px;border:1px solid var(--gm)}
+.hero h1{font-size:42px;color:var(--gd);margin-bottom:12px;line-height:1.1}
+.hero p{font-size:18px;color:var(--txm);max-width:600px;margin:0 auto 24px}
+.badge{display:inline-flex;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;text-transform:uppercase}
+.b-buyer{background:var(--bl);color:var(--b)}
+.b-seller{background:var(--al);color:var(--a)}
+.b-new{background:var(--gl);color:var(--g)}
+.b-used{background:var(--cl);color:var(--c)}
+.wish-item{display:flex;flex-direction:column;gap:12px}
+.wish-header{display:flex;justify-content:between;align-items:start;gap:12px}
+.wish-title{font-size:20px;color:var(--dk)}
+.wish-price{font-size:22px;font-weight:700;color:var(--g)}
+.wish-meta{display:flex;gap:16px;font-size:13px;color:var(--txl);flex-wrap:wrap}
+.wish-meta span{display:flex;align-items:center;gap:4px}
+.wish-desc{font-size:15px;color:var(--txm);line-height:1.5;margin-top:4px}
+.wish-footer{display:flex;justify-content:between;align-items:center;margin-top:8px;padding-top:16px;border-top:1px dashed var(--bd)}
+.wish-user{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.wish-user i{font-size:18px;color:var(--g)}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+.modal.active{display:flex}
+.modal-content{background:#fff;border-radius:20px;width:100%;max-width:500px;padding:30px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.15)}
+.modal-close{position:absolute;top:20px;right:20px;background:transparent;border:none;font-size:24px;cursor:pointer;color:var(--txl)}
+.modal-close:hover{color:var(--tx)}
+.toast{position:fixed;bottom:30px;right:30px;background:var(--dk);color:#fff;padding:14px 24px;border-radius:var(--r);box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:300;transform:translateY(100px);opacity:0;transition:all 0.3s;font-weight:500;display:flex;align-items:center;gap:10px}
+.toast.active{transform:translateY(0);opacity:1}
+.toast.er{background:var(--c)}
+.chat-layout{display:grid;grid-template-columns:300px 1fr;gap:20px;background:#fff;border:1px solid var(--bd);border-radius:20px;height:600px;overflow:hidden}
+@media(max-width:768px){.chat-layout{grid-template-columns:1fr}.chat-layout.sidebar-hidden .chat-sidebar{display:none}.chat-layout.main-hidden .chat-main{display:none}}
+.chat-sidebar{border-right:1px solid var(--bd);display:flex;flex-direction:column;background:#fcfbfa}
+.chat-sidebar-h{padding:20px;border-bottom:1px solid var(--bd);font-size:18px}
+.chat-list{flex:1;overflow-y:auto}
+.chat-item{padding:16px 20px;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:all 0.2s}
+.chat-item:hover{background:rgba(0,0,0,0.02)}
+.chat-item.act{background:var(--gl);border-right:4px solid var(--g)}
+.chat-item-title{font-weight:600;font-size:15px;margin-bottom:4px;display:flex;justify-content:between;align-items:center}
+.chat-item-sub{font-size:13px;color:var(--txm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-main{display:flex;flex-direction:column;background:#fff}
+.chat-main-h{padding:16px 20px;border-bottom:1px solid var(--bd);display:flex;justify-content:between;align-items:center}
+.chat-messages{flex:1;padding:20px;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;gap:12px}
+.msg-row{display:flex;width:100%}
+.msg-row.me{justify-content:flex-end}
+.msg-bubble{max-width:70%;padding:12px 16px;border-radius:16px;font-size:15px;line-height:1.4;position:relative}
+.msg-row.me .msg-bubble{background:var(--g);color:#fff;border-bottom-right-radius:2px}
+.msg-row.them .msg-bubble{background:#fff;color:var(--tx);border-bottom-left-radius:2px;border:1px solid var(--bd)}
+.msg-ts{font-size:10px;margin-top:4px;text-align:right;opacity:0.7}
+.chat-input-area{padding:16px;border-top:1px solid var(--bd);background:#fff;display:flex;gap:12px}
+.chat-input-area input{flex:1;padding:12px;border:1px solid var(--bd);border-radius:var(--r);font-family:inherit;font-size:15px}
+.chat-input-area input:focus{outline:none;border-color:var(--g)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--txl)}
+.empty-state i{font-size:48px;margin-bottom:12px;color:var(--bd)}
+.notif-badge{background:var(--c);color:#fff;font-size:11px;padding:2px 6px;border-radius:10px;font-weight:700;margin-left:4px}
+.footer{background:var(--dk);color:var(--txl);text-align:center;padding:40px 20px;font-size:14px;margin-top:60px;border-top:4px solid var(--g)}
+.footer strong{color:#fff}
 </style>
 </head>
 <body>
 
-<!-- TOAST -->
-<div class="toast" id="toast"><i id="ticon" class="ti ti-check"></i><span id="tmsg"></span></div>
-
-<!-- NOTIF PANEL -->
-<div class="notif-panel" id="notifPanel">
-  <div class="np-hd"><span>Notificações</span><span class="np-all" onclick="markAllRead()">Marcar todas lidas</span></div>
-  <div id="notifList"></div>
-</div>
-
-<!-- MSG MODAL -->
-<div class="mover" id="msgMod">
-  <div class="modal">
-    <div class="mhd"><span class="mtitle" id="modTitle">Contatar comprador</span><button class="xbtn" onclick="closeMod()"><i class="ti ti-x"></i></button></div>
-    <div class="aipanel">
-      <div class="aihd"><i class="ti ti-sparkles"></i>Sugestão gerada por IA</div>
-      <div id="aiTxt" style="font-size:13.5px;color:var(--tx);line-height:1.55"><i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando mensagem personalizada...</div>
+<nav class="nav">
+  <div class="nav-brand" onclick="view('feed')"><i class="ti ti-shopping-cart-discount"></i> querocomprar</div>
+  <div class="nav-links" id="nav-links">
     </div>
-    <div class="fld"><label>Sua mensagem</label><textarea id="modMsg" rows="4" placeholder="Ou escreva sua própria mensagem..."></textarea></div>
-    <button class="btn g full" onclick="sendModMsg()"><i class="ti ti-send"></i>Enviar mensagem</button>
-  </div>
-</div>
-
-<!-- DETAIL MODAL -->
-<div class="mover" id="detMod">
-  <div class="modal">
-    <div class="mhd"><span class="mtitle">Detalhes do anúncio</span><button class="xbtn" onclick="document.getElementById('detMod').classList.remove('on')"><i class="ti ti-x"></i></button></div>
-    <div id="detContent"></div>
-  </div>
-</div>
-
-<!-- NAV -->
-<nav>
-  <a class="logo" href="#" onclick="CU&&view('feed');return false">quero<em>comprar</em></a>
-  <div class="nsearch" id="navSearch" style="display:none">
-    <i class="ti ti-search si"></i>
-    <input type="text" placeholder="Buscar produtos..." id="searchInp"
-      oninput="doSearch(this.value)"
-      onfocus="document.getElementById('sdrop').classList.add('on')"
-      onblur="setTimeout(()=>document.getElementById('sdrop').classList.remove('on'),200)">
-    <div class="sdrop" id="sdrop"></div>
-  </div>
-  <div id="navR">
-    <button class="nbtn" onclick="show('login')" style="margin-right:6px">Entrar</button>
-    <button class="nbtn p" onclick="show('reg')">Criar conta</button>
-  </div>
 </nav>
 
-<!-- LOGIN -->
-<div class="scr on" id="scr-login">
-  <div class="auth-bg">
-    <div class="acard">
-      <div class="atitle">Bem-vindo de volta!</div>
-      <div class="asub">Acesse para descobrir e responder oportunidades</div>
-      <div class="fld"><label>E-mail</label><input type="email" id="le" placeholder="seu@email.com"></div>
-      <div class="fld"><label>Senha</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
-      <button class="btn g full" onclick="login()">Entrar na plataforma</button>
-      <p style="font-size:12px;color:var(--txl);text-align:center;margin-top:.75rem">Contas de teste: <b>ana@q.com</b> / 123 &nbsp;&middot;& <b>carlos@q.com</b> / 123</p>
-      <div style="font-size:11.5px;color:var(--txm);background:var(--bl);border:1px solid #c5dbf5;border-radius:8px;padding:.6rem .85rem;margin-top:.7rem;line-height:1.5"><i class="ti ti-info-circle" style="color:var(--b)"></i> Para simular dois usuários no mesmo dispositivo: faça login como Carlos, envie uma mensagem, clique em Sair, depois entre como Ana para ver a mensagem recebida.</div>
-      <div class="aswitch">Sem conta? <a onclick="show('reg')">Criar gratuitamente</a></div>
+<div class="container">
+
+  <div id="v-feed" class="view">
+    <div class="hero">
+      <h1>Diga o que precisa,<br>deixe os vendedores te acharem.</h1>
+      <p>Uma plataforma invertida onde os compradores publicam seus desejos de consumo e os vendedores oferecem as melhores propostas.</p>
+      <div id="feed-action"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h2 class="syne" style="font-size:24px">Pedidos Recentes</h2>
+      <div style="display:flex;gap:10px;">
+        <select id="f-cat" onchange="loadFeed()" style="padding:8px 12px;border-radius:var(--r);border:1px solid var(--bd);font-family:inherit">
+          <option value="">Todas Categorias</option>
+          <option value="Eletrônicos">Eletrônicos</option>
+          <option value="Moda & Acessórios">Moda & Acessórios</option>
+          <option value="Casa & Decoração">Casa & Decoração</option>
+          <option value="Automotivo">Automotivo</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+    </div>
+    <div id="feed-list"></div>
+  </div>
+
+  <div id="v-mywishes" class="view">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <h2 class="syne" style="font-size:28px">Meus Pedidos de Compra</h2>
+      <button class="btn" onclick="openMod('wish')"><i class="ti ti-plus"></i> Novo Pedido</button>
+    </div>
+    <div id="mywishes-list"></div>
+  </div>
+
+  <div id="v-msgs" class="view">
+    <h2 class="syne" style="font-size:28px;margin-bottom:20px">Negociações e Chats</h2>
+    <div class="chat-layout" id="chat-layout">
+      <div class="chat-sidebar">
+        <div class="chat-sidebar-h">Conversas</div>
+        <div class="chat-list" id="chat-list-container"></div>
+      </div>
+      <div class="chat-main" id="chat-main-container">
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <p>© 2026 <strong>querocomprar</strong>. Conectando intenções de compra a oportunidades de venda de ponta a ponta.</p>
+</footer>
+
+<div class="modal" id="m-auth">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeMod()"><i class="ti ti-x"></i></button>
+    <div id="auth-login-form">
+      <h3 class="syne" style="font-size:24px;margin-bottom:20px;color:var(--gd)">Entrar no QueroComprar</h3>
+      <div class="form-g"><label>E-mail</label><input type="email" id="li-email"></div>
+      <div class="form-g"><label>Senha</label><input type="password" id="li-pass"></div>
+      <button class="btn" style="width:100%;justify-content:center;margin-top:10px" onclick="login()">Entrar</button>
+      <p style="text-align:center;margin-top:16px;font-size:14px;color:var(--txm)">Não tem conta? <a href="#" onclick="toggleAuthForm(false)" style="color:var(--g);font-weight:600">Cadastre-se</a></p>
+    </div>
+    <div id="auth-reg-form" style="display:none">
+      <h3 class="syne" style="font-size:24px;margin-bottom:20px;color:var(--gd)">Criar Nova Conta</h3>
+      <div class="form-g"><label>Nome Completo / Loja</label><input type="text" id="rg-name"></div>
+      <div class="form-g"><label>E-mail</label><input type="email" id="rg-email"></div>
+      <div class="form-g"><label>Senha (mín. 6 caracteres)</label><input type="password" id="rg-pass"></div>
+      <div class="grid-2">
+        <div class="form-g"><label>WhatsApp</label><input type="text" id="rg-phone" placeholder="(00) 00000-0000"></div>
+        <div class="form-g"><label>Cidade/UF</label><input type="text" id="rg-city" placeholder="Ex: São Paulo/SP"></div>
+      </div>
+      <div class="form-g">
+        <label>Eu quero...</label>
+        <select id="rg-role">
+          <option value="buyer">Comprar produtos (Comprador)</option>
+          <option value="seller">Vender produtos (Vendedor/Lojista)</option>
+        </select>
+      </div>
+      <button class="btn btn-a" style="width:100%;justify-content:center;margin-top:10px" onclick="register()">Criar Minha Conta</button>
+      <p style="text-align:center;margin-top:16px;font-size:14px;color:var(--txm)">Já tem uma conta? <a href="#" onclick="toggleAuthForm(true)" style="color:var(--g);font-weight:600">Fazer Login</a></p>
     </div>
   </div>
 </div>
 
-<!-- CADASTRO -->
-<div class="scr" id="scr-reg">
-  <div class="auth-bg">
-    <div class="acard">
-      <div class="atitle">Criar conta</div>
-      <div class="asub">Publique o que procura ou ofereça o que tem</div>
-      <div class="role-tabs">
-        <button class="rtab on" id="tb-buy" onclick="setRole('buyer')"><i class="ti ti-shopping-cart"></i> Comprador</button>
-        <button class="rtab" id="tb-sel" onclick="setRole('seller')"><i class="ti ti-tag"></i> Vendedor</button>
+<div class="modal" id="m-wish">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeMod()"><i class="ti ti-x"></i></button>
+    <h3 class="syne" style="font-size:24px;margin-bottom:20px;color:var(--gd)">O que você quer comprar?</h3>
+    <div class="form-g"><label>Produto/Título Resumido</label><input type="text" id="w-title" placeholder="Ex: iPhone 14 Pro Max 256GB"></div>
+    <div class="grid-2">
+      <div class="form-g">
+        <label>Categoria</label>
+        <select id="w-cat">
+          <option value="Eletrônicos">Eletrônicos</option>
+          <option value="Moda & Acessórios">Moda & Acessórios</option>
+          <option value="Casa & Decoração">Casa & Decoração</option>
+          <option value="Automotivo">Automotivo</option>
+          <option value="Outros">Outros</option>
+        </select>
       </div>
-      <div class="fld"><label>Nome completo</label><input type="text" id="rn" placeholder="Seu nome"></div>
-      <div class="fld"><label>E-mail</label><input type="email" id="re" placeholder="seu@email.com"></div>
-      <div class="fld"><label>Senha</label><input type="password" id="rp" placeholder="Mínimo 3 caracteres"></div>
-      <button class="btn g full" onclick="register()">Criar conta gratuita</button>
-      <div class="aswitch">Já tem conta? <a onclick="show('login')">Faça login</a></div>
+      <div class="form-g">
+        <label>Condição Aceita</label>
+        <select id="w-cond">
+          <option value="Novo">Apenas Novo</option>
+          <option value="Usado">Pode ser Usado</option>
+          <option value="Tanto faz">Tanto faz</option>
+        </select>
+      </div>
     </div>
+    <div class="form-g"><label>Preço Máximo Pretendido (R$)</label><input type="number" id="w-price" placeholder="Ex: 4500"></div>
+    <div class="form-g"><label>Detalhes/Especificações (Opcional)</label><textarea id="w-desc" rows="3" placeholder="Detalhe cor, estado de conservação aceito, acessórios que precisa, etc..."></textarea></div>
+    <button class="btn" style="width:100%;justify-content:center;margin-top:10px" onclick="addWish()">Publicar Meu Pedido</button>
   </div>
 </div>
 
-<!-- APP -->
-<div class="scr" id="scr-app">
-  <div class="lay">
-    <!-- SIDEBAR -->
-    <div class="side">
-      <div class="ssec">Descobrir</div>
-      <button class="si-btn on" id="sn-feed" onclick="view('feed')"><i class="ti ti-layout-grid"></i>Explorar</button>
-      <button class="si-btn" id="sn-match" onclick="view('match')"><i class="ti ti-sparkles"></i>Match por IA<span class="si-pill green" id="matchpill" style="display:none">✦</span></button>
-      <div class="ssec">Minha conta</div>
-      <button class="si-btn" id="sn-mine" onclick="view('mine')"><i class="ti ti-heart"></i>Meus desejos</button>
-      <button class="si-btn" id="sn-new" onclick="view('new')"><i class="ti ti-plus"></i>Publicar desejo</button>
-      <button class="si-btn" id="sn-msgs" onclick="view('msgs')"><i class="ti ti-message-2"></i>Mensagens<span class="si-pill red" id="msdot" style="display:none">0</span></button>
-      <div class="ssec">Plataforma</div>
-      <button class="si-btn" id="sn-dash" onclick="view('dash')"><i class="ti ti-chart-bar"></i>Analytics</button>
-      <button class="si-btn" id="sn-prof" onclick="view('prof')"><i class="ti ti-user"></i>Perfil</button>
-      <div style="margin-top:auto;padding-top:1rem;border-top:.5px solid var(--bd)">
-        <button class="si-btn" style="color:var(--c)" onclick="logout()"><i class="ti ti-logout"></i>Sair</button>
-      </div>
-    </div>
-    <!-- CONTENT -->
-    <div class="cnt" id="cnt"></div>
-  </div>
-</div>
+<div class="toast" id="toast"><i class="ti ti-info-circle"></i> <span id="toast-txt"></span></div>
 
 <script>
-const COLS=['#1D9E75','#BA7517','#D85A30','#378ADD','#639922','#534AB7','#D4537E'];
-const CATS=['Todos','Eletrônicos','Veículos','Imóveis','Roupas','Móveis','Esportes','Livros','Outros'];
-let CU=null, selRole='buyer', activeFilter='Todos', activeConv=null, modWishId=null, notifOpen=false, sortMode='new';
+/* ── CONFIGURAÇÃO SUPABASE ── */
+const SUPABASE_URL = 'https://ylkhhylumtewwxivebez.supabase.co';
+// Cole aqui a sua Anon Key copiada do painel "Project Settings > API" do Supabase
+const SUPABASE_ANON_KEY = 'sb_publishable_wtmqB-s1-wtOaX7VVqUhpQ_hDJS-BrN'; 
 
-/* ── SEED DATA ── */
-const USERS=[
-  {id:1,name:'Ana Silva',email:'ana@q.com',pass:'123',role:'buyer',city:'Rio de Janeiro',phone:''},
-  {id:2,name:'Carlos Mendes',email:'carlos@q.com',pass:'123',role:'seller',city:'São Paulo',phone:''},
-  {id:3,name:'Beatriz Costa',email:'bi@q.com',pass:'123',role:'buyer',city:'Belo Horizonte',phone:''},
-];
-let WISHES=[
-  {id:1,uid:1,title:'iPhone 15 Pro Max 256GB',cat:'Eletrônicos',cond:'Seminovo',price:5500,desc:'Procuro iPhone 15 Pro Max em bom estado. Prefiro preto ou azul. Com ou sem nota, desde que funcione perfeitamente.',ts:Date.now()-7200000,views:34,offers:2},
-  {id:2,uid:3,title:'Bicicleta speed Trek',cat:'Esportes',cond:'Usado',price:3000,desc:'Qualquer Trek de estrada aro 700, tamanho M ou L. Pequenos arranhões ok.',ts:Date.now()-18000000,views:18,offers:1},
-  {id:3,uid:1,title:'Sofá retrátil 3 lugares',cat:'Móveis',cond:'Seminovo',price:1800,desc:'Sofá em couro ou tecido, cores neutras, bom estado para apartamento.',ts:Date.now()-86400000,views:22,offers:0},
-  {id:4,uid:3,title:'Notebook Dell ou Lenovo i5+',cat:'Eletrônicos',cond:'Qualquer',price:2200,desc:'8GB RAM mínimo, SSD. Para faculdade de engenharia.',ts:Date.now()-172800000,views:41,offers:3},
-  {id:5,uid:1,title:'Câmera DSLR para iniciante',cat:'Eletrônicos',cond:'Seminovo',price:2800,desc:'Canon ou Nikon com lente kit. Modelo 2018 em diante.',ts:Date.now()-259200000,views:15,offers:1},
-  {id:6,uid:3,title:'Violão elétrico acústico',cat:'Outros',cond:'Qualquer',price:900,desc:'Yamaha, Takamine ou similar. Estou aprendendo música.',ts:Date.now()-345600000,views:9,offers:0},
-  {id:7,uid:1,title:'Mesa de escritório L',cat:'Móveis',cond:'Qualquer',price:600,desc:'Mesa em L para home office. Pode ser MDF ou madeira. Cor clara.',ts:Date.now()-432000000,views:7,offers:0},
-];
-let CONVS=[
-  {id:1,from:2,to:1,wid:1,msgs:[
-    {uid:2,text:'Oi Ana! Tenho um iPhone 15 Pro Max preto com nota fiscal e ainda na garantia Apple.',ts:Date.now()-3600000},
-    {uid:1,text:'Tem fotos? Está com algum arranhão?',ts:Date.now()-3540000},
-    {uid:2,text:'Zero arranhões, sempre com capinha. Mando fotos agora!',ts:Date.now()-3480000},
-  ]},
-  {id:2,from:2,to:3,wid:2,msgs:[
-    {uid:2,text:'Boa tarde Beatriz! Tenho uma Trek Domane SL5 2022 tamanho M disponível.',ts:Date.now()-86400000},
-    {uid:3,text:'Que tamanho exatamente? E qual o histórico de uso?',ts:Date.now()-82800000},
-  ]},
-];
-let NOTIFS=[
-  {id:1,uid:1,type:'msg',text:'Carlos Mendes enviou uma mensagem sobre seu anúncio de iPhone.',ts:Date.now()-3600000,read:false,wid:1},
-  {id:2,uid:1,type:'offer',text:'Nova oferta recebida no anúncio "Sofá retrátil 3 lugares".',ts:Date.now()-7200000,read:false,wid:3},
-  {id:3,uid:1,type:'match',text:'IA encontrou 3 vendedores compatíveis com seu desejo de iPhone.',ts:Date.now()-14400000,read:true,wid:1},
-  {id:4,uid:3,type:'msg',text:'Carlos respondeu sobre sua bicicleta Trek.',ts:Date.now()-86400000,read:false,wid:2},
-];
-let nwid=8, ncid=3, nuid=4, nnid=5;
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ── PERSISTENCE ── */
-function sv(){
-  try{
-    localStorage.setItem("qc3_w",JSON.stringify(WISHES));
-    localStorage.setItem("qc3_c",JSON.stringify(CONVS));
-    localStorage.setItem("qc3_u",JSON.stringify(USERS));
-    localStorage.setItem("qc3_n",JSON.stringify(NOTIFS));
-    if(CU) localStorage.setItem("qc3_cu",String(CU.id));
-  }catch(e){}
-}
-(function ld(){
-  try{
-    const w=localStorage.getItem("qc3_w"),c=localStorage.getItem("qc3_c"),
-          u=localStorage.getItem("qc3_u"),n=localStorage.getItem("qc3_n");
-    if(w)WISHES=JSON.parse(w);
-    if(c)CONVS=JSON.parse(c);
-    if(n)NOTIFS=JSON.parse(n);
-    if(u){const pu=JSON.parse(u);pu.forEach(x=>{if(!USERS.find(y=>y.id===x.id))USERS.push(x)})}
-    if(WISHES.length)nwid=Math.max(...WISHES.map(x=>x.id))+1;
-    if(CONVS.length)ncid=Math.max(...CONVS.map(x=>x.id))+1;
-    const cuid=localStorage.getItem("qc3_cu");
-    if(cuid){const u2=USERS.find(x=>x.id===parseInt(cuid));if(u2)CU=u2;}
-  }catch(e){}
-})();
-window.addEventListener("DOMContentLoaded",()=>{if(CU)enter();});
+/* ── ESTADO DA APLICAÇÃO ── */
+let CU = null; // Current User (Perfil completo do usuário logado)
+let activeConv = null; // Conversa aberta no Chat
+let currentView = 'feed';
 
-/* ── AUTH ── */
-function show(s){
-  document.querySelectorAll('.scr').forEach(x=>x.classList.remove('on'));
-  document.getElementById('scr-'+s).classList.add('on');
-}
-function setRole(r){
-  selRole=r;
-  document.getElementById('tb-buy').classList.toggle('on',r==='buyer');
-  document.getElementById('tb-sel').classList.toggle('on',r==='seller');
-}
-function login(){
-  const e=document.getElementById("le").value.trim(), p=document.getElementById("lp").value;
-  const u=USERS.find(x=>x.email===e&&x.pass===p);
-  if(!u){toast("E-mail ou senha incorretos","er");return}
-  CU=u; activeConv=null; enter();
-}
-function register(){
-  const n=val('rn'), e=val('re'), p=val('rp');
-  if(!n||!e||!p){toast('Preencha todos os campos','er');return}
-  if(USERS.find(x=>x.email===e)){toast('E-mail já cadastrado','er');return}
-  const u={id:nuid++,name:n,email:e,pass:p,role:selRole,city:'',phone:''};
-  USERS.push(u); CU=u; sv(); enter(); toast('Conta criada com sucesso!');
-}
-function logout(){
-  CU=null; activeConv=null;
-  try{localStorage.removeItem("qc3_cu");}catch(e){}
-  document.getElementById("navSearch").style.display="none";
-  show("login");
-}
-function enter(){
-  document.getElementById("navSearch").style.display="flex";
-  document.getElementById("matchpill").style.display="inline";
-  sv(); refreshNav(); show("app"); view("feed");
-}
-
-function getUnread(){return CONVS.filter(c=>c.to===CU.id).length}
-function getUnreadN(){return NOTIFS.filter(n=>n.uid===CU.id&&!n.read).length}
-
-function refreshNav(){
-  const ur=getUnread(), un=getUnreadN();
-  document.getElementById('navR').innerHTML=`
-    <div style="display:flex;align-items:center;gap:9px">
-      <button class="navico" onclick="toggleNotif()" id="notifBtn">
-        <i class="ti ti-bell"></i>
-        ${un>0?'<span class="ndot"></span>':''}
-      </button>
-      <div class="upill" onclick="view('prof')">
-        <div class="av" style="background:${COLS[CU.id%COLS.length]}">${CU.name[0]}</div>
-        <span class="uname">${CU.name.split(' ')[0]}</span>
-        ${ur>0?`<span class="nbadge">${ur}</span>`:''}
-      </div>
-    </div>`;
-  const d=document.getElementById('msdot');
-  if(d){d.style.display=ur>0?'inline':'none';d.textContent=ur;}
-}
-
-/* ── NOTIFICATIONS ── */
-function toggleNotif(){
-  notifOpen=!notifOpen;
-  document.getElementById('notifPanel').classList.toggle('on',notifOpen);
-  if(notifOpen) buildNotifPanel();
-}
-function buildNotifPanel(){
-  const el=document.getElementById('notifList'); if(!el) return;
-  const myN=NOTIFS.filter(n=>n.uid===CU.id).sort((a,b)=>b.ts-a.ts);
-  if(!myN.length){el.innerHTML='<div style="padding:1.5rem;text-align:center;font-size:13px;color:var(--txl)">Nenhuma notificação</div>';return}
-  const icons={msg:'ti-message-2',offer:'ti-tag',match:'ti-sparkles'};
-  const bgs={msg:'var(--bl)',offer:'var(--al)',match:'var(--gl)'};
-  const fgs={msg:'var(--b)',offer:'var(--a)',match:'var(--g)'};
-  el.innerHTML=myN.map(n=>`
-    <div class="ni${n.read?'':' unread'}" onclick="clickNotif(${n.id})">
-      <div class="niico" style="background:${bgs[n.type]||'#eee'};color:${fgs[n.type]||'#666'}">
-        <i class="ti ${icons[n.type]||'ti-bell'}"></i>
-      </div>
-      <div style="flex:1">
-        <div class="nitxt">${n.text}</div>
-        <div class="nitime">${relTime(n.ts)}</div>
-      </div>
-      ${!n.read?'<div style="width:7px;height:7px;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:4px"></div>':''}
-    </div>`).join('');
-}
-function clickNotif(id){
-  const n=NOTIFS.find(x=>x.id===id); if(!n) return;
-  n.read=true; sv(); notifOpen=false;
-  document.getElementById('notifPanel').classList.remove('on');
+/* ── INICIALIZAÇÃO ── */
+window.addEventListener('DOMContentLoaded', async () => {
+  // Verifica se o usuário já possui uma sessão ativa salva no navegador
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session && session.user) {
+    await fetchUserProfile(session.user.id);
+  }
+  
   refreshNav();
-  if(n.type==='msg') view('msgs');
-  else if(n.wid) showDetail(n.wid);
-}
-function markAllRead(){
-  NOTIFS.filter(n=>n.uid===CU.id).forEach(n=>n.read=true);
-  sv(); buildNotifPanel(); refreshNav();
-}
-
-/* ── SEARCH ── */
-function doSearch(q){
-  const drop=document.getElementById('sdrop');
-  if(!q.trim()){drop.innerHTML='';return}
-  const res=WISHES.filter(w=>
-    w.title.toLowerCase().includes(q.toLowerCase())||
-    w.cat.toLowerCase().includes(q.toLowerCase())||
-    w.desc.toLowerCase().includes(q.toLowerCase())
-  ).slice(0,6);
-  if(!res.length){drop.innerHTML='<div style="padding:.9rem;font-size:13px;color:var(--txl);text-align:center">Nenhum resultado</div>';return}
-  drop.innerHTML=res.map(w=>{
-    const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
-    return `<div class="sitem" onmousedown="showDetail(${w.id})">
-      <div class="av" style="background:${COLS[u.id%COLS.length]};border-radius:7px;width:34px;height:34px;font-size:12px;flex-shrink:0">${u.name[0]}</div>
-      <div><div style="font-size:13.5px;font-weight:500">${w.title}</div>
-      <div style="font-size:12px;color:var(--txm)">${w.cat} · até R$ ${fmt(w.price)}</div></div>
-    </div>`;
-  }).join('');
-}
-
-/* ── VIEWS ── */
-function view(vn){
-  ['feed','match','mine','new','msgs','dash','prof'].forEach(x=>{
-    const s=document.getElementById('sn-'+x); if(s) s.classList.remove('on');
-  });
-  const s=document.getElementById('sn-'+vn); if(s) s.classList.add('on');
-  const el=document.getElementById('cnt');
-  notifOpen=false; document.getElementById('notifPanel').classList.remove('on');
-  if(vn==='msgs'){
-    el.classList.add('msgs-view');
-  } else {
-    el.classList.remove('msgs-view');
-  }
-  if(vn==='feed')      renderFeed(el);
-  else if(vn==='match')renderMatch(el);
-  else if(vn==='mine') renderMine(el);
-  else if(vn==='new')  renderNew(el);
-  else if(vn==='msgs') renderMsgs(el);
-  else if(vn==='dash') renderDash(el);
-  else if(vn==='prof') renderProf(el);
-}
-
-/* ── FEED ── */
-function renderFeed(el){
-  el.innerHTML=`<div class="fhead fi">
-    <div class="ftitle">Explorar desejos</div>
-    <div style="display:flex;gap:7px;align-items:center">
-      <select onchange="sortMode=this.value;buildGrid()" style="font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;outline:none;cursor:pointer">
-        <option value="new">Mais recentes</option>
-        <option value="price">Maior valor</option>
-        <option value="offers">Mais ofertas</option>
-      </select>
-      <button class="btn g sm" onclick="view('new')"><i class="ti ti-plus"></i>Publicar</button>
-    </div>
-  </div>
-  <div class="chips" id="chips">
-    ${CATS.map(c=>`<div class="chip${c===activeFilter?' on':''}" onclick="filterCat('${c}')">${c}</div>`).join('')}
-  </div>
-  <div class="grid fi" id="wgrid"></div>`;
-  buildGrid();
-}
-function filterCat(c){
-  activeFilter=c; buildGrid();
-  document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.textContent===c));
-}
-function buildGrid(){
-  const g=document.getElementById('wgrid'); if(!g) return;
-  let ws=activeFilter==='Todos'?[...WISHES]:WISHES.filter(w=>w.cat===activeFilter);
-  if(sortMode==='new')    ws.sort((a,b)=>b.ts-a.ts);
-  else if(sortMode==='price')   ws.sort((a,b)=>b.price-a.price);
-  else ws.sort((a,b)=>(b.offers||0)-(a.offers||0));
-  g.innerHTML=ws.length ? ws.map(cardHTML).join('') :
-    '<div class="empty"><i class="ti ti-mood-empty"></i><p>Nenhum desejo nessa categoria ainda.</p></div>';
-}
-function cardHTML(w){
-  const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
-  const mine=CU&&w.uid===CU.id;
-  return `<div class="wcard fi">
-    <div class="wch">
-      <div class="wcu">
-        <div class="av" style="background:${COLS[u.id%COLS.length]};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0">${u.name[0]}</div>
-        <div><div class="wun">${u.name}</div><div class="wt">${relTime(w.ts)}</div></div>
-      </div>
-      <span class="cat">${w.cat}</span>
-    </div>
-    <div class="wtitle" onclick="showDetail(${w.id})">${w.title}</div>
-    <div class="wdesc">${w.desc}</div>
-    <div class="wcf">
-      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond}${w.views?' · '+w.views+' vistas':''}</div></div>
-      ${mine?'<span class="own">Seu anúncio</span>':`<button class="msgbtn" onclick="openMsgMod(${w.id})"><i class="ti ti-send" style="font-size:13px"></i>Tenho isso!</button>`}
-    </div>
-  </div>`;
-}
-
-/* ── MATCH IA ── */
-async function renderMatch(el){
-  el.innerHTML=`<div class="match-banner fi">
-    <i class="ti ti-sparkles"></i>
-    <div><h3>Match inteligente por IA</h3><p>A IA analisa todos os desejos da plataforma e aponta as melhores oportunidades para o seu perfil de vendedor.</p></div>
-  </div>
-  <div id="matchArea" style="text-align:center;padding:3rem;color:var(--txm)">
-    <i class="ti ti-loader spin" style="font-size:32px;color:var(--g)"></i>
-    <p style="margin-top:.9rem;font-size:14px">Analisando oportunidades com IA...</p>
-  </div>`;
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`Você é um sistema de match de marketplace. Analise desejos de compra e retorne JSON com os 4 melhores para um vendedor, ordenados por oportunidade de venda. Retorne APENAS JSON válido sem markdown: {"matches":[{"id":1,"score":92,"reason":"razão curta em português max 10 palavras"}]}`,
-        messages:[{role:'user',content:`Desejos disponíveis: ${JSON.stringify(WISHES.map(w=>({id:w.id,title:w.title,cat:w.cat,price:w.price,cond:w.cond,offers:w.offers||0})))}. Gere os 4 melhores matches para um vendedor.`}]
-      })
-    });
-    const data=await resp.json();
-    let txt=(data.content&&data.content[0]&&data.content[0].text)||'';
-    txt=txt.replace(/```json|```/g,'').trim();
-    const {matches}=JSON.parse(txt);
-    renderMatchCards(matches);
-  }catch(e){
-    // fallback
-    const fallback=WISHES.filter(w=>!CU||w.uid!==CU.id).sort((a,b)=>b.price-a.price).slice(0,4)
-      .map((w,i)=>({id:w.id,score:[95,87,79,71][i],reason:'Alto orçamento com bom potencial de venda'}));
-    renderMatchCards(fallback);
-  }
-}
-function renderMatchCards(matches){
-  const el=document.getElementById('matchArea'); if(!el) return;
-  el.innerHTML=`<div class="match-list fi">${matches.map(m=>{
-    const w=WISHES.find(x=>x.id===m.id); if(!w) return '';
-    const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
-    const mine=CU&&w.uid===CU.id;
-    const scoreColor=m.score>=85?'var(--g)':m.score>=70?'var(--a)':'var(--c)';
-    return `<div class="mcard">
-      <div class="mscore" style="border-color:${scoreColor};color:${scoreColor};background:${scoreColor}18">${m.score}<span style="font-size:9px">%</span></div>
-      <div class="minfo">
-        <div class="mtit">${w.title}</div>
-        <div class="msub">até R$ ${fmt(w.price)} · ${w.cat} · ${u.name} · ${w.cond}</div>
-        <div class="mreason"><i class="ti ti-sparkles" style="font-size:12px;flex-shrink:0;margin-top:1px"></i>${m.reason}</div>
-      </div>
-      ${!mine
-        ?`<button class="btn g sm" onclick="openMsgMod(${w.id})" style="flex-shrink:0">Contatar</button>`
-        :'<span class="own" style="flex-shrink:0">Seu</span>'}
-    </div>`;
-  }).join('')}</div>`;
-}
-
-/* ── MINE ── */
-function renderMine(el){
-  const mine=WISHES.filter(w=>w.uid===CU.id).sort((a,b)=>b.ts-a.ts);
-  el.innerHTML=`<div class="fhead fi">
-    <div class="ftitle">Meus desejos</div>
-    <button class="btn g sm" onclick="view('new')"><i class="ti ti-plus"></i>Publicar</button>
-  </div>
-  <div class="grid fi">${mine.length ? mine.map(mineCard).join('') :
-    '<div class="empty"><i class="ti ti-heart"></i><p>Nenhum desejo publicado ainda.<br>Clique em "Publicar desejo" para começar!</p></div>'}</div>`;
-}
-function mineCard(w){
-  const msgs=CONVS.filter(c=>c.wid===w.id).length;
-  return `<div class="wcard fi">
-    <div class="wch">
-      <div><div class="wtitle" onclick="showDetail(${w.id})">${w.title}</div><div class="wt">${relTime(w.ts)}</div></div>
-      <span class="cat">${w.cat}</span>
-    </div>
-    <div class="wdesc">${w.desc}</div>
-    <div class="wcf">
-      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond} · ${w.views||0} vistas</div></div>
-      <div style="display:flex;gap:5px;align-items:center">
-        ${msgs?`<span style="font-size:12px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:7px;display:flex;align-items:center;gap:3px"><i class="ti ti-message-2" style="font-size:11px"></i>${msgs}</span>`:''}
-        <button class="btn out xs" onclick="delWish(${w.id})" title="Remover"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>
-  </div>`;
-}
-function delWish(id){
-  if(!confirm('Remover este anúncio?')) return;
-  WISHES=WISHES.filter(w=>w.id!==id); sv();
-  renderMine(document.getElementById('cnt')); toast('Anúncio removido');
-}
-
-/* ── NEW ── */
-function renderNew(el){
-  el.innerHTML=`<div class="ftitle fi" style="margin-bottom:1.2rem">Publicar desejo de compra</div>
-  <div class="fcard fi" style="max-width:560px">
-    <div class="fld"><label>O que você procura?</label><input type="text" id="wt" placeholder="Ex: iPhone 15 Pro Max 256GB"></div>
-    <div class="fld2">
-      <div><label>Categoria</label><select id="wc">
-        <option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option>
-        <option>Roupas</option><option>Móveis</option><option>Esportes</option>
-        <option>Livros</option><option>Outros</option>
-      </select></div>
-      <div><label>Condição</label><select id="wco">
-        <option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option>
-      </select></div>
-    </div>
-    <div class="fld"><label>Valor máximo que pagaria</label>
-      <div class="pricewrap"><span>R$</span><input type="number" id="wp" placeholder="0" min="0"></div>
-    </div>
-    <div class="fld"><label>Descrição detalhada</label>
-      <textarea id="wd" placeholder="Cor, modelo específico, versão, requisitos mínimos, observações..."></textarea>
-    </div>
-    <div style="background:var(--gl);border-radius:8px;padding:.75rem 1rem;font-size:13.5px;color:var(--gd);margin-bottom:1rem;display:flex;gap:7px;align-items:flex-start">
-      <i class="ti ti-bulb" style="flex-shrink:0;margin-top:1px"></i>
-      Quanto mais detalhado o anúncio, mais ofertas relevantes você recebe de vendedores.
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn g" id="pubBtn" onclick="publish()"><i class="ti ti-plus"></i>Publicar desejo</button>
-      <button class="btn out" onclick="view('feed')">Cancelar</button>
-    </div>
-  </div>`;
-}
-function publish(){
-  const t=val('wt'), c=val('wc'), co=val('wco'), p=val('wp'), d=val('wd');
-  if(!t||!p){toast('Preencha produto e valor máximo','er');return}
-  const btn=document.getElementById('pubBtn');
-  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader spin"></i> Publicando...';
-  setTimeout(()=>{
-    WISHES.unshift({id:nwid++,uid:CU.id,title:t,cat:c,cond:co,price:parseFloat(p),desc:d||'Sem descrição adicional.',ts:Date.now(),views:0,offers:0});
-    sv(); toast('Desejo publicado com sucesso!'); view('feed');
-  },700);
-}
-
-/* ── MSGS ── */
-function renderMsgs(el){
-  el.innerHTML=`<div class="mlayout">
-    <div class="mlist"><div class="mlh">Mensagens</div><div id="mlistin"></div></div>
-    <div class="chat" id="chatarea">${ecHTML()}</div>
-  </div>`;
-  buildConvList();
-  if(activeConv){const c=CONVS.find(x=>x.id===activeConv.id);if(c) openConv(c.id);}
-}
-function buildConvList(){
-  const el=document.getElementById('mlistin'); if(!el) return;
-  const myC=CONVS.filter(c=>c.from===CU.id||c.to===CU.id);
-  if(!myC.length){el.innerHTML='<p style="padding:1.5rem;font-size:13px;color:var(--txl);text-align:center">Nenhuma conversa ainda</p>';return}
-  el.innerHTML=myC.map(c=>{
-    const oid=c.from===CU.id?c.to:c.from;
-    const ou=USERS.find(x=>x.id===oid)||{name:'?',id:0};
-    const last=c.msgs[c.msgs.length-1];
-    const w=WISHES.find(x=>x.id===c.wid);
-    const isOn=activeConv&&activeConv.id===c.id;
-    return `<div class="mi${isOn?' on':''}" onclick="openConv(${c.id})">
-      <div class="av" style="background:${COLS[ou.id%COLS.length]};width:36px;height:36px;border-radius:50%;font-size:12.5px;flex-shrink:0">${ou.name[0]}</div>
-      <div style="flex:1;min-width:0">
-        <div class="min">${ou.name}</div>
-        <div class="mip">${last?esc(last.text):''}</div>
-        ${w?`<div class="miwish"><i class="ti ti-tag" style="font-size:10px"></i> ${w.title}</div>`:''}
-      </div>
-      ${c.to===CU.id&&!isOn?'<div class="unrd"></div>':''}
-    </div>`;
-  }).join('');
-}
-function openConv(cid){
-  activeConv=CONVS.find(c=>c.id===cid); buildConvList();
-  const ca=document.getElementById('chatarea'); if(!ca) return;
-  const oid=activeConv.from===CU.id?activeConv.to:activeConv.from;
-  const ou=USERS.find(x=>x.id===oid)||{name:'?',id:0};
-  const w=WISHES.find(x=>x.id===activeConv.wid);
-  ca.innerHTML=`
-    <div class="chh">
-      <div class="av" style="background:${COLS[ou.id%COLS.length]};width:38px;height:38px;border-radius:50%;font-size:14px;flex-shrink:0">${ou.name[0]}</div>
-      <div>
-        <div class="chname">${ou.name}</div>
-        ${w?`<div class="chwish"><i class="ti ti-tag" style="font-size:11px"></i> ${w.title} — até R$ ${fmt(w.price)}</div>`:''}
-      </div>
-    </div>
-    <div class="chscroll" id="chscroll">${activeConv.msgs.map(bubHTML).join('')}</div>
-    <div class="chinput" id="chinput">
-      <div id="imgStrip" class="img-strip" style="display:none"></div>
-      <div id="offerBar" class="offer-bar" style="display:none">
-        <label><i class="ti ti-tag" style="font-size:13px"></i> Sua oferta</label>
-        <div class="opw"><span>R$</span><input type="number" id="offerVal" placeholder="0" min="0"></div>
-        <button class="cls" onclick="toggleOffer()" title="Fechar"><i class="ti ti-x"></i></button>
-      </div>
-      <div class="chinput-toolbar">
-        <button class="icobtn" onclick="document.getElementById('fileInp').click()" title="Enviar foto"><i class="ti ti-photo"></i></button>
-        <button class="icobtn" id="offerToggleBtn" onclick="toggleOffer()" title="Fazer oferta de preço"><i class="ti ti-currency-dollar"></i></button>
-        <input type="file" id="fileInp" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
-        <input class="msgtxt" type="text" id="chin" placeholder="Escreva uma mensagem..." onkeydown="if(event.key==='Enter')sendMsg()">
-        <button class="sbtn" onclick="sendMsg()"><i class="ti ti-send" style="font-size:15px"></i></button>
-      </div>
-    </div>`;
-  scrollChat();
-}
-function bubHTML(m){
-  const me=m.uid===CU.id;
-  if(m.type==='offer'){
-    return `<div class="bubble-offer ${me?'me':'them'}" style="margin-bottom:2px">
-      <div class="boffer-lbl"><i class="ti ti-tag" style="font-size:12px"></i>Oferta de preço</div>
-      <div class="boffer-val">R$ ${fmt(m.price)}</div>
-      ${m.text?`<div style="font-size:13px;color:var(--txm);margin-top:5px">${esc(m.text)}</div>`:''}
-      <div class="btime">${fmtT(m.ts)}</div>
-    </div>`;
-  }
-  if(m.type==='img'){
-    return `<div class="bubble-img ${me?'me':'them'}" style="margin-bottom:2px">
-      <img src="${m.src}" alt="Foto" onclick="openImg('${m.src}')">
-      <div class="btime" style="padding:2px 6px;font-size:10px;color:var(--txl)">${fmtT(m.ts)}</div>
-    </div>`;
-  }
-  return `<div><div class="bubble ${me?'me':'them'}">${esc(m.text)}<div class="btime">${fmtT(m.ts)}</div></div></div>`;
-}
-function ecHTML(){return`<div class="echat"><i class="ti ti-message-2"></i><p style="font-size:14px;font-weight:500">Selecione uma conversa</p><p style="font-size:13px;color:var(--txl);margin-top:4px">ou use "Tenho isso!" em qualquer anúncio</p></div>`}
-let pendingImgs=[];
-let offerOpen=false;
-
-function toggleOffer(){
-  offerOpen=!offerOpen;
-  const bar=document.getElementById('offerBar');
-  const btn=document.getElementById('offerToggleBtn');
-  if(bar){bar.style.display=offerOpen?'flex':'none';}
-  if(btn){btn.classList.toggle('icobtn',true);btn.style.background=offerOpen?'var(--al)':'';}
-  if(offerOpen) setTimeout(()=>{const v=document.getElementById('offerVal');if(v)v.focus();},50);
-}
-
-function handleFiles(files){
-  Array.from(files).forEach(f=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      pendingImgs.push(e.target.result);
-      renderImgStrip();
-    };
-    r.readAsDataURL(f);
-  });
-  document.getElementById('fileInp').value='';
-}
-
-function renderImgStrip(){
-  const strip=document.getElementById('imgStrip');
-  if(!strip) return;
-  if(!pendingImgs.length){strip.style.display='none';strip.innerHTML='';return;}
-  strip.style.display='flex';
-  strip.innerHTML=pendingImgs.map((src,i)=>`
-    <div class="img-thumb">
-      <img src="${src}">
-      <button class="rm" onclick="removeImg(${i})"><i class="ti ti-x" style="font-size:9px"></i></button>
-    </div>`).join('');
-}
-
-function removeImg(i){pendingImgs.splice(i,1);renderImgStrip();}
-
-function openImg(src){
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
-  ov.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.5)">`;
-  ov.onclick=()=>document.body.removeChild(ov);
-  document.body.appendChild(ov);
-}
-
-function sendMsg(){
-  const inp=document.getElementById('chin');
-  const text=inp?inp.value.trim():'';
-  const offerVal=document.getElementById('offerVal');
-  const price=offerVal?parseFloat(offerVal.value):null;
-  const hasOffer=offerOpen&&price&&price>0;
-  const hasImgs=pendingImgs.length>0;
-  if(!text&&!hasOffer&&!hasImgs){return;}
-
-  const sc=document.getElementById('chscroll');
-  function pushAndRender(msg){
-    activeConv.msgs.push(msg);
-    if(sc){sc.innerHTML+=bubHTML(msg);scrollChat();}
-  }
-
-  // send images first
-  pendingImgs.forEach(src=>{
-    pushAndRender({uid:CU.id,type:'img',src,ts:Date.now()});
-  });
-  pendingImgs=[];renderImgStrip();
-
-  // send offer
-  if(hasOffer){
-    pushAndRender({uid:CU.id,type:'offer',price,text,ts:Date.now()});
-    offerVal.value='';
-    offerOpen=false;
-    const bar=document.getElementById('offerBar');if(bar)bar.style.display='none';
-  } else if(text){
-    // plain text
-    pushAndRender({uid:CU.id,text,ts:Date.now()});
-  }
-
-  if(inp) inp.value='';
-  sv(); buildConvList(); refreshNav();
-}
-function scrollChat(){const s=document.getElementById('chscroll');if(s)setTimeout(()=>{s.scrollTop=s.scrollHeight},50)}
-
-/* ── ANALYTICS ── */
-function renderDash(el){
-  const myW=WISHES.filter(w=>w.uid===CU.id);
-  const tv=myW.reduce((a,w)=>a+(w.views||0),0);
-  const to=myW.reduce((a,w)=>a+(w.offers||0),0);
-  const cr=myW.length?Math.round((to/Math.max(tv,1))*100):0;
-  const catC={};
-  WISHES.forEach(w=>{catC[w.cat]=(catC[w.cat]||0)+1});
-  const topC=Object.entries(catC).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const maxC=Math.max(...topC.map(x=>x[1]),1);
-  const pr=[{l:'<500',n:0},{l:'500-1k',n:0},{l:'1k-3k',n:0},{l:'3k-6k',n:0},{l:'>6k',n:0}];
-  WISHES.forEach(w=>{
-    if(w.price<500)pr[0].n++;
-    else if(w.price<1000)pr[1].n++;
-    else if(w.price<3000)pr[2].n++;
-    else if(w.price<6000)pr[3].n++;
-    else pr[4].n++;
-  });
-  const maxP=Math.max(...pr.map(x=>x.n),1);
-
-  el.innerHTML=`
-  <div class="ftitle fi" style="margin-bottom:1.1rem">Analytics da plataforma</div>
-  <div class="dash-grid fi">
-    <div class="dcard"><div class="dlbl">Total de desejos</div><div class="dnum">${WISHES.length}</div><div class="dtag up">↑ ativos</div></div>
-    <div class="dcard"><div class="dlbl">Vistas nos seus anúncios</div><div class="dnum">${tv}</div><div class="dtag up">${myW.length} anúncios</div></div>
-    <div class="dcard"><div class="dlbl">Ofertas recebidas</div><div class="dnum">${to}</div><div class="dtag ${to>0?'up':'dn'}">${to>0?to+' ativas':'nenhuma'}</div></div>
-    <div class="dcard"><div class="dlbl">Taxa de contato</div><div class="dnum">${cr}%</div><div class="dtag ${cr>5?'up':'dn'}">vista → oferta</div></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
-    <div class="chart-card fi">
-      <div class="chart-title">Desejos por categoria</div>
-      <div class="bar-chart">
-        ${topC.map(([cat,n])=>`<div class="bar-col">
-          <div class="bar-val">${n}</div>
-          <div class="bar" style="height:${Math.round((n/maxC)*95)}px;background:var(--g)"></div>
-          <div class="bar-lbl">${cat.substring(0,6)}</div>
-        </div>`).join('')}
-      </div>
-    </div>
-    <div class="chart-card fi">
-      <div class="chart-title">Distribuição de orçamentos</div>
-      <div class="bar-chart">
-        ${pr.map(r=>`<div class="bar-col">
-          <div class="bar-val">${r.n}</div>
-          <div class="bar" style="height:${Math.round((r.n/maxP)*95)}px;background:var(--b)"></div>
-          <div class="bar-lbl">${r.l}</div>
-        </div>`).join('')}
-      </div>
-    </div>
-  </div>
-  <div class="ai-insights fi" id="aiIns">
-    <div class="ai-ins-hd" id="insHd"><i class="ti ti-sparkles"></i>Insights da IA <i class="ti ti-loader spin" style="font-size:13px;margin-left:auto;color:var(--g)"></i></div>
-    <div id="insItems"><p style="font-size:13px;color:var(--txm)">Analisando dados da plataforma...</p></div>
-  </div>`;
-  fetchInsights(topC,tv,to,cr);
-}
-async function fetchInsights(topC,tv,to,cr){
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:800,
-        system:`Analista de marketplace brasileiro. Gere 3 insights de negócio práticos e específicos com base nos dados. Retorne APENAS JSON sem markdown: {"insights":[{"icon":"ti-trending-up","text":"insight aqui"}]}. Use ícones Tabler: ti-trending-up, ti-bulb, ti-target, ti-alert-triangle, ti-star, ti-users.`,
-        messages:[{role:'user',content:`Marketplace querocomprar: ${WISHES.length} desejos, categorias: ${topC.map(([c,n])=>c+':'+n).join(', ')}, ${tv} visualizações nos meus anúncios, ${to} ofertas recebidas, taxa de contato ${cr}%. Gere 3 insights estratégicos.`}]
-      })
-    });
-    const data=await resp.json();
-    let txt=(data.content&&data.content[0]&&data.content[0].text)||'';
-    txt=txt.replace(/```json|```/g,'').trim();
-    const {insights}=JSON.parse(txt);
-    document.getElementById('insHd').innerHTML='<i class="ti ti-sparkles"></i>Insights da IA';
-    document.getElementById('insItems').innerHTML=insights.map(ins=>`
-      <div class="insight-item">
-        <i class="ti ${ins.icon}" style="color:var(--g);flex-shrink:0;margin-top:2px"></i>
-        <span>${ins.text}</span>
-      </div>`).join('');
-  }catch(e){
-    document.getElementById('insHd').innerHTML='<i class="ti ti-sparkles"></i>Insights';
-    document.getElementById('insItems').innerHTML=`
-      <div class="insight-item"><i class="ti ti-trending-up" style="color:var(--g);flex-shrink:0;margin-top:2px"></i><span>Eletrônicos lidera com mais desejos e maiores orçamentos na plataforma — alta oportunidade para vendedores do segmento.</span></div>
-      <div class="insight-item"><i class="ti ti-target" style="color:var(--b);flex-shrink:0;margin-top:2px"></i><span>Anúncios com descrições detalhadas recebem em média 3x mais contatos. Incentive compradores a detalhar o que buscam.</span></div>
-      <div class="insight-item"><i class="ti ti-bulb" style="color:var(--a);flex-shrink:0;margin-top:2px"></i><span>A faixa de R$ 1k–3k concentra a maior parte dos orçamentos — ideal para seminovos e produtos recondicionados.</span></div>`;
-  }
-}
-
-/* ── PROFILE ── */
-function renderProf(el){
-  const myW=WISHES.filter(w=>w.uid===CU.id).length;
-  const recvd=CONVS.filter(c=>c.to===CU.id).length;
-  const active=CONVS.filter(c=>c.from===CU.id||c.to===CU.id).length;
-  const roleLabel={buyer:'Comprador',seller:'Vendedor',both:'Comprador & Vendedor'};
-  el.innerHTML=`
-  <div class="phero fi">
-    <div class="pbav" style="background:${COLS[CU.id%COLS.length]}">${CU.name[0]}</div>
-    <div>
-      <div class="pname">${CU.name}</div>
-      <div class="pemail">${CU.email}</div>
-      <div class="prole">${roleLabel[CU.role]||'Usuário'}</div>
-    </div>
-  </div>
-  <div class="stats fi">
-    <div class="stat"><div class="snum">${myW}</div><div class="slbl">Desejos publicados</div></div>
-    <div class="stat"><div class="snum">${recvd}</div><div class="slbl">Ofertas recebidas</div></div>
-    <div class="stat"><div class="snum">${active}</div><div class="slbl">Conversas ativas</div></div>
-  </div>
-  <div class="fcard fi" style="max-width:510px">
-    <div class="fctitle">Editar perfil</div>
-    <div class="fld"><label>Nome</label><input type="text" id="en" value="${CU.name}"></div>
-    <div class="fld2">
-      <div><label>Telefone</label><input type="text" id="ep" value="${CU.phone||''}" placeholder="(11) 99999-9999"></div>
-      <div><label>Cidade</label><input type="text" id="ec" value="${CU.city||''}" placeholder="São Paulo - SP"></div>
-    </div>
-    <div class="fld"><label>Papel na plataforma</label>
-      <select id="erole">
-        <option value="buyer" ${CU.role==='buyer'?'selected':''}>Comprador — Publico desejos de compra</option>
-        <option value="seller" ${CU.role==='seller'?'selected':''}>Vendedor — Ofereço produtos</option>
-        <option value="both" ${CU.role==='both'?'selected':''}>Ambos — Compro e vendo</option>
-      </select>
-    </div>
-    <button class="btn g" onclick="saveProf()"><i class="ti ti-check"></i>Salvar alterações</button>
-  </div>`;
-}
-function saveProf(){
-  const n=val('en'), p=val('ep'), c=val('ec'), r=document.getElementById('erole').value;
-  if(n) CU.name=n; CU.phone=p; CU.city=c; CU.role=r;
-  const u=USERS.find(x=>x.id===CU.id); if(u) Object.assign(u,{name:n,phone:p,city:c,role:r});
-  sv(); toast('Perfil atualizado!'); renderProf(document.getElementById('cnt'));
-}
-
-/* ── DETAIL MODAL ── */
-function showDetail(wid){
-  const w=WISHES.find(x=>x.id===wid); if(!w) return;
-  if(w.views!=null) w.views++; sv();
-  const u=USERS.find(x=>x.id===w.uid)||{name:'?'};
-  const mine=CU&&w.uid===CU.id;
-  document.getElementById('detContent').innerHTML=`
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
-      <div class="av" style="background:${COLS[u.id%COLS.length]};width:40px;height:40px;border-radius:50%;font-size:15px;flex-shrink:0">${u.name[0]}</div>
-      <div>
-        <div style="font-weight:600;font-size:15px">${u.name}</div>
-        <div style="font-size:12px;color:var(--txl)">${u.city||'Localização não informada'} · ${relTime(w.ts)}</div>
-      </div>
-    </div>
-    <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem">${w.title}</h2>
-    <div style="display:flex;gap:7px;margin-bottom:.9rem">
-      <span class="cat">${w.cat}</span>
-      <span style="font-size:11px;background:var(--bg);color:var(--txm);padding:3px 9px;border-radius:8px">${w.cond}</span>
-    </div>
-    <p style="font-size:14px;color:var(--txm);line-height:1.65;margin-bottom:1rem">${w.desc}</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.1rem">
-      <div style="background:var(--gl);border-radius:9px;padding:.9rem;text-align:center">
-        <div style="font-size:11px;color:var(--gd);margin-bottom:3px">Valor máximo</div>
-        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--gd)">R$ ${fmt(w.price)}</div>
-      </div>
-      <div style="background:var(--bg);border-radius:9px;padding:.9rem;text-align:center">
-        <div style="font-size:11px;color:var(--txm);margin-bottom:3px">Visualizações</div>
-        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem">${w.views||0}</div>
-      </div>
-    </div>
-    ${!mine
-      ?`<button class="btn g full" onclick="document.getElementById('detMod').classList.remove('on');openMsgMod(${w.id})">
-          <i class="ti ti-send"></i>Tenho isso! Contatar comprador
-        </button>`
-      :'<div style="text-align:center;font-size:13px;color:var(--txl);padding:.6rem;background:var(--bg);border-radius:8px">Este é o seu anúncio</div>'}`;
-  document.getElementById('detMod').classList.add('on');
-}
-
-/* ── MSG MODAL + AI ── */
-async function openMsgMod(wid){
-  modWishId=wid;
-  const w=WISHES.find(x=>x.id===wid); if(!w) return;
-  document.getElementById('modTitle').textContent=w.title.length>40?w.title.substring(0,40)+'...':w.title;
-  document.getElementById('modMsg').value='';
-  document.getElementById('aiTxt').innerHTML='<i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando sugestão personalizada...';
-  document.getElementById('msgMod').classList.add('on');
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:800,
-        system:`Gere uma mensagem inicial curta (2-3 frases) e persuasiva que um vendedor usaria para contatar um comprador. Escreva em português brasileiro informal e direto. Retorne APENAS a mensagem, sem aspas nem explicações.`,
-        messages:[{role:'user',content:`O comprador procura: "${w.title}". Categoria: ${w.cat}. Orçamento: até R$ ${fmt(w.price)}. Condição: ${w.cond}. Descrição: ${w.desc}`}]
-      })
-    });
-    const data=await resp.json();
-    const txt=data.content&&data.content[0]&&data.content[0].text;
-    if(txt){
-      const safe=esc(txt);
-      document.getElementById('aiTxt').innerHTML=`${safe}<br>
-        <button class="aiuse" onclick="document.getElementById('modMsg').value=${JSON.stringify(txt)}">
-          <i class="ti ti-check" style="font-size:12px"></i>Usar esta mensagem
-        </button>`;
-    }
-  }catch(e){
-    document.getElementById('aiTxt').innerHTML='Apresente-se e descreva o produto que você tem a oferecer. Seja direto e mencione o preço.';
-  }
-}
-function closeMod(){document.getElementById('msgMod').classList.remove('on');modWishId=null}
-function sendModMsg(){
-  const text=document.getElementById('modMsg').value.trim();
-  if(!text){toast('Digite uma mensagem antes de enviar','er');return}
-  const w=WISHES.find(x=>x.id===modWishId);
-  if(w.uid===CU.id){toast('Você não pode contatar a si mesmo','er');return}
-  let conv=CONVS.find(c=>c.from===CU.id&&c.wid===modWishId);
-  if(!conv){conv={id:ncid++,from:CU.id,to:w.uid,wid:modWishId,msgs:[]};CONVS.push(conv)}
-  conv.msgs.push({uid:CU.id,text,ts:Date.now()});
-  if(w.offers!=null) w.offers++;
-  NOTIFS.push({id:nnid++,uid:w.uid,type:'msg',
-    text:`${CU.name} enviou uma mensagem sobre "${w.title.substring(0,30)}".`,
-    ts:Date.now(),read:false,wid:w.id});
-  sv(); closeMod(); toast('Mensagem enviada com sucesso!');
-  activeConv=conv; view('msgs'); refreshNav();
-}
-
-/* ── UTILS ── */
-function val(id){const e=document.getElementById(id);return e?e.value.trim():''}
-function fmt(n){return Number(n).toLocaleString('pt-BR')}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function fmtT(ts){const d=new Date(ts);return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
-function relTime(ts){
-  const d=Date.now()-ts;
-  if(d<60000) return 'agora';
-  if(d<3600000) return Math.floor(d/60000)+'min atrás';
-  if(d<86400000) return Math.floor(d/3600000)+'h atrás';
-  return Math.floor(d/86400000)+'d atrás';
-}
-function toast(msg,type='ok'){
-  const t=document.getElementById('toast');
-  document.getElementById('tmsg').textContent=msg;
-  document.getElementById('ticon').className='ti '+(type==='ok'?'ti-check':'ti-alert-circle');
-  t.className='toast on '+type;
-  setTimeout(()=>t.classList.remove('on'),3000);
-}
-
-/* ── GLOBAL CLICK ── */
-document.addEventListener('click',e=>{
-  if(notifOpen&&!e.target.closest('#notifPanel')&&!e.target.closest('#notifBtn')){
-    notifOpen=false;
-    document.getElementById('notifPanel').classList.remove('on');
-  }
+  view('feed');
+  setupRealtimeListener();
 });
+
+// Busca os metadados do usuário na tabela de perfis
+async function fetchUserProfile(uid) {
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', uid).single();
+  if (!error && data) {
+    CU = data;
+  } else {
+    CU = null;
+    await supabase.auth.signOut();
+  }
+}
+
+/* ── GERENCIAMENTO DE TELAS (VIEWS) ── */
+function view(v) {
+  currentView = v;
+  document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
+  const el = document.getElementById('v-' + v);
+  if(el) el.classList.add('active');
+  
+  document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('act'));
+  const btn = document.getElementById('nv-' + v);
+  if(btn) btn.classList.add('act');
+  
+  if(v === 'feed') loadFeed();
+  if(v === 'mywishes') loadMyWishes();
+  if(v === 'msgs') loadConversations();
+}
+
+function refreshNav() {
+  const box = document.getElementById('nav-links');
+  if(!box) return;
+  if(!CU) {
+    box.innerHTML = `<button class="btn btn-sec" style="color:#fff;border-color:rgba(255,255,255,0.3)" onclick="openMod('auth')"><i class="ti ti-user"></i> Entrar / Cadastrar</button>`;
+  } else {
+    let html = `
+      <button class="nav-btn" id="nv-feed" onclick="view('feed')"><i class="ti ti-layout-dashboard"></i> <span>Feed</span></button>
+      <button class="nav-btn" id="nv-msgs" onclick="view('msgs')"><i class="ti ti-message-circle"></i> <span>Mensagens</span></button>
+    `;
+    if(CU.role === 'buyer') {
+      html += `<button class="nav-btn" id="nv-mywishes" onclick="view('mywishes')"><i class="ti ti-clipboard-list"></i> <span>Meus Pedidos</span></button>`;
+    }
+    html += `
+      <span style="font-size:14px;color:var(--gm);font-weight:600;margin-left:10px;display:inline-flex;align-items:center;gap:4px">
+        <i class="ti ti-user-circle"></i> ${esc(CU.name)} (${CU.role === 'buyer' ? 'Comprador' : 'Vendedor'})
+      </span>
+      <button class="nav-btn" onclick="logout()" style="color:#ff7675"><i class="ti ti-logout"></i></button>
+    `;
+    box.innerHTML = html;
+  }
+  
+  // Atualiza também os botões de ação do Hero baseados no perfil
+  const actionBox = document.getElementById('feed-action');
+  if(actionBox) {
+    if(!CU) {
+      actionBox.innerHTML = `<button class="btn" onclick="openMod('auth')">Quero Cadastrar Meu Pedido</button>`;
+    } else if(CU.role === 'buyer') {
+      actionBox.innerHTML = `<button class="btn" onclick="view('mywishes')"><i class="ti ti-plus"></i> Gerenciar Meus Pedidos</button>`;
+    } else {
+      actionBox.innerHTML = `<p style="color:var(--txm);font-weight:500"><i class="ti ti-info-circle"></i> Abaixo estão as demandas de compradores reais. Faça sua oferta entrando em contato!</p>`;
+    }
+  }
+}
+
+/* ── AUTENTICAÇÃO (SUPABASE AUTH + PROFILES) ── */
+async function register() {
+  const name = val('rg-name'), email = val('rg-email'), pass = val('rg-pass'), phone = val('rg-phone'), city = val('rg-city'), role = val('rg-role');
+  if(!name || !email || !pass || !phone || !city) return toast('Preencha todos os campos do cadastro!','er');
+  if(pass.length < 6) return toast('A senha precisa ter no mínimo 6 dígitos.','er');
+  
+  toast('Criando conta, por favor aguarde...');
+  const { data: authData, error: authError } = await supabase.auth.signUp({ email, password: pass });
+  
+  if(authError) return toast(authError.message, 'er');
+  
+  if(authData && authData.user) {
+    // Insere dados extras estruturados na nossa tabela pública 'profiles'
+    const { error: profError } = await supabase.from('profiles').insert([{
+      id: authData.user.id, name, role, phone, city
+    }]);
+    
+    if(profError) return toast(profError.message, 'er');
+    
+    toast('Cadastro realizado! Faça login com suas credenciais.');
+    toggleAuthForm(true);
+  }
+}
+
+async function login() {
+  const email = val('li-email'), pass = val('li-pass');
+  if(!email || !pass) return toast('Preencha o e-mail e a senha!','er');
+  
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  if(error) return toast(error.message, 'er');
+  
+  if(data && data.user) {
+    await fetchUserProfile(data.user.id);
+    toast('Autenticado com sucesso!');
+    closeMod();
+    refreshNav();
+    view('feed');
+  }
+}
+
+async function logout() {
+  await supabase.auth.signOut();
+  CU = null;
+  activeConv = null;
+  toast('Sessão encerrada.');
+  refreshNav();
+  view('feed');
+}
+
+function toggleAuthForm(showLogin) {
+  document.getElementById('auth-login-form').style.display = showLogin ? 'block' : 'none';
+  document.getElementById('auth-reg-form').style.display = showLogin ? 'none' : 'block';
+}
+
+/* ── OPERAÇÕES COM WISHES (PEDIDOS DE COMPRA) ── */
+async function addWish() {
+  if(!CU) return openMod('auth');
+  const title = val('w-title'), category = val('w-cat'), condition = val('w-cond'), price = val('w-price'), description = val('w-desc');
+  if(!title || !price) return toast('Título e Preço Máximo são obrigatórios!','er');
+  
+  const { error } = await supabase.from('wishes').insert([{
+    user_id: CU.id, title, category, condition, price: parseFloat(price), description
+  }]);
+  
+  if(error) return toast(error.error, 'er');
+  
+  toast('Pedido de compra publicado no feed!');
+  closeMod();
+  
+  // Limpa formulário
+  document.getElementById('w-title').value = '';
+  document.getElementById('w-price').value = '';
+  document.getElementById('w-desc').value = '';
+  
+  currentView === 'mywishes' ? loadMyWishes() : loadFeed();
+}
+
+async function loadFeed() {
+  const catFilter = val('f-cat');
+  const box = document.getElementById('feed-list');
+  if(!box) return;
+  box.innerHTML = '<div class="empty-state">Buscando oportunidades do banco de dados...</div>';
+  
+  let query = supabase.from('wishes').select('*, profiles(name, city)').order('created_at', { ascending: false });
+  if(catFilter) query = query.eq('category', catFilter);
+  
+  const { data, error } = await query;
+  if(error) return box.innerHTML = `<div class="empty-state">Erro ao buscar feed: ${error.message}</div>`;
+  if(!data || data.length === 0) {
+    box.innerHTML = `<div class="empty-state"><i class="ti ti-mood-empty"></i><p>Nenhum pedido ativo encontrado nesta categoria.</p></div>`;
+    return;
+  }
+  
+  let html = '';
+  data.forEach(w => {
+    // Esconde os desejos criados pelo próprio usuário logado para ele não se autocontatar
+    if(CU && w.user_id === CU.id) return;
+    
+    html += `
+      <div class="card wish-item">
+        <div class="wish-header">
+          <div>
+            <span class="badge b-buyer" style="margin-bottom:6px">${esc(w.category)}</span>
+            <span class="badge ${w.condition==='Novo'?'b-new':'b-used'}" style="margin-bottom:6px">${esc(w.condition)}</span>
+            <h3 class="wish-title">${esc(w.title)}</h3>
+          </div>
+          <div class="wish-price">R$ ${fmt(w.price)}</div>
+        </div>
+        ${w.description ? `<p class="wish-desc">${esc(w.description)}</p>` : ''}
+        <div class="wish-footer">
+          <div class="wish-user"><i class="ti ti-map-pin"></i> Solicitado por ${esc(w.profiles?.name || 'Comprador')} — ${esc(w.profiles?.city || 'Brasil')}</div>
+          ${CU && CU.role === 'seller' ? `<button class="btn btn-a" onclick="initiateContact(${w.id}, '${w.user_id}')"><i class="ti ti-message-plus"></i> Fazer Proposta</button>` : (!CU ? `<button class="btn btn-sec" onclick="openMod('auth')">Entre para Propor</button>` : '')}
+        </div>
+      </div>
+    `;
+  });
+  box.innerHTML = html || `<div class="empty-state"><i class="ti ti-mood-empty"></i><p>Nenhum pedido ativo de terceiros disponível.</p></div>`;
+}
+
+async function loadMyWishes() {
+  const box = document.getElementById('mywishes-list');
+  if(!box || !CU) return;
+  box.innerHTML = '<div class="empty-state">Buscando seus dados...</div>';
+  
+  const { data, error } = await supabase.from('wishes').select('*').eq('user_id', CU.id).order('created_at', { ascending: false });
+  if(error) return box.innerHTML = `Erro: ${error.message}`;
+  if(!data || data.length === 0) {
+    box.innerHTML = `<div class="card empty-state"><i class="ti ti-edit"></i><p>Você ainda não publicou nenhuma intenção de compra. Clique em "Novo Pedido" acima!</p></div>`;
+    return;
+  }
+  
+  let html = '';
+  data.forEach(w => {
+    html += `
+      <div class="card wish-item">
+        <div class="wish-header">
+          <div>
+            <span class="badge b-buyer" style="margin-bottom:6px">${esc(w.category)}</span>
+            <h3 class="wish-title">${esc(w.title)}</h3>
+          </div>
+          <div class="wish-price" style="color:var(--tx)">Preço Máx: R$ ${fmt(w.price)}</div>
+        </div>
+        <div class="wish-footer" style="margin-top:4px;padding-top:12px">
+          <div style="font-size:13px;color:var(--txl)">Postado em: ${new Date(w.created_at).toLocaleDateString('pt-BR')}</div>
+          <button class="btn btn-sec btn-c" style="color:#fff;padding:6px 12px;font-size:13px" onclick="deleteWish(${w.id})"><i class="ti ti-trash"></i> Excluir</button>
+        </div>
+      </div>
+    `;
+  });
+  box.innerHTML = html;
+}
+
+async function deleteWish(wid) {
+  if(!confirm('Deseja mesmo remover esta intenção de compra?')) return;
+  const { error } = await supabase.from('wishes').delete().eq('id', wid);
+  if(error) return toast(error.message, 'er');
+  toast('Pedido removido com sucesso.');
+  loadMyWishes();
+}
+
+/* ── GERENCIAMENTO DA COMUNICAÇÃO (CONVERSAS E MENSAGENS) ── */
+async function initiateContact(wishId, buyerId) {
+  if(!CU || CU.role !== 'seller') return;
+  
+  // Verifica se o vendedor já abriu um chat prévio para este exato desejo
+  const { data: existing, error } = await supabase.from('conversations')
+    .select('*')
+    .eq('wish_id', wishId)
+    .eq('seller_id', CU.id)
+    .maybeSingle();
+    
+  if(error) return toast(error.message, 'er');
+  
+  if(existing) {
+    activeConv = existing;
+    view('msgs');
+  } else {
+    // Cria um registro permanente de conversa cruzando o desejo, comprador e o vendedor
+    const { data: newConv, error: createError } = await supabase.from('conversations').insert([{
+      wish_id: wishId,
+      buyer_id: buyerId,
+      seller_id: CU.id
+    }]).select().single();
+    
+    if(createError) return toast(createError.message, 'er');
+    
+    // Insere a primeira mensagem padrão de abordagem do vendedor
+    await supabase.from('messages').insert([{
+      conversation_id: newConv.id,
+      sender_id: CU.id,
+      text: 'Olá! Sou vendedor e vi o seu pedido. Tenho uma proposta que pode te interessar!'
+    }]);
+    
+    activeConv = newConv;
+    toast('Chat iniciado com sucesso!');
+    view('msgs');
+  }
+}
+
+async function loadConversations() {
+  const sidebar = document.getElementById('chat-list-container');
+  if(!sidebar || !CU) return;
+  sidebar.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txl)">Carregando...</div>';
+  
+  // Puxa as conversas onde o usuário ativo participa, trazendo o join do desejo e dos perfis
+  let query = supabase.from('conversations').select('*, wishes(title), buyer:profiles!conversations_buyer_id_fkey(name), seller:profiles!conversations_seller_id_fkey(name)');
+  if(CU.role === 'buyer') query = query.eq('buyer_id', CU.id);
+  else query = query.eq('seller_id', CU.id);
+  
+  const { data, error } = await query;
+  if(error) return sidebar.innerHTML = 'Erro ao carregar chats.';
+  if(!data || data.length === 0) {
+    sidebar.innerHTML = `<div style="padding:30px 10px;text-align:center;color:var(--txl);font-size:14px"><i class="ti ti-messages" style="font-size:32px;display:block;margin-bottom:8px"></i>Sem conversas ativas.</div>`;
+    document.getElementById('chat-main-container').innerHTML = `<div class="empty-state" style="margin:auto"><i class="ti ti-message"></i><p>Selecione um chat na barra lateral para negociar.</p></div>`;
+    return;
+  }
+  
+  let html = '';
+  data.forEach(c => {
+    const activeClass = (activeConv && activeConv.id === c.id) ? 'act' : '';
+    const correspondente = CU.role === 'buyer' ? c.seller?.name : c.buyer?.name;
+    
+    html += `
+      <div class="chat-item ${activeClass}" onclick="openChat(${JSON.stringify(c).replace(/"/g, '&quot;')})">
+        <div class="chat-item-title">${esc(correspondente || 'Usuário')}</div>
+        <div class="chat-item-sub">Ref: ${esc(c.wishes?.title || 'Produto')}</div>
+      </div>
+    `;
+  });
+  sidebar.innerHTML = html;
+  
+  if(activeConv) {
+    // Atualiza a referência de dados expandida da conversa ativa
+    const currentActive = data.find(c => c.id === activeConv.id);
+    if(currentActive) renderChatMain(currentActive);
+  } else {
+    document.getElementById('chat-main-container').innerHTML = `<div class="empty-state" style="margin:auto"><i class="ti ti-message"></i><p>Selecione um chat na barra lateral para iniciar.</p></div>`;
+  }
+}
+
+function openChat(convObj) {
+  activeConv = convObj;
+  // Recarrega a lista para aplicar a classe css '.act' no selecionado
+  loadConversations();
+}
+
+async function renderChatMain(c) {
+  const mainBox = document.getElementById('chat-main-container');
+  if(!mainBox) return;
+  
+  const correspondente = CU.role === 'buyer' ? c.seller?.name : c.buyer?.name;
+  
+  mainBox.innerHTML = `
+    <div class="chat-main-h">
+      <div>
+        <strong style="display:block;font-size:16px">${esc(correspondente)}</strong>
+        <span style="font-size:13px;color:var(--g)">Produto: ${esc(c.wishes?.title)}</span>
+      </div>
+    </div>
+    <div class="chat-messages" id="chat-messages-box">Carregando histórico de mensagens...</div>
+    <div class="chat-input-area">
+      <input type="text" id="chat-typed-msg" placeholder="Digite sua proposta ou mensagem..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+      <button class="btn" onclick="sendChatMessage()"><i class="ti ti-send"></i></button>
+    </div>
+  `;
+  
+  // Carrega as mensagens existentes vinculadas a esta ID de conversa
+  const { data: msgs, error } = await supabase.from('messages').select('*').eq('conversation_id', c.id).order('created_at', { ascending: true });
+  const msgBox = document.getElementById('chat-messages-box');
+  
+  if(error || !msgs) {
+    msgBox.innerHTML = 'Falha ao recuperar o histórico.';
+    return;
+  }
+  
+  if(msgs.length === 0) {
+    msgBox.innerHTML = '<div class="empty-state">Inicie o diálogo enviando uma mensagem.</div>';
+    return;
+  }
+  
+  let mHtml = '';
+  msgs.forEach(m => {
+    const isMe = m.sender_id === CU.id ? 'me' : 'them';
+    const timeStr = new Date(m.created_at).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+    mHtml += `
+      <div class="msg-row ${isMe}">
+        <div class="msg-bubble">
+          <div>${esc(m.text)}</div>
+          <div class="msg-ts">${timeStr}</div>
+        </div>
+      </div>
+    `;
+  });
+  msgBox.innerHTML = mHtml;
+  msgBox.scrollTop = msgBox.scrollHeight;
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chat-typed-msg');
+  if(!input || !activeConv || !CU) return;
+  const text = input.value.trim();
+  if(!text) return;
+  
+  input.value = ''; // Limpa o campo imediatamente para dar fluidez visual
+  
+  const { error } = await supabase.from('messages').insert([{
+    conversation_id: activeConv.id,
+    sender_id: CU.id,
+    text: text
+  }]);
+  
+  if(error) toast('Erro ao enviar mensagem: ' + error.message, 'er');
+  // Observação: Não precisamos chamar o renderizador manualmente aqui, pois o setupRealtimeListener() tratará a inserção!
+}
+
+/* ── SUCURSAL REALTIME (WEBSOCKETS OUVINTES) ── */
+function setupRealtimeListener() {
+  supabase
+    .channel('public-messages-channel')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+      const novaMsg = payload.new;
+      // Se o usuário está na aba de mensagens e a nova linha pertence à conversa selecionada na tela
+      if (currentView === 'msgs' && activeConv && novaMsg.conversation_id === activeConv.id) {
+        const msgBox = document.getElementById('chat-messages-box');
+        if (msgBox) {
+          // Remove o empty state se ele existir
+          if(msgBox.querySelector('.empty-state')) msgBox.innerHTML = '';
+          
+          const isMe = novaMsg.sender_id === CU.id ? 'me' : 'them';
+          const timeStr = new Date(novaMsg.created_at).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+          
+          const row = document.createElement('div');
+          row.className = `msg-row ${isMe}`;
+          row.innerHTML = `
+            <div class="msg-bubble">
+              <div>${esc(novaMsg.text)}</div>
+              <div class="msg-ts">${timeStr}</div>
+            </div>
+          `;
+          msgBox.appendChild(row);
+          msgBox.scrollTop = msgBox.scrollHeight;
+        }
+      } else if (CU && (novaMsg.sender_id !== CU.id)) {
+        // Alerta sonoro ou toast caso o usuário receba uma mensagem fora do chat aberto
+        toast('Você recebeu uma nova resposta sobre uma negociação!');
+      }
+    })
+    .subscribe();
+}
+
+/* ── COMPONENTES UTILS (MODAL / TOAST / FORMATS) ── */
+function openMod(type) {
+  if(type === 'auth') toggleAuthForm(true);
+  const el = document.getElementById('m-' + type);
+  if(el) el.classList.add('active');
+}
+
+function closeMod() {
+  document.querySelectorAll('.modal').forEach(e => e.classList.remove('active'));
+}
+
+function val(id){ const e = document.getElementById(id); return e ? e.value.trim() : ''; }
+function fmt(n){ return Number(n).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function toast(msg, type = 'ok') {
+  const t = document.getElementById('toast');
+  const txt = document.getElementById('toast-txt');
+  if(!t || !txt) return;
+  txt.innerText = msg;
+  t.className = 'toast' + (type === 'er' ? ' er' : '') + ' active';
+  setTimeout(() => { t.classList.remove('active'); }, 4000);
+}
 </script>
 </body>
 </html>
