@@ -220,7 +220,7 @@ const SUPABASE_URL = 'https://ylkhhylumtewwxivebez.supabase.co';
 // Cole aqui a sua Anon Key copiada do painel "Project Settings > API" do Supabase
 const SUPABASE_ANON_KEY = 'sb_publishable_wtmqB-s1-wtOaX7VVqUhpQ_hDJS-BrN'; 
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ── ESTADO DA APLICAÇÃO ── */
 let CU = null; // Current User (Perfil completo do usuário logado)
