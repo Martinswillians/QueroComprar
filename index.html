@@ -214,13 +214,14 @@ h1,h2,h3,.syne{font-family:'Syne',sans-serif;font-weight:700}
 
 <div class="toast" id="toast"><i class="ti ti-info-circle"></i> <span id="toast-txt"></span></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 /* ── CONFIGURAÇÃO SUPABASE ── */
 const SUPABASE_URL = 'https://ylkhhylumtewwxivebez.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_wtmqB-s1-wtOaX7VVqUhpQ_hDJS-BrN'; 
 
-// Mude o nome da variável aqui de 'supabase' para 'supabaseClient'
-const supabaseClient = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ── ESTADO DA APLICAÇÃO ── */
 let CU = null; // Current User (Perfil completo do usuário logado)
