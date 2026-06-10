@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>querocomprar — v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --g:#1D9E75;--gl:#E1F5EE;--gd:#085041;--gm:#5DCAA5;
+  --a:#BA7517;--al:#FAEEDA;
+  --c:#D85A30;--cl:#FAECE7;
+  --b:#378ADD;--bl:#E8F2FC;
+  --bg:#F0EEE7;--bd:#D3D1C7;
+  --tx:#2C2C2A;--txm:#5F5E5A;--txl:#888780;
+  --dk:#1C1C1A;
+  --r:10px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:15px}
+button,input,select,textarea{font-family:inherit}
+*{scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
+
+/* ── NAV ── */
+nav{background:var(--dk);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:12px;position:sticky;top:0;z-index:300}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;letter-spacing:-.5px;cursor:pointer;text-decoration:none}
+.logo em{color:var(--g);font-style:normal}
+.nsearch{flex:1;max-width:320px;position:relative;margin-left:auto}
+.nsearch input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:20px;padding:7px 14px 7px 34px;font-size:13px;outline:none;transition:.2s}
+.nsearch input::placeholder{color:rgba(255,255,255,.35)}
+.nsearch input:focus{background:rgba(255,255,255,.13);border-color:var(--gm)}
+.nsearch .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);font-size:15px;pointer-events:none}
+.sdrop{display:none;position:absolute;top:40px;left:0;right:0;background:#fff;border:.5px solid var(--bd);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:400;max-height:280px;overflow-y:auto}
+.sdrop.on{display:block}
+.sitem{display:flex;align-items:center;gap:9px;padding:.65rem .9rem;cursor:pointer;border-bottom:.5px solid var(--bd);transition:.15s}
+.sitem:hover{background:var(--bg)}
+.sitem:last-child{border-bottom:none}
+.nbtn{background:transparent;border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:.2s}
+.nbtn:hover{background:rgba(255,255,255,.1)}
+.nbtn.p{background:var(--g);border-color:var(--g)}
+.nbtn.p:hover{background:var(--gd)}
+.upill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:20px;padding:4px 12px 4px 4px;cursor:pointer;border:1px solid rgba(255,255,255,.1);transition:.2s}
+.upill:hover{background:rgba(255,255,255,.15)}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
+.uname{font-size:13px;color:#fff}
+.nbadge{background:var(--c);color:#fff;font-size:10px;font-weight:700;border-radius:8px;padding:1px 7px;margin-left:3px}
+.navico{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.6);font-size:20px;padding:4px;position:relative;display:flex;align-items:center;transition:.2s}
+.navico:hover{color:#fff}
+.navico .ndot{position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--c);border:1.5px solid var(--dk)}
+
+/* ── NOTIF PANEL ── */
+.notif-panel{position:fixed;top:56px;right:12px;width:320px;background:#fff;border:.5px solid var(--bd);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.15);z-index:500;display:none;max-height:440px;overflow-y:auto}
+.notif-panel.on{display:block}
+.np-hd{padding:.9rem 1rem;border-bottom:.5px solid var(--bd);display:flex;align-items:center;justify-content:space-between;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;position:sticky;top:0;background:#fff}
+.np-all{font-size:12px;color:var(--g);cursor:pointer;font-weight:400}
+.ni{display:flex;gap:.8rem;padding:.85rem 1rem;border-bottom:.5px solid var(--bd);cursor:pointer;transition:.15s}
+.ni:hover{background:var(--bg)}
+.ni.unread{background:#f4fff9}
+.niico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.nitxt{font-size:13px;line-height:1.4}
+.nitime{font-size:11px;color:var(--txl);margin-top:2px}
+
+/* ── SCREENS ── */
+.scr{display:none;min-height:calc(100vh - 56px)}
+.scr.on{display:block}
+
+/* ── AUTH ── */
+.auth-bg{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 65% 35%,#d3f5e8,var(--bg) 58%)}
+.acard{background:#fff;border-radius:14px;padding:2.3rem;width:100%;max-width:390px;border:.5px solid var(--bd);box-shadow:0 8px 32px rgba(0,0,0,.07)}
+.atitle{font-family:'Syne',sans-serif;font-weight:800;font-size:1.45rem;margin-bottom:.3rem}
+.asub{font-size:13px;color:var(--txm);margin-bottom:1.6rem}
+.role-tabs{display:flex;gap:7px;margin-bottom:1.5rem}
+.rtab{flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-weight:500;color:var(--txm);background:#fff;cursor:pointer;transition:.2s}
+.rtab.on{background:var(--gl);border-color:var(--g);color:var(--gd)}
+.fld{margin-bottom:1rem}
+label{display:block;font-size:13px;font-weight:500;margin-bottom:5px}
+input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{width:100%;padding:10px 13px;border:1px solid var(--bd);border-radius:8px;font-size:14px;outline:none;transition:.2s;background:#fff;color:var(--tx)}
+input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(29,158,117,.08)}
+textarea{resize:vertical;min-height:78px;line-height:1.5}
+.fld2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:8px;font-weight:500;font-size:14px;border:none;cursor:pointer;transition:.2s;white-space:nowrap}
+.btn.full{width:100%}
+.btn.g{background:var(--g);color:#fff}
+.btn.g:hover{background:var(--gd)}
+.btn.out{background:transparent;border:1px solid var(--bd);color:var(--tx)}
+.btn.out:hover{background:var(--bg)}
+.btn.sm{padding:6px 13px;font-size:13px}
+.btn.xs{padding:4px 10px;font-size:12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.aswitch{text-align:center;margin-top:1rem;font-size:13px;color:var(--txm)}
+.aswitch a{color:var(--g);cursor:pointer;font-weight:500}
+
+/* ── APP LAYOUT ── */
+.lay{display:grid;grid-template-columns:216px 1fr;min-height:calc(100vh - 56px)}
+.side{background:#fff;border-right:.5px solid var(--bd);padding:1.1rem .75rem;display:flex;flex-direction:column;gap:2px}
+.ssec{font-size:10px;font-weight:600;color:var(--txl);text-transform:uppercase;letter-spacing:.06em;padding:.8rem .8rem .3rem}
+.si-btn{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--txm);cursor:pointer;transition:.15s;border:none;background:none;width:100%;text-align:left}
+.si-btn:hover{background:var(--bg);color:var(--tx)}
+.si-btn.on{background:var(--gl);color:var(--gd)}
+.si-btn i{font-size:17px;width:19px;text-align:center;flex-shrink:0}
+.si-pill{font-size:11px;font-weight:600;border-radius:8px;padding:1px 7px;margin-left:auto}
+.si-pill.red{background:var(--c);color:#fff}
+.si-pill.green{background:var(--g);color:#fff}
+.cnt{padding:1.8rem;overflow-y:auto;max-height:calc(100vh - 56px)}
+
+/* ── FEED ── */
+.fhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:.7rem}
+.ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:1.25rem}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.1rem}
+.chip{padding:5px 13px;border-radius:14px;border:1px solid var(--bd);font-size:12.5px;cursor:pointer;background:#fff;color:var(--tx);transition:.2s}
+.chip.on{background:var(--g);color:#fff;border-color:var(--g)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(244px,1fr));gap:.9rem}
+.wcard{background:#fff;border-radius:var(--r);border:.5px solid var(--bd);padding:1.05rem;transition:border-color .2s,box-shadow .2s}
+.wcard:hover{border-color:var(--gm);box-shadow:0 4px 18px rgba(29,158,117,.09)}
+.wch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.7rem}
+.wcu{display:flex;align-items:center;gap:7px}
+.wun{font-size:13px;font-weight:500;line-height:1.2}
+.wt{font-size:11px;color:var(--txl)}
+.cat{font-size:11px;font-weight:600;padding:2px 9px;border-radius:8px;background:var(--al);color:var(--a);white-space:nowrap}
+.wtitle{font-family:'Syne',sans-serif;font-weight:600;font-size:.9rem;margin-bottom:.3rem;cursor:pointer;transition:color .15s}
+.wtitle:hover{color:var(--g)}
+.wdesc{font-size:12.5px;color:var(--txm);line-height:1.5;margin-bottom:.65rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wcf{display:flex;justify-content:space-between;align-items:center;padding-top:.65rem;border-top:.5px solid var(--bd)}
+.price{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--gd)}
+.psub{font-size:11px;color:var(--txl);margin-top:1px}
+.msgbtn{display:flex;align-items:center;gap:5px;background:var(--gl);color:var(--gd);border:none;border-radius:7px;padding:6px 11px;font-size:13px;font-weight:500;transition:.2s;cursor:pointer}
+.msgbtn:hover{background:var(--g);color:#fff}
+.own{font-size:11px;color:var(--txl);background:var(--bg);padding:3px 9px;border-radius:7px}
+
+/* ── MATCH ── */
+.match-banner{background:linear-gradient(120deg,var(--gd),#1a5f7a);border-radius:var(--r);padding:1.2rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1rem;color:#fff}
+.match-banner i{font-size:32px;opacity:.8;flex-shrink:0}
+.match-banner h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:3px}
+.match-banner p{font-size:13px;opacity:.75}
+.match-list{display:flex;flex-direction:column;gap:.8rem}
+.mcard{background:#fff;border:.5px solid var(--bd);border-radius:var(--r);padding:1rem;display:flex;align-items:center;gap:1rem;transition:border-color .2s}
+.mcard:hover{border-color:var(--gm)}
+.mscore{width:50px;height:50px;border-radius:50%;background:var(--gl);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;color:var(--gd);flex-shrink:0;text-align:center;line-height:1.2}
+.minfo{flex:1;min-width:0}
+.mtit{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msub{font-size:12px;color:var(--txm);margin-top:2px}
+.mreason{font-size:12px;color:var(--g);margin-top:4px;display:flex;align-items:flex-start;gap:4px}
+
+/* ── ANALYTICS ── */
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.1rem}
+.dcard{background:#fff;border:.5px solid var(--bd);border-radius:var(--r);padding:1rem}
+.dnum{font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;line-height:1;margin-top:.4rem}
+.dlbl{font-size:12px;color:var(--txm)}
+.dtag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:7px;display:inline-block;margin-top:6px}
+.dtag.up{background:var(--gl);color:var(--gd)}
+.dtag.dn{background:var(--cl);color:var(--c)}
+.chart-card{background:#fff;border:.5px solid var(--bd);border-radius:var(--r);padding:1.2rem}
+.chart-title{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;margin-bottom:1rem}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:110px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:5px 5px 0 0;min-height:4px;transition:.4s}
+.bar-lbl{font-size:10px;color:var(--txl);text-align:center}
+.bar-val{font-size:10px;color:var(--txm);font-weight:500}
+.ai-insights{background:linear-gradient(135deg,#edfaf4,#e3f1fd);border:1px solid #aad9c3;border-radius:var(--r);padding:1.2rem}
+.ai-ins-hd{display:flex;align-items:center;gap:7px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--gd);margin-bottom:.8rem}
+.insight-item{display:flex;gap:8px;padding:.65rem .9rem;background:rgba(255,255,255,.75);border-radius:8px;margin-bottom:.5rem;font-size:13.5px;align-items:flex-start;line-height:1.5}
+
+/* ── MSGS ── */
+.mlayout{display:grid;grid-template-columns:272px 1fr;height:calc(100vh - 56px)}
+.mlist{background:#fff;border-right:.5px solid var(--bd);overflow-y:auto;display:flex;flex-direction:column}
+.mlh{padding:.95rem 1rem;border-bottom:.5px solid var(--bd);font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;position:sticky;top:0;background:#fff}
+.mi{display:flex;align-items:center;gap:9px;padding:11px 1rem;cursor:pointer;border-bottom:.5px solid var(--bd);transition:.15s}
+.mi:hover{background:var(--bg)}
+.mi.on{background:var(--gl)}
+.min{font-size:13.5px;font-weight:500}
+.mip{font-size:12px;color:var(--txm);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:155px}
+.miwish{font-size:11px;color:var(--g);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:155px}
+.unrd{width:8px;height:8px;border-radius:50%;background:var(--g);margin-left:auto;flex-shrink:0}
+.chat{display:flex;flex-direction:column;background:var(--bg)}
+.chh{background:#fff;padding:.9rem 1.3rem;border-bottom:.5px solid var(--bd);display:flex;align-items:center;gap:10px}
+.chname{font-weight:600;font-size:15px}
+.chwish{font-size:12px;color:var(--txm);margin-top:2px}
+.chscroll{flex:1;overflow-y:auto;padding:1.2rem;display:flex;flex-direction:column;gap:10px}
+.bubble{max-width:70%;padding:9px 13px;border-radius:12px;font-size:14px;line-height:1.5}
+.bubble.me{background:var(--g);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.bubble.them{background:#fff;color:var(--tx);margin-right:auto;border-bottom-left-radius:4px;border:.5px solid var(--bd)}
+.btime{font-size:10.5px;margin-top:4px;opacity:.65;text-align:right}
+.bubble.them .btime{text-align:left}
+.chinput{background:#fff;border-top:.5px solid var(--bd);padding:.8rem 1rem;display:flex;gap:8px;align-items:center}
+.chinput input{flex:1;border-radius:20px;padding:9px 14px;border:1px solid var(--bd);font-size:14px;outline:none;transition:.2s}
+.chinput input:focus{border-color:var(--g)}
+.sbtn{width:38px;height:38px;border-radius:50%;background:var(--g);color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;flex-shrink:0;transition:.2s}
+.sbtn:hover{background:var(--gd)}
+.echat{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--txl);gap:10px;text-align:center;padding:2rem}
+.echat i{font-size:48px;opacity:.18}
+
+/* ── PROFILE ── */
+.phero{background:linear-gradient(135deg,var(--dk),#1a3a2e);border-radius:var(--r);padding:1.8rem;margin-bottom:1.1rem;display:flex;align-items:center;gap:1.3rem}
+.pbav{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:#fff;flex-shrink:0}
+.pname{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;color:#fff}
+.pemail{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px}
+.prole{font-size:11.5px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);padding:3px 12px;border-radius:14px;display:inline-block;margin-top:7px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.1rem}
+.stat{background:#fff;border-radius:var(--r);border:.5px solid var(--bd);padding:1rem;text-align:center}
+.snum{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--gd)}
+.slbl{font-size:12px;color:var(--txm);margin-top:3px}
+.fcard{background:#fff;border-radius:var(--r);border:.5px solid var(--bd);padding:1.4rem}
+.fctitle{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;margin-bottom:1.1rem}
+
+/* ── MODAL ── */
+.mover{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;align-items:center;justify-content:center;padding:1rem}
+.mover.on{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.8rem;width:100%;max-width:460px;border:.5px solid var(--bd);max-height:90vh;overflow-y:auto}
+.mhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.3rem}
+.mtitle{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem}
+.xbtn{background:none;border:none;color:var(--txm);font-size:19px;cursor:pointer;padding:2px;transition:.2s}
+.xbtn:hover{color:var(--tx)}
+
+/* ── AI PANEL ── */
+.aipanel{background:linear-gradient(135deg,#edfaf4,#e3f1fd);border:1px solid #aad9c3;border-radius:9px;padding:1rem;margin-bottom:1rem}
+.aihd{display:flex;align-items:center;gap:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--gd);margin-bottom:.65rem}
+.aiuse{display:inline-flex;align-items:center;gap:4px;margin-top:.55rem;background:var(--g);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;transition:.2s}
+.aiuse:hover{background:var(--gd)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--dk);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;z-index:9999;transform:translateY(80px);opacity:0;transition:.3s;display:flex;align-items:center;gap:8px;max-width:310px;box-shadow:0 8px 28px rgba(0,0,0,.2)}
+.toast.on{transform:translateY(0);opacity:1}
+.toast.ok i{color:var(--g)}
+.toast.er i{color:var(--c)}
+
+.empty{text-align:center;padding:3.5rem 2rem;color:var(--txl);grid-column:1/-1}
+.empty i{font-size:50px;opacity:.16;margin-bottom:.8rem;display:block}
+.empty p{font-size:14px;line-height:1.6}
+.pricewrap{position:relative}
+.pricewrap span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--txm);font-size:14px;pointer-events:none}
+.pricewrap input{padding-left:32px}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .7s linear infinite}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fi{animation:fi .22s ease forwards}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i id="ticon" class="ti ti-check"></i><span id="tmsg"></span></div>
+
+<!-- NOTIF PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="np-hd"><span>Notificações</span><span class="np-all" onclick="markAllRead()">Marcar todas lidas</span></div>
+  <div id="notifList"></div>
+</div>
+
+<!-- MSG MODAL -->
+<div class="mover" id="msgMod">
+  <div class="modal">
+    <div class="mhd"><span class="mtitle" id="modTitle">Contatar comprador</span><button class="xbtn" onclick="closeMod()"><i class="ti ti-x"></i></button></div>
+    <div class="aipanel">
+      <div class="aihd"><i class="ti ti-sparkles"></i>Sugestão gerada por IA</div>
+      <div id="aiTxt" style="font-size:13.5px;color:var(--tx);line-height:1.55"><i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando mensagem personalizada...</div>
+    </div>
+    <div class="fld"><label>Sua mensagem</label><textarea id="modMsg" rows="4" placeholder="Ou escreva sua própria mensagem..."></textarea></div>
+    <button class="btn g full" onclick="sendModMsg()"><i class="ti ti-send"></i>Enviar mensagem</button>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="mover" id="detMod">
+  <div class="modal">
+    <div class="mhd"><span class="mtitle">Detalhes do anúncio</span><button class="xbtn" onclick="document.getElementById('detMod').classList.remove('on')"><i class="ti ti-x"></i></button></div>
+    <div id="detContent"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#" onclick="CU&&view('feed');return false">quero<em>comprar</em></a>
+  <div class="nsearch" id="navSearch" style="display:none">
+    <i class="ti ti-search si"></i>
+    <input type="text" placeholder="Buscar produtos..." id="searchInp"
+      oninput="doSearch(this.value)"
+      onfocus="document.getElementById('sdrop').classList.add('on')"
+      onblur="setTimeout(()=>document.getElementById('sdrop').classList.remove('on'),200)">
+    <div class="sdrop" id="sdrop"></div>
+  </div>
+  <div id="navR">
+    <button class="nbtn" onclick="show('login')" style="margin-right:6px">Entrar</button>
+    <button class="nbtn p" onclick="show('reg')">Criar conta</button>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div class="scr on" id="scr-login">
+  <div class="auth-bg">
+    <div class="acard">
+      <div class="atitle">Bem-vindo de volta!</div>
+      <div class="asub">Acesse para descobrir e responder oportunidades</div>
+      <div class="fld"><label>E-mail</label><input type="email" id="le" placeholder="seu@email.com"></div>
+      <div class="fld"><label>Senha</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
+      <button class="btn g full" onclick="login()">Entrar na plataforma</button>
+      <p style="font-size:12px;color:var(--txl);text-align:center;margin-top:.75rem">Contas de teste: <b>ana@q.com</b> / 123 &nbsp;·&nbsp; <b>carlos@q.com</b> / 123</p>
+      <div class="aswitch">Sem conta? <a onclick="show('reg')">Criar gratuitamente</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- CADASTRO -->
+<div class="scr" id="scr-reg">
+  <div class="auth-bg">
+    <div class="acard">
+      <div class="atitle">Criar conta</div>
+      <div class="asub">Publique o que procura ou ofereça o que tem</div>
+      <div class="role-tabs">
+        <button class="rtab on" id="tb-buy" onclick="setRole('buyer')"><i class="ti ti-shopping-cart"></i> Comprador</button>
+        <button class="rtab" id="tb-sel" onclick="setRole('seller')"><i class="ti ti-tag"></i> Vendedor</button>
+      </div>
+      <div class="fld"><label>Nome completo</label><input type="text" id="rn" placeholder="Seu nome"></div>
+      <div class="fld"><label>E-mail</label><input type="email" id="re" placeholder="seu@email.com"></div>
+      <div class="fld"><label>Senha</label><input type="password" id="rp" placeholder="Mínimo 3 caracteres"></div>
+      <button class="btn g full" onclick="register()">Criar conta gratuita</button>
+      <div class="aswitch">Já tem conta? <a onclick="show('login')">Faça login</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="scr" id="scr-app">
+  <div class="lay">
+    <!-- SIDEBAR -->
+    <div class="side">
+      <div class="ssec">Descobrir</div>
+      <button class="si-btn on" id="sn-feed" onclick="view('feed')"><i class="ti ti-layout-grid"></i>Explorar</button>
+      <button class="si-btn" id="sn-match" onclick="view('match')"><i class="ti ti-sparkles"></i>Match por IA<span class="si-pill green" id="matchpill" style="display:none">✦</span></button>
+      <div class="ssec">Minha conta</div>
+      <button class="si-btn" id="sn-mine" onclick="view('mine')"><i class="ti ti-heart"></i>Meus desejos</button>
+      <button class="si-btn" id="sn-new" onclick="view('new')"><i class="ti ti-plus"></i>Publicar desejo</button>
+      <button class="si-btn" id="sn-msgs" onclick="view('msgs')"><i class="ti ti-message-2"></i>Mensagens<span class="si-pill red" id="msdot" style="display:none">0</span></button>
+      <div class="ssec">Plataforma</div>
+      <button class="si-btn" id="sn-dash" onclick="view('dash')"><i class="ti ti-chart-bar"></i>Analytics</button>
+      <button class="si-btn" id="sn-prof" onclick="view('prof')"><i class="ti ti-user"></i>Perfil</button>
+      <div style="margin-top:auto;padding-top:1rem;border-top:.5px solid var(--bd)">
+        <button class="si-btn" style="color:var(--c)" onclick="logout()"><i class="ti ti-logout"></i>Sair</button>
+      </div>
+    </div>
+    <!-- CONTENT -->
+    <div class="cnt" id="cnt"></div>
+  </div>
+</div>
+
+<script>
+const COLS=['#1D9E75','#BA7517','#D85A30','#378ADD','#639922','#534AB7','#D4537E'];
+const CATS=['Todos','Eletrônicos','Veículos','Imóveis','Roupas','Móveis','Esportes','Livros','Outros'];
+let CU=null, selRole='buyer', activeFilter='Todos', activeConv=null, modWishId=null, notifOpen=false, sortMode='new';
+
+/* ── SEED DATA ── */
+const USERS=[
+  {id:1,name:'Ana Silva',email:'ana@q.com',pass:'123',role:'buyer',city:'Rio de Janeiro',phone:''},
+  {id:2,name:'Carlos Mendes',email:'carlos@q.com',pass:'123',role:'seller',city:'São Paulo',phone:''},
+  {id:3,name:'Beatriz Costa',email:'bi@q.com',pass:'123',role:'buyer',city:'Belo Horizonte',phone:''},
+];
+let WISHES=[
+  {id:1,uid:1,title:'iPhone 15 Pro Max 256GB',cat:'Eletrônicos',cond:'Seminovo',price:5500,desc:'Procuro iPhone 15 Pro Max em bom estado. Prefiro preto ou azul. Com ou sem nota, desde que funcione perfeitamente.',ts:Date.now()-7200000,views:34,offers:2},
+  {id:2,uid:3,title:'Bicicleta speed Trek',cat:'Esportes',cond:'Usado',price:3000,desc:'Qualquer Trek de estrada aro 700, tamanho M ou L. Pequenos arranhões ok.',ts:Date.now()-18000000,views:18,offers:1},
+  {id:3,uid:1,title:'Sofá retrátil 3 lugares',cat:'Móveis',cond:'Seminovo',price:1800,desc:'Sofá em couro ou tecido, cores neutras, bom estado para apartamento.',ts:Date.now()-86400000,views:22,offers:0},
+  {id:4,uid:3,title:'Notebook Dell ou Lenovo i5+',cat:'Eletrônicos',cond:'Qualquer',price:2200,desc:'8GB RAM mínimo, SSD. Para faculdade de engenharia.',ts:Date.now()-172800000,views:41,offers:3},
+  {id:5,uid:1,title:'Câmera DSLR para iniciante',cat:'Eletrônicos',cond:'Seminovo',price:2800,desc:'Canon ou Nikon com lente kit. Modelo 2018 em diante.',ts:Date.now()-259200000,views:15,offers:1},
+  {id:6,uid:3,title:'Violão elétrico acústico',cat:'Outros',cond:'Qualquer',price:900,desc:'Yamaha, Takamine ou similar. Estou aprendendo música.',ts:Date.now()-345600000,views:9,offers:0},
+  {id:7,uid:1,title:'Mesa de escritório L',cat:'Móveis',cond:'Qualquer',price:600,desc:'Mesa em L para home office. Pode ser MDF ou madeira. Cor clara.',ts:Date.now()-432000000,views:7,offers:0},
+];
+let CONVS=[
+  {id:1,from:2,to:1,wid:1,msgs:[
+    {uid:2,text:'Oi Ana! Tenho um iPhone 15 Pro Max preto com nota fiscal e ainda na garantia Apple.',ts:Date.now()-3600000},
+    {uid:1,text:'Tem fotos? Está com algum arranhão?',ts:Date.now()-3540000},
+    {uid:2,text:'Zero arranhões, sempre com capinha. Mando fotos agora!',ts:Date.now()-3480000},
+  ]},
+  {id:2,from:2,to:3,wid:2,msgs:[
+    {uid:2,text:'Boa tarde Beatriz! Tenho uma Trek Domane SL5 2022 tamanho M disponível.',ts:Date.now()-86400000},
+    {uid:3,text:'Que tamanho exatamente? E qual o histórico de uso?',ts:Date.now()-82800000},
+  ]},
+];
+let NOTIFS=[
+  {id:1,uid:1,type:'msg',text:'Carlos Mendes enviou uma mensagem sobre seu anúncio de iPhone.',ts:Date.now()-3600000,read:false,wid:1},
+  {id:2,uid:1,type:'offer',text:'Nova oferta recebida no anúncio "Sofá retrátil 3 lugares".',ts:Date.now()-7200000,read:false,wid:3},
+  {id:3,uid:1,type:'match',text:'IA encontrou 3 vendedores compatíveis com seu desejo de iPhone.',ts:Date.now()-14400000,read:true,wid:1},
+  {id:4,uid:3,type:'msg',text:'Carlos respondeu sobre sua bicicleta Trek.',ts:Date.now()-86400000,read:false,wid:2},
+];
+let nwid=8, ncid=3, nuid=4, nnid=5;
+
+/* ── PERSISTENCE ── */
+function sv(){
+  try{
+    localStorage.setItem('qc3_w',JSON.stringify(WISHES));
+    localStorage.setItem('qc3_c',JSON.stringify(CONVS));
+    localStorage.setItem('qc3_u',JSON.stringify(USERS));
+    localStorage.setItem('qc3_n',JSON.stringify(NOTIFS));
+  }catch(e){}
+}
+(function ld(){
+  try{
+    const w=localStorage.getItem('qc3_w'),c=localStorage.getItem('qc3_c'),
+          u=localStorage.getItem('qc3_u'),n=localStorage.getItem('qc3_n');
+    if(w)WISHES=JSON.parse(w);
+    if(c)CONVS=JSON.parse(c);
+    if(n)NOTIFS=JSON.parse(n);
+    if(u){const pu=JSON.parse(u);pu.forEach(x=>{if(!USERS.find(y=>y.id===x.id))USERS.push(x)})}
+    if(WISHES.length)nwid=Math.max(...WISHES.map(x=>x.id))+1;
+    if(CONVS.length)ncid=Math.max(...CONVS.map(x=>x.id))+1;
+  }catch(e){}
+})();
+
+/* ── AUTH ── */
+function show(s){
+  document.querySelectorAll('.scr').forEach(x=>x.classList.remove('on'));
+  document.getElementById('scr-'+s).classList.add('on');
+}
+function setRole(r){
+  selRole=r;
+  document.getElementById('tb-buy').classList.toggle('on',r==='buyer');
+  document.getElementById('tb-sel').classList.toggle('on',r==='seller');
+}
+function login(){
+  const e=document.getElementById('le').value.trim(), p=document.getElementById('lp').value;
+  const u=USERS.find(x=>x.email===e&&x.pass===p);
+  if(!u){toast('E-mail ou senha incorretos','er');return}
+  CU=u; enter();
+}
+function register(){
+  const n=val('rn'), e=val('re'), p=val('rp');
+  if(!n||!e||!p){toast('Preencha todos os campos','er');return}
+  if(USERS.find(x=>x.email===e)){toast('E-mail já cadastrado','er');return}
+  const u={id:nuid++,name:n,email:e,pass:p,role:selRole,city:'',phone:''};
+  USERS.push(u); CU=u; sv(); enter(); toast('Conta criada com sucesso!');
+}
+function logout(){
+  CU=null; activeConv=null;
+  document.getElementById('navSearch').style.display='none';
+  show('login');
+}
+function enter(){
+  document.getElementById('navSearch').style.display='flex';
+  document.getElementById('matchpill').style.display='inline';
+  refreshNav(); show('app'); view('feed');
+}
+
+function getUnread(){return CONVS.filter(c=>c.to===CU.id).length}
+function getUnreadN(){return NOTIFS.filter(n=>n.uid===CU.id&&!n.read).length}
+
+function refreshNav(){
+  const ur=getUnread(), un=getUnreadN();
+  document.getElementById('navR').innerHTML=`
+    <div style="display:flex;align-items:center;gap:9px">
+      <button class="navico" onclick="toggleNotif()" id="notifBtn">
+        <i class="ti ti-bell"></i>
+        ${un>0?'<span class="ndot"></span>':''}
+      </button>
+      <div class="upill" onclick="view('prof')">
+        <div class="av" style="background:${COLS[CU.id%COLS.length]}">${CU.name[0]}</div>
+        <span class="uname">${CU.name.split(' ')[0]}</span>
+        ${ur>0?`<span class="nbadge">${ur}</span>`:''}
+      </div>
+    </div>`;
+  const d=document.getElementById('msdot');
+  if(d){d.style.display=ur>0?'inline':'none';d.textContent=ur;}
+}
+
+/* ── NOTIFICATIONS ── */
+function toggleNotif(){
+  notifOpen=!notifOpen;
+  document.getElementById('notifPanel').classList.toggle('on',notifOpen);
+  if(notifOpen) buildNotifPanel();
+}
+function buildNotifPanel(){
+  const el=document.getElementById('notifList'); if(!el) return;
+  const myN=NOTIFS.filter(n=>n.uid===CU.id).sort((a,b)=>b.ts-a.ts);
+  if(!myN.length){el.innerHTML='<div style="padding:1.5rem;text-align:center;font-size:13px;color:var(--txl)">Nenhuma notificação</div>';return}
+  const icons={msg:'ti-message-2',offer:'ti-tag',match:'ti-sparkles'};
+  const bgs={msg:'var(--bl)',offer:'var(--al)',match:'var(--gl)'};
+  const fgs={msg:'var(--b)',offer:'var(--a)',match:'var(--g)'};
+  el.innerHTML=myN.map(n=>`
+    <div class="ni${n.read?'':' unread'}" onclick="clickNotif(${n.id})">
+      <div class="niico" style="background:${bgs[n.type]||'#eee'};color:${fgs[n.type]||'#666'}">
+        <i class="ti ${icons[n.type]||'ti-bell'}"></i>
+      </div>
+      <div style="flex:1">
+        <div class="nitxt">${n.text}</div>
+        <div class="nitime">${relTime(n.ts)}</div>
+      </div>
+      ${!n.read?'<div style="width:7px;height:7px;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:4px"></div>':''}
+    </div>`).join('');
+}
+function clickNotif(id){
+  const n=NOTIFS.find(x=>x.id===id); if(!n) return;
+  n.read=true; sv(); notifOpen=false;
+  document.getElementById('notifPanel').classList.remove('on');
+  refreshNav();
+  if(n.type==='msg') view('msgs');
+  else if(n.wid) showDetail(n.wid);
+}
+function markAllRead(){
+  NOTIFS.filter(n=>n.uid===CU.id).forEach(n=>n.read=true);
+  sv(); buildNotifPanel(); refreshNav();
+}
+
+/* ── SEARCH ── */
+function doSearch(q){
+  const drop=document.getElementById('sdrop');
+  if(!q.trim()){drop.innerHTML='';return}
+  const res=WISHES.filter(w=>
+    w.title.toLowerCase().includes(q.toLowerCase())||
+    w.cat.toLowerCase().includes(q.toLowerCase())||
+    w.desc.toLowerCase().includes(q.toLowerCase())
+  ).slice(0,6);
+  if(!res.length){drop.innerHTML='<div style="padding:.9rem;font-size:13px;color:var(--txl);text-align:center">Nenhum resultado</div>';return}
+  drop.innerHTML=res.map(w=>{
+    const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
+    return `<div class="sitem" onmousedown="showDetail(${w.id})">
+      <div class="av" style="background:${COLS[u.id%COLS.length]};border-radius:7px;width:34px;height:34px;font-size:12px;flex-shrink:0">${u.name[0]}</div>
+      <div><div style="font-size:13.5px;font-weight:500">${w.title}</div>
+      <div style="font-size:12px;color:var(--txm)">${w.cat} · até R$ ${fmt(w.price)}</div></div>
+    </div>`;
+  }).join('');
+}
+
+/* ── VIEWS ── */
+function view(vn){
+  ['feed','match','mine','new','msgs','dash','prof'].forEach(x=>{
+    const s=document.getElementById('sn-'+x); if(s) s.classList.remove('on');
+  });
+  const s=document.getElementById('sn-'+vn); if(s) s.classList.add('on');
+  const el=document.getElementById('cnt');
+  el.style.padding='1.8rem'; el.style.margin='';
+  notifOpen=false; document.getElementById('notifPanel').classList.remove('on');
+  if(vn==='feed')      renderFeed(el);
+  else if(vn==='match')renderMatch(el);
+  else if(vn==='mine') renderMine(el);
+  else if(vn==='new')  renderNew(el);
+  else if(vn==='msgs') {el.style.padding='0';el.style.margin='-1.8rem';renderMsgs(el);}
+  else if(vn==='dash') renderDash(el);
+  else if(vn==='prof') renderProf(el);
+}
+
+/* ── FEED ── */
+function renderFeed(el){
+  el.innerHTML=`<div class="fhead fi">
+    <div class="ftitle">Explorar desejos</div>
+    <div style="display:flex;gap:7px;align-items:center">
+      <select onchange="sortMode=this.value;buildGrid()" style="font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;outline:none;cursor:pointer">
+        <option value="new">Mais recentes</option>
+        <option value="price">Maior valor</option>
+        <option value="offers">Mais ofertas</option>
+      </select>
+      <button class="btn g sm" onclick="view('new')"><i class="ti ti-plus"></i>Publicar</button>
+    </div>
+  </div>
+  <div class="chips" id="chips">
+    ${CATS.map(c=>`<div class="chip${c===activeFilter?' on':''}" onclick="filterCat('${c}')">${c}</div>`).join('')}
+  </div>
+  <div class="grid fi" id="wgrid"></div>`;
+  buildGrid();
+}
+function filterCat(c){
+  activeFilter=c; buildGrid();
+  document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.textContent===c));
+}
+function buildGrid(){
+  const g=document.getElementById('wgrid'); if(!g) return;
+  let ws=activeFilter==='Todos'?[...WISHES]:WISHES.filter(w=>w.cat===activeFilter);
+  if(sortMode==='new')    ws.sort((a,b)=>b.ts-a.ts);
+  else if(sortMode==='price')   ws.sort((a,b)=>b.price-a.price);
+  else ws.sort((a,b)=>(b.offers||0)-(a.offers||0));
+  g.innerHTML=ws.length ? ws.map(cardHTML).join('') :
+    '<div class="empty"><i class="ti ti-mood-empty"></i><p>Nenhum desejo nessa categoria ainda.</p></div>';
+}
+function cardHTML(w){
+  const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
+  const mine=CU&&w.uid===CU.id;
+  return `<div class="wcard fi">
+    <div class="wch">
+      <div class="wcu">
+        <div class="av" style="background:${COLS[u.id%COLS.length]};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0">${u.name[0]}</div>
+        <div><div class="wun">${u.name}</div><div class="wt">${relTime(w.ts)}</div></div>
+      </div>
+      <span class="cat">${w.cat}</span>
+    </div>
+    <div class="wtitle" onclick="showDetail(${w.id})">${w.title}</div>
+    <div class="wdesc">${w.desc}</div>
+    <div class="wcf">
+      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond}${w.views?' · '+w.views+' vistas':''}</div></div>
+      ${mine?'<span class="own">Seu anúncio</span>':`<button class="msgbtn" onclick="openMsgMod(${w.id})"><i class="ti ti-send" style="font-size:13px"></i>Tenho isso!</button>`}
+    </div>
+  </div>`;
+}
+
+/* ── MATCH IA ── */
+async function renderMatch(el){
+  el.innerHTML=`<div class="match-banner fi">
+    <i class="ti ti-sparkles"></i>
+    <div><h3>Match inteligente por IA</h3><p>A IA analisa todos os desejos da plataforma e aponta as melhores oportunidades para o seu perfil de vendedor.</p></div>
+  </div>
+  <div id="matchArea" style="text-align:center;padding:3rem;color:var(--txm)">
+    <i class="ti ti-loader spin" style="font-size:32px;color:var(--g)"></i>
+    <p style="margin-top:.9rem;font-size:14px">Analisando oportunidades com IA...</p>
+  </div>`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:`Você é um sistema de match de marketplace. Analise desejos de compra e retorne JSON com os 4 melhores para um vendedor, ordenados por oportunidade de venda. Retorne APENAS JSON válido sem markdown: {"matches":[{"id":1,"score":92,"reason":"razão curta em português max 10 palavras"}]}`,
+        messages:[{role:'user',content:`Desejos disponíveis: ${JSON.stringify(WISHES.map(w=>({id:w.id,title:w.title,cat:w.cat,price:w.price,cond:w.cond,offers:w.offers||0})))}. Gere os 4 melhores matches para um vendedor.`}]
+      })
+    });
+    const data=await resp.json();
+    let txt=(data.content&&data.content[0]&&data.content[0].text)||'';
+    txt=txt.replace(/```json|```/g,'').trim();
+    const {matches}=JSON.parse(txt);
+    renderMatchCards(matches);
+  }catch(e){
+    // fallback
+    const fallback=WISHES.filter(w=>!CU||w.uid!==CU.id).sort((a,b)=>b.price-a.price).slice(0,4)
+      .map((w,i)=>({id:w.id,score:[95,87,79,71][i],reason:'Alto orçamento com bom potencial de venda'}));
+    renderMatchCards(fallback);
+  }
+}
+function renderMatchCards(matches){
+  const el=document.getElementById('matchArea'); if(!el) return;
+  el.innerHTML=`<div class="match-list fi">${matches.map(m=>{
+    const w=WISHES.find(x=>x.id===m.id); if(!w) return '';
+    const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
+    const mine=CU&&w.uid===CU.id;
+    const scoreColor=m.score>=85?'var(--g)':m.score>=70?'var(--a)':'var(--c)';
+    return `<div class="mcard">
+      <div class="mscore" style="border-color:${scoreColor};color:${scoreColor};background:${scoreColor}18">${m.score}<span style="font-size:9px">%</span></div>
+      <div class="minfo">
+        <div class="mtit">${w.title}</div>
+        <div class="msub">até R$ ${fmt(w.price)} · ${w.cat} · ${u.name} · ${w.cond}</div>
+        <div class="mreason"><i class="ti ti-sparkles" style="font-size:12px;flex-shrink:0;margin-top:1px"></i>${m.reason}</div>
+      </div>
+      ${!mine
+        ?`<button class="btn g sm" onclick="openMsgMod(${w.id})" style="flex-shrink:0">Contatar</button>`
+        :'<span class="own" style="flex-shrink:0">Seu</span>'}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* ── MINE ── */
+function renderMine(el){
+  const mine=WISHES.filter(w=>w.uid===CU.id).sort((a,b)=>b.ts-a.ts);
+  el.innerHTML=`<div class="fhead fi">
+    <div class="ftitle">Meus desejos</div>
+    <button class="btn g sm" onclick="view('new')"><i class="ti ti-plus"></i>Publicar</button>
+  </div>
+  <div class="grid fi">${mine.length ? mine.map(mineCard).join('') :
+    '<div class="empty"><i class="ti ti-heart"></i><p>Nenhum desejo publicado ainda.<br>Clique em "Publicar desejo" para começar!</p></div>'}</div>`;
+}
+function mineCard(w){
+  const msgs=CONVS.filter(c=>c.wid===w.id).length;
+  return `<div class="wcard fi">
+    <div class="wch">
+      <div><div class="wtitle" onclick="showDetail(${w.id})">${w.title}</div><div class="wt">${relTime(w.ts)}</div></div>
+      <span class="cat">${w.cat}</span>
+    </div>
+    <div class="wdesc">${w.desc}</div>
+    <div class="wcf">
+      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond} · ${w.views||0} vistas</div></div>
+      <div style="display:flex;gap:5px;align-items:center">
+        ${msgs?`<span style="font-size:12px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:7px;display:flex;align-items:center;gap:3px"><i class="ti ti-message-2" style="font-size:11px"></i>${msgs}</span>`:''}
+        <button class="btn out xs" onclick="delWish(${w.id})" title="Remover"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  </div>`;
+}
+function delWish(id){
+  if(!confirm('Remover este anúncio?')) return;
+  WISHES=WISHES.filter(w=>w.id!==id); sv();
+  renderMine(document.getElementById('cnt')); toast('Anúncio removido');
+}
+
+/* ── NEW ── */
+function renderNew(el){
+  el.innerHTML=`<div class="ftitle fi" style="margin-bottom:1.2rem">Publicar desejo de compra</div>
+  <div class="fcard fi" style="max-width:560px">
+    <div class="fld"><label>O que você procura?</label><input type="text" id="wt" placeholder="Ex: iPhone 15 Pro Max 256GB"></div>
+    <div class="fld2">
+      <div><label>Categoria</label><select id="wc">
+        <option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option>
+        <option>Roupas</option><option>Móveis</option><option>Esportes</option>
+        <option>Livros</option><option>Outros</option>
+      </select></div>
+      <div><label>Condição</label><select id="wco">
+        <option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option>
+      </select></div>
+    </div>
+    <div class="fld"><label>Valor máximo que pagaria</label>
+      <div class="pricewrap"><span>R$</span><input type="number" id="wp" placeholder="0" min="0"></div>
+    </div>
+    <div class="fld"><label>Descrição detalhada</label>
+      <textarea id="wd" placeholder="Cor, modelo específico, versão, requisitos mínimos, observações..."></textarea>
+    </div>
+    <div style="background:var(--gl);border-radius:8px;padding:.75rem 1rem;font-size:13.5px;color:var(--gd);margin-bottom:1rem;display:flex;gap:7px;align-items:flex-start">
+      <i class="ti ti-bulb" style="flex-shrink:0;margin-top:1px"></i>
+      Quanto mais detalhado o anúncio, mais ofertas relevantes você recebe de vendedores.
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn g" id="pubBtn" onclick="publish()"><i class="ti ti-plus"></i>Publicar desejo</button>
+      <button class="btn out" onclick="view('feed')">Cancelar</button>
+    </div>
+  </div>`;
+}
+function publish(){
+  const t=val('wt'), c=val('wc'), co=val('wco'), p=val('wp'), d=val('wd');
+  if(!t||!p){toast('Preencha produto e valor máximo','er');return}
+  const btn=document.getElementById('pubBtn');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader spin"></i> Publicando...';
+  setTimeout(()=>{
+    WISHES.unshift({id:nwid++,uid:CU.id,title:t,cat:c,cond:co,price:parseFloat(p),desc:d||'Sem descrição adicional.',ts:Date.now(),views:0,offers:0});
+    sv(); toast('Desejo publicado com sucesso!'); view('feed');
+  },700);
+}
+
+/* ── MSGS ── */
+function renderMsgs(el){
+  el.innerHTML=`<div class="mlayout fi">
+    <div class="mlist"><div class="mlh">Mensagens</div><div id="mlistin"></div></div>
+    <div class="chat" id="chatarea">${ecHTML()}</div>
+  </div>`;
+  buildConvList();
+  if(activeConv){const c=CONVS.find(x=>x.id===activeConv.id);if(c) openConv(c.id);}
+}
+function buildConvList(){
+  const el=document.getElementById('mlistin'); if(!el) return;
+  const myC=CONVS.filter(c=>c.from===CU.id||c.to===CU.id);
+  if(!myC.length){el.innerHTML='<p style="padding:1.5rem;font-size:13px;color:var(--txl);text-align:center">Nenhuma conversa ainda</p>';return}
+  el.innerHTML=myC.map(c=>{
+    const oid=c.from===CU.id?c.to:c.from;
+    const ou=USERS.find(x=>x.id===oid)||{name:'?',id:0};
+    const last=c.msgs[c.msgs.length-1];
+    const w=WISHES.find(x=>x.id===c.wid);
+    const isOn=activeConv&&activeConv.id===c.id;
+    return `<div class="mi${isOn?' on':''}" onclick="openConv(${c.id})">
+      <div class="av" style="background:${COLS[ou.id%COLS.length]};width:36px;height:36px;border-radius:50%;font-size:12.5px;flex-shrink:0">${ou.name[0]}</div>
+      <div style="flex:1;min-width:0">
+        <div class="min">${ou.name}</div>
+        <div class="mip">${last?esc(last.text):''}</div>
+        ${w?`<div class="miwish"><i class="ti ti-tag" style="font-size:10px"></i> ${w.title}</div>`:''}
+      </div>
+      ${c.to===CU.id&&!isOn?'<div class="unrd"></div>':''}
+    </div>`;
+  }).join('');
+}
+function openConv(cid){
+  activeConv=CONVS.find(c=>c.id===cid); buildConvList();
+  const ca=document.getElementById('chatarea'); if(!ca) return;
+  const oid=activeConv.from===CU.id?activeConv.to:activeConv.from;
+  const ou=USERS.find(x=>x.id===oid)||{name:'?',id:0};
+  const w=WISHES.find(x=>x.id===activeConv.wid);
+  ca.innerHTML=`
+    <div class="chh">
+      <div class="av" style="background:${COLS[ou.id%COLS.length]};width:38px;height:38px;border-radius:50%;font-size:14px;flex-shrink:0">${ou.name[0]}</div>
+      <div>
+        <div class="chname">${ou.name}</div>
+        ${w?`<div class="chwish"><i class="ti ti-tag" style="font-size:11px"></i> ${w.title} — até R$ ${fmt(w.price)}</div>`:''}
+      </div>
+    </div>
+    <div class="chscroll" id="chscroll">${activeConv.msgs.map(bubHTML).join('')}</div>
+    <div class="chinput">
+      <input type="text" id="chin" placeholder="Escreva uma mensagem..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="sbtn" onclick="sendMsg()"><i class="ti ti-send" style="font-size:15px"></i></button>
+    </div>`;
+  scrollChat();
+}
+function bubHTML(m){
+  const me=m.uid===CU.id;
+  return `<div><div class="bubble ${me?'me':'them'}">${esc(m.text)}<div class="btime">${fmtT(m.ts)}</div></div></div>`;
+}
+function ecHTML(){return`<div class="echat"><i class="ti ti-message-2"></i><p style="font-size:14px;font-weight:500">Selecione uma conversa</p><p style="font-size:13px;color:var(--txl);margin-top:4px">ou use "Tenho isso!" em qualquer anúncio</p></div>`}
+function sendMsg(){
+  const inp=document.getElementById('chin');
+  const text=inp&&inp.value.trim(); if(!text) return;
+  activeConv.msgs.push({uid:CU.id,text,ts:Date.now()});
+  inp.value=''; sv();
+  const sc=document.getElementById('chscroll');
+  if(sc){sc.innerHTML+=bubHTML(activeConv.msgs[activeConv.msgs.length-1]);scrollChat();}
+  buildConvList(); refreshNav();
+}
+function scrollChat(){const s=document.getElementById('chscroll');if(s)setTimeout(()=>{s.scrollTop=s.scrollHeight},50)}
+
+/* ── ANALYTICS ── */
+function renderDash(el){
+  const myW=WISHES.filter(w=>w.uid===CU.id);
+  const tv=myW.reduce((a,w)=>a+(w.views||0),0);
+  const to=myW.reduce((a,w)=>a+(w.offers||0),0);
+  const cr=myW.length?Math.round((to/Math.max(tv,1))*100):0;
+  const catC={};
+  WISHES.forEach(w=>{catC[w.cat]=(catC[w.cat]||0)+1});
+  const topC=Object.entries(catC).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxC=Math.max(...topC.map(x=>x[1]),1);
+  const pr=[{l:'<500',n:0},{l:'500-1k',n:0},{l:'1k-3k',n:0},{l:'3k-6k',n:0},{l:'>6k',n:0}];
+  WISHES.forEach(w=>{
+    if(w.price<500)pr[0].n++;
+    else if(w.price<1000)pr[1].n++;
+    else if(w.price<3000)pr[2].n++;
+    else if(w.price<6000)pr[3].n++;
+    else pr[4].n++;
+  });
+  const maxP=Math.max(...pr.map(x=>x.n),1);
+
+  el.innerHTML=`
+  <div class="ftitle fi" style="margin-bottom:1.1rem">Analytics da plataforma</div>
+  <div class="dash-grid fi">
+    <div class="dcard"><div class="dlbl">Total de desejos</div><div class="dnum">${WISHES.length}</div><div class="dtag up">↑ ativos</div></div>
+    <div class="dcard"><div class="dlbl">Vistas nos seus anúncios</div><div class="dnum">${tv}</div><div class="dtag up">${myW.length} anúncios</div></div>
+    <div class="dcard"><div class="dlbl">Ofertas recebidas</div><div class="dnum">${to}</div><div class="dtag ${to>0?'up':'dn'}">${to>0?to+' ativas':'nenhuma'}</div></div>
+    <div class="dcard"><div class="dlbl">Taxa de contato</div><div class="dnum">${cr}%</div><div class="dtag ${cr>5?'up':'dn'}">vista → oferta</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
+    <div class="chart-card fi">
+      <div class="chart-title">Desejos por categoria</div>
+      <div class="bar-chart">
+        ${topC.map(([cat,n])=>`<div class="bar-col">
+          <div class="bar-val">${n}</div>
+          <div class="bar" style="height:${Math.round((n/maxC)*95)}px;background:var(--g)"></div>
+          <div class="bar-lbl">${cat.substring(0,6)}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="chart-card fi">
+      <div class="chart-title">Distribuição de orçamentos</div>
+      <div class="bar-chart">
+        ${pr.map(r=>`<div class="bar-col">
+          <div class="bar-val">${r.n}</div>
+          <div class="bar" style="height:${Math.round((r.n/maxP)*95)}px;background:var(--b)"></div>
+          <div class="bar-lbl">${r.l}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="ai-insights fi" id="aiIns">
+    <div class="ai-ins-hd" id="insHd"><i class="ti ti-sparkles"></i>Insights da IA <i class="ti ti-loader spin" style="font-size:13px;margin-left:auto;color:var(--g)"></i></div>
+    <div id="insItems"><p style="font-size:13px;color:var(--txm)">Analisando dados da plataforma...</p></div>
+  </div>`;
+  fetchInsights(topC,tv,to,cr);
+}
+async function fetchInsights(topC,tv,to,cr){
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:800,
+        system:`Analista de marketplace brasileiro. Gere 3 insights de negócio práticos e específicos com base nos dados. Retorne APENAS JSON sem markdown: {"insights":[{"icon":"ti-trending-up","text":"insight aqui"}]}. Use ícones Tabler: ti-trending-up, ti-bulb, ti-target, ti-alert-triangle, ti-star, ti-users.`,
+        messages:[{role:'user',content:`Marketplace querocomprar: ${WISHES.length} desejos, categorias: ${topC.map(([c,n])=>c+':'+n).join(', ')}, ${tv} visualizações nos meus anúncios, ${to} ofertas recebidas, taxa de contato ${cr}%. Gere 3 insights estratégicos.`}]
+      })
+    });
+    const data=await resp.json();
+    let txt=(data.content&&data.content[0]&&data.content[0].text)||'';
+    txt=txt.replace(/```json|```/g,'').trim();
+    const {insights}=JSON.parse(txt);
+    document.getElementById('insHd').innerHTML='<i class="ti ti-sparkles"></i>Insights da IA';
+    document.getElementById('insItems').innerHTML=insights.map(ins=>`
+      <div class="insight-item">
+        <i class="ti ${ins.icon}" style="color:var(--g);flex-shrink:0;margin-top:2px"></i>
+        <span>${ins.text}</span>
+      </div>`).join('');
+  }catch(e){
+    document.getElementById('insHd').innerHTML='<i class="ti ti-sparkles"></i>Insights';
+    document.getElementById('insItems').innerHTML=`
+      <div class="insight-item"><i class="ti ti-trending-up" style="color:var(--g);flex-shrink:0;margin-top:2px"></i><span>Eletrônicos lidera com mais desejos e maiores orçamentos na plataforma — alta oportunidade para vendedores do segmento.</span></div>
+      <div class="insight-item"><i class="ti ti-target" style="color:var(--b);flex-shrink:0;margin-top:2px"></i><span>Anúncios com descrições detalhadas recebem em média 3x mais contatos. Incentive compradores a detalhar o que buscam.</span></div>
+      <div class="insight-item"><i class="ti ti-bulb" style="color:var(--a);flex-shrink:0;margin-top:2px"></i><span>A faixa de R$ 1k–3k concentra a maior parte dos orçamentos — ideal para seminovos e produtos recondicionados.</span></div>`;
+  }
+}
+
+/* ── PROFILE ── */
+function renderProf(el){
+  const myW=WISHES.filter(w=>w.uid===CU.id).length;
+  const recvd=CONVS.filter(c=>c.to===CU.id).length;
+  const active=CONVS.filter(c=>c.from===CU.id||c.to===CU.id).length;
+  const roleLabel={buyer:'Comprador',seller:'Vendedor',both:'Comprador & Vendedor'};
+  el.innerHTML=`
+  <div class="phero fi">
+    <div class="pbav" style="background:${COLS[CU.id%COLS.length]}">${CU.name[0]}</div>
+    <div>
+      <div class="pname">${CU.name}</div>
+      <div class="pemail">${CU.email}</div>
+      <div class="prole">${roleLabel[CU.role]||'Usuário'}</div>
+    </div>
+  </div>
+  <div class="stats fi">
+    <div class="stat"><div class="snum">${myW}</div><div class="slbl">Desejos publicados</div></div>
+    <div class="stat"><div class="snum">${recvd}</div><div class="slbl">Ofertas recebidas</div></div>
+    <div class="stat"><div class="snum">${active}</div><div class="slbl">Conversas ativas</div></div>
+  </div>
+  <div class="fcard fi" style="max-width:510px">
+    <div class="fctitle">Editar perfil</div>
+    <div class="fld"><label>Nome</label><input type="text" id="en" value="${CU.name}"></div>
+    <div class="fld2">
+      <div><label>Telefone</label><input type="text" id="ep" value="${CU.phone||''}" placeholder="(11) 99999-9999"></div>
+      <div><label>Cidade</label><input type="text" id="ec" value="${CU.city||''}" placeholder="São Paulo - SP"></div>
+    </div>
+    <div class="fld"><label>Papel na plataforma</label>
+      <select id="erole">
+        <option value="buyer" ${CU.role==='buyer'?'selected':''}>Comprador — Publico desejos de compra</option>
+        <option value="seller" ${CU.role==='seller'?'selected':''}>Vendedor — Ofereço produtos</option>
+        <option value="both" ${CU.role==='both'?'selected':''}>Ambos — Compro e vendo</option>
+      </select>
+    </div>
+    <button class="btn g" onclick="saveProf()"><i class="ti ti-check"></i>Salvar alterações</button>
+  </div>`;
+}
+function saveProf(){
+  const n=val('en'), p=val('ep'), c=val('ec'), r=document.getElementById('erole').value;
+  if(n) CU.name=n; CU.phone=p; CU.city=c; CU.role=r;
+  const u=USERS.find(x=>x.id===CU.id); if(u) Object.assign(u,{name:n,phone:p,city:c,role:r});
+  sv(); toast('Perfil atualizado!'); renderProf(document.getElementById('cnt'));
+}
+
+/* ── DETAIL MODAL ── */
+function showDetail(wid){
+  const w=WISHES.find(x=>x.id===wid); if(!w) return;
+  if(w.views!=null) w.views++; sv();
+  const u=USERS.find(x=>x.id===w.uid)||{name:'?'};
+  const mine=CU&&w.uid===CU.id;
+  document.getElementById('detContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+      <div class="av" style="background:${COLS[u.id%COLS.length]};width:40px;height:40px;border-radius:50%;font-size:15px;flex-shrink:0">${u.name[0]}</div>
+      <div>
+        <div style="font-weight:600;font-size:15px">${u.name}</div>
+        <div style="font-size:12px;color:var(--txl)">${u.city||'Localização não informada'} · ${relTime(w.ts)}</div>
+      </div>
+    </div>
+    <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem">${w.title}</h2>
+    <div style="display:flex;gap:7px;margin-bottom:.9rem">
+      <span class="cat">${w.cat}</span>
+      <span style="font-size:11px;background:var(--bg);color:var(--txm);padding:3px 9px;border-radius:8px">${w.cond}</span>
+    </div>
+    <p style="font-size:14px;color:var(--txm);line-height:1.65;margin-bottom:1rem">${w.desc}</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.1rem">
+      <div style="background:var(--gl);border-radius:9px;padding:.9rem;text-align:center">
+        <div style="font-size:11px;color:var(--gd);margin-bottom:3px">Valor máximo</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--gd)">R$ ${fmt(w.price)}</div>
+      </div>
+      <div style="background:var(--bg);border-radius:9px;padding:.9rem;text-align:center">
+        <div style="font-size:11px;color:var(--txm);margin-bottom:3px">Visualizações</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem">${w.views||0}</div>
+      </div>
+    </div>
+    ${!mine
+      ?`<button class="btn g full" onclick="document.getElementById('detMod').classList.remove('on');openMsgMod(${w.id})">
+          <i class="ti ti-send"></i>Tenho isso! Contatar comprador
+        </button>`
+      :'<div style="text-align:center;font-size:13px;color:var(--txl);padding:.6rem;background:var(--bg);border-radius:8px">Este é o seu anúncio</div>'}`;
+  document.getElementById('detMod').classList.add('on');
+}
+
+/* ── MSG MODAL + AI ── */
+async function openMsgMod(wid){
+  modWishId=wid;
+  const w=WISHES.find(x=>x.id===wid); if(!w) return;
+  document.getElementById('modTitle').textContent=w.title.length>40?w.title.substring(0,40)+'...':w.title;
+  document.getElementById('modMsg').value='';
+  document.getElementById('aiTxt').innerHTML='<i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando sugestão personalizada...';
+  document.getElementById('msgMod').classList.add('on');
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:800,
+        system:`Gere uma mensagem inicial curta (2-3 frases) e persuasiva que um vendedor usaria para contatar um comprador. Escreva em português brasileiro informal e direto. Retorne APENAS a mensagem, sem aspas nem explicações.`,
+        messages:[{role:'user',content:`O comprador procura: "${w.title}". Categoria: ${w.cat}. Orçamento: até R$ ${fmt(w.price)}. Condição: ${w.cond}. Descrição: ${w.desc}`}]
+      })
+    });
+    const data=await resp.json();
+    const txt=data.content&&data.content[0]&&data.content[0].text;
+    if(txt){
+      const safe=esc(txt);
+      document.getElementById('aiTxt').innerHTML=`${safe}<br>
+        <button class="aiuse" onclick="document.getElementById('modMsg').value=${JSON.stringify(txt)}">
+          <i class="ti ti-check" style="font-size:12px"></i>Usar esta mensagem
+        </button>`;
+    }
+  }catch(e){
+    document.getElementById('aiTxt').innerHTML='Apresente-se e descreva o produto que você tem a oferecer. Seja direto e mencione o preço.';
+  }
+}
+function closeMod(){document.getElementById('msgMod').classList.remove('on');modWishId=null}
+function sendModMsg(){
+  const text=document.getElementById('modMsg').value.trim();
+  if(!text){toast('Digite uma mensagem antes de enviar','er');return}
+  const w=WISHES.find(x=>x.id===modWishId);
+  if(w.uid===CU.id){toast('Você não pode contatar a si mesmo','er');return}
+  let conv=CONVS.find(c=>c.from===CU.id&&c.wid===modWishId);
+  if(!conv){conv={id:ncid++,from:CU.id,to:w.uid,wid:modWishId,msgs:[]};CONVS.push(conv)}
+  conv.msgs.push({uid:CU.id,text,ts:Date.now()});
+  if(w.offers!=null) w.offers++;
+  NOTIFS.push({id:nnid++,uid:w.uid,type:'msg',
+    text:`${CU.name} enviou uma mensagem sobre "${w.title.substring(0,30)}".`,
+    ts:Date.now(),read:false,wid:w.id});
+  sv(); closeMod(); toast('Mensagem enviada com sucesso!');
+  activeConv=conv; view('msgs'); refreshNav();
+}
+
+/* ── UTILS ── */
+function val(id){const e=document.getElementById(id);return e?e.value.trim():''}
+function fmt(n){return Number(n).toLocaleString('pt-BR')}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmtT(ts){const d=new Date(ts);return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
+function relTime(ts){
+  const d=Date.now()-ts;
+  if(d<60000) return 'agora';
+  if(d<3600000) return Math.floor(d/60000)+'min atrás';
+  if(d<86400000) return Math.floor(d/3600000)+'h atrás';
+  return Math.floor(d/86400000)+'d atrás';
+}
+function toast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  document.getElementById('tmsg').textContent=msg;
+  document.getElementById('ticon').className='ti '+(type==='ok'?'ti-check':'ti-alert-circle');
+  t.className='toast on '+type;
+  setTimeout(()=>t.classList.remove('on'),3000);
+}
+
+/* ── GLOBAL CLICK ── */
+document.addEventListener('click',e=>{
+  if(notifOpen&&!e.target.closest('#notifPanel')&&!e.target.closest('#notifBtn')){
+    notifOpen=false;
+    document.getElementById('notifPanel').classList.remove('on');
+  }
+});
+</script>
+</body>
+</html>
