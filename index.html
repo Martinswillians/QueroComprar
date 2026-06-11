@@ -1714,6 +1714,200 @@
       margin: 0 auto;
       padding: 1.8rem
     }
+
+    /* ════════════════════════════════════════════════
+       RESPONSIVO — MOBILE FIRST
+    ════════════════════════════════════════════════ */
+
+    /* Hamburguer button (mobile) */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    /* Overlay para fechar sidebar no mobile */
+    .side-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 149;
+    }
+    .side-overlay.on { display: block; }
+
+    @media (max-width: 768px) {
+
+      /* ── NAV ── */
+      nav {
+        padding: 0 .9rem;
+        gap: 8px;
+      }
+      .nsearch {
+        flex: 1;
+        max-width: none;
+        margin-left: 0;
+      }
+      .nsearch input {
+        font-size: 12px;
+        padding: 6px 10px 6px 30px;
+      }
+      /* Esconde nome, mostra só avatar */
+      .uname { display: none; }
+      .upill { padding: 3px 6px 3px 3px; gap: 5px; }
+      /* Esconde botões Entrar/Criar conta em texto, mostra ícones */
+      .nbtn { padding: 5px 10px; font-size: 12px; }
+      .menu-toggle { display: flex; }
+
+      /* ── LAYOUT (sidebar vira drawer) ── */
+      .lay {
+        grid-template-columns: 1fr;
+        position: relative;
+      }
+      .side {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        bottom: 0;
+        width: 220px;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        box-shadow: 4px 0 20px rgba(0,0,0,.15);
+        overflow-y: auto;
+      }
+      .side.open {
+        transform: translateX(0);
+      }
+      .cnt {
+        padding: 1rem;
+        max-height: none;
+        min-height: calc(100vh - 56px);
+        overflow-y: auto;
+      }
+      .cnt.msgs-view {
+        padding: 0;
+        height: calc(100vh - 56px);
+      }
+
+      /* ── FEED ── */
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .fhead {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .6rem;
+      }
+      .fhead > div:last-child {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .chips {
+        gap: 4px;
+      }
+      .chip {
+        padding: 4px 10px;
+        font-size: 12px;
+      }
+
+      /* ── MSGS (chat full width no mobile) ── */
+      .mlayout {
+        grid-template-columns: 1fr;
+        height: calc(100vh - 56px);
+      }
+      .mlist {
+        display: none;
+        width: 100%;
+        height: calc(100vh - 56px);
+        position: fixed;
+        top: 56px;
+        left: 0;
+        z-index: 50;
+        background: #fff;
+      }
+      .mlist.show-list {
+        display: flex;
+      }
+      .chat {
+        height: calc(100vh - 56px);
+        display: flex;
+        flex-direction: column;
+      }
+      .chscroll {
+        padding: .8rem;
+      }
+      .bubble { max-width: 85%; }
+      .chinput { padding: .5rem .6rem; }
+      /* Botão voltar para lista no mobile */
+      .chh {
+        position: relative;
+      }
+      .back-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: none;
+        cursor: pointer;
+        color: var(--tx);
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      /* Esconde empty state, mostra lista diretamente */
+      .mobile-show-list .mlist { display: flex; }
+      .mobile-show-list .chat { display: none; }
+      .mobile-show-chat .mlist { display: none; }
+      .mobile-show-chat .chat { display: flex; }
+
+      /* ── PERFIL ── */
+      .phero {
+        padding: 1.2rem;
+        gap: .9rem;
+      }
+      .pbav { width: 50px; height: 50px; font-size: 1.1rem; }
+      .pname { font-size: 1rem; }
+      .stats { grid-template-columns: repeat(3,1fr); gap: .5rem; }
+      .snum { font-size: 1.3rem; }
+      .fld2 { grid-template-columns: 1fr; }
+
+      /* ── ANALYTICS ── */
+      .dash-grid { grid-template-columns: repeat(2,1fr); }
+      .chart-card > div[style*="grid-template-columns:1fr 1fr"] {
+        display: flex; flex-direction: column;
+      }
+
+      /* ── MODAIS ── */
+      .modal { padding: 1.3rem; }
+      .mover { padding: .5rem; align-items: flex-end; }
+      .modal { border-radius: 14px 14px 0 0; max-height: 92vh; }
+
+      /* ── NOTIFICAÇÕES ── */
+      .notif-panel { left: 8px; right: 8px; width: auto; }
+
+      /* ── MATCH BANNER ── */
+      .match-banner { flex-direction: column; gap: .7rem; padding: 1rem; }
+      .match-banner i { font-size: 24px; }
+      .mcard { flex-wrap: wrap; }
+
+      /* ── PUBLIC FEED ── */
+      .pub-wrap { padding: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .dash-grid { grid-template-columns: 1fr 1fr; }
+      .stats { gap: .4rem; }
+      .stat { padding: .7rem .5rem; }
+      nav { padding: 0 .7rem; gap: 6px; }
+    }
   </style>
 </head>
 
