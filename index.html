@@ -448,7 +448,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 async function setSession(user) {
   // Load profile
-  let { data: prof } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  let { data: prof } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
   if (!prof) {
     // Profile not yet created (first login via OAuth etc) — skip
     return;
@@ -499,29 +499,77 @@ async function login() {
 }
 
 async function register() {
+
   const name  = document.getElementById('rn').value.trim();
   const email = document.getElementById('re').value.trim();
   const pass  = document.getElementById('rp').value;
-  if (!name || !email || !pass) { toast('Preencha todos os campos', 'er'); return; }
-  if (pass.length < 6) { toast('Senha com mínimo 6 caracteres', 'er'); return; }
+
+  if (!name || !email || !pass) {
+    toast('Preencha todos os campos', 'er');
+    return;
+  }
+
+  if (pass.length < 6) {
+    toast('Senha com mínimo 6 caracteres', 'er');
+    return;
+  }
+
   const btn = document.getElementById('regBtn');
-  btn.disabled = true; btn.textContent = 'Criando conta...';
-  const { data, error } = await sb.auth.signUp({ email, password: pass });
-  if (error) { btn.disabled = false; btn.textContent = 'Criar conta gratuita'; toast(error.message, 'er'); return; }
-  // Create profile
-  const { error: pe } = await sb.from('profiles').insert({ id: data.user.id, name, role: selRole, phone: '', city: '' });
-  btn.disabled = false; btn.textContent = 'Criar conta gratuita';
-  if (pe) { toast('Erro ao criar perfil: ' + pe.message, 'er'); return; }
-  await setSession(data.user);
-  closeAuthModal();
-  toast('Conta criada com sucesso! Bem-vindo(a)!');
+
+  btn.disabled = true;
+  btn.textContent = 'Criando conta...';
+
+  try {
+
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password: pass,
+      options: {
+        data: {
+          name: name
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    if (!data?.user) {
+      throw new Error('Usuário não retornado pelo Supabase');
+    }
+
+    const { error: pe } = await sb
+  .from('profiles')
+  .upsert({
+    id: data.user.id,
+    name,
+    role: selRole || 'buyer',
+    phone: '',
+    city: ''
+  });
+
+    if (pe) {
+  console.error('Erro ao inserir profile:', pe);
+  throw pe;
 }
 
-async function logout() {
-  if (msgChannel) { sb.removeChannel(msgChannel); msgChannel = null; }
-  await sb.auth.signOut();
-  CU = null; CUProfile = null; activeConv = null; CONVS = [];
-  show('public'); refreshNavPublic();
+    await setSession(data.user);
+
+    closeAuthModal();
+
+    toast('Conta criada com sucesso!');
+
+  } catch (err) {
+
+    console.error(err);
+
+    toast(err.message, 'er');
+
+  } finally {
+
+    btn.disabled = false;
+    btn.textContent = 'Criar conta gratuita';
+
+  }
 }
 
 /* ════════════════════════════════════════════════
@@ -1271,11 +1319,27 @@ async function showUserProfile(uid) {
   document.getElementById('userProfileContent').innerHTML =
     '<div style="text-align:center;padding:2rem"><i class="ti ti-loader spin" style="color:var(--g);font-size:24px"></i></div>';
   document.getElementById('userProfileMod').classList.add('on');
-  const { data: prof } = await sb.from('profiles').select('*').eq('id', uid).single();
-  if (!prof) {
-    document.getElementById('userProfileContent').innerHTML =
-      '<p style="text-align:center;color:var(--txl);padding:1.5rem">Perfil não encontrado</p>';
-    return;
+  const { data: prof, error } = await sb
+  .from('profiles')
+  .select('*')
+  .eq('id', uid)
+  .maybeSingle();
+
+if (error) {
+  console.error('Erro ao buscar perfil:', error);
+
+  document.getElementById('userProfileContent').innerHTML =
+    '<p style="text-align:center;color:red;padding:1.5rem">Erro ao carregar perfil</p>';
+
+  return;
+}
+
+if (!prof) {
+  document.getElementById('userProfileContent').innerHTML =
+    '<p style="text-align:center;color:var(--txl);padding:1.5rem">Perfil não encontrado</p>';
+
+  return;
+}
   }
   const isBuyer  = prof.role === 'buyer'  || prof.role === 'both';
   const isSeller = prof.role === 'seller' || prof.role === 'both';
