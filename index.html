@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>querocomprar — v3</title>
+<title>querocomprar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -16,14 +17,11 @@
   --b:#378ADD;--bl:#E8F2FC;
   --bg:#F0EEE7;--bd:#D3D1C7;
   --tx:#2C2C2A;--txm:#5F5E5A;--txl:#888780;
-  --dk:#1C1C1A;
-  --r:10px;
+  --dk:#1C1C1A;--r:10px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:15px}
 button,input,select,textarea{font-family:inherit}
 *{scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
-
-/* ── NAV ── */
 nav{background:var(--dk);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:12px;position:sticky;top:0;z-index:300}
 .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;letter-spacing:-.5px;cursor:pointer;text-decoration:none}
 .logo em{color:var(--g);font-style:normal}
@@ -49,8 +47,6 @@ nav{background:var(--dk);height:56px;display:flex;align-items:center;padding:0 1
 .navico{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.6);font-size:20px;padding:4px;position:relative;display:flex;align-items:center;transition:.2s}
 .navico:hover{color:#fff}
 .navico .ndot{position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--c);border:1.5px solid var(--dk)}
-
-/* ── NOTIF PANEL ── */
 .notif-panel{position:fixed;top:56px;right:12px;width:320px;background:#fff;border:.5px solid var(--bd);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.15);z-index:500;display:none;max-height:440px;overflow-y:auto}
 .notif-panel.on{display:block}
 .np-hd{padding:.9rem 1rem;border-bottom:.5px solid var(--bd);display:flex;align-items:center;justify-content:space-between;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;position:sticky;top:0;background:#fff}
@@ -61,12 +57,8 @@ nav{background:var(--dk);height:56px;display:flex;align-items:center;padding:0 1
 .niico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
 .nitxt{font-size:13px;line-height:1.4}
 .nitime{font-size:11px;color:var(--txl);margin-top:2px}
-
-/* ── SCREENS ── */
 .scr{display:none;min-height:calc(100vh - 56px)}
 .scr.on{display:block}
-
-/* ── AUTH ── */
 .auth-bg{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 65% 35%,#d3f5e8,var(--bg) 58%)}
 .acard{background:#fff;border-radius:14px;padding:2.3rem;width:100%;max-width:390px;border:.5px solid var(--bd);box-shadow:0 8px 32px rgba(0,0,0,.07)}
 .atitle{font-family:'Syne',sans-serif;font-weight:800;font-size:1.45rem;margin-bottom:.3rem}
@@ -91,8 +83,6 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .aswitch{text-align:center;margin-top:1rem;font-size:13px;color:var(--txm)}
 .aswitch a{color:var(--g);cursor:pointer;font-weight:500}
-
-/* ── APP LAYOUT ── */
 .lay{display:grid;grid-template-columns:216px 1fr;min-height:calc(100vh - 56px)}
 .side{background:#fff;border-right:.5px solid var(--bd);padding:1.1rem .75rem;display:flex;flex-direction:column;gap:2px}
 .ssec{font-size:10px;font-weight:600;color:var(--txl);text-transform:uppercase;letter-spacing:.06em;padding:.8rem .8rem .3rem}
@@ -105,8 +95,6 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .si-pill.green{background:var(--g);color:#fff}
 .cnt{padding:1.8rem;overflow-y:auto;max-height:calc(100vh - 56px)}
 .cnt.msgs-view{padding:0;overflow:hidden;max-height:calc(100vh - 56px)}
-
-/* ── FEED ── */
 .fhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:.7rem}
 .ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:1.25rem}
 .chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.1rem}
@@ -129,8 +117,6 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .msgbtn{display:flex;align-items:center;gap:5px;background:var(--gl);color:var(--gd);border:none;border-radius:7px;padding:6px 11px;font-size:13px;font-weight:500;transition:.2s;cursor:pointer}
 .msgbtn:hover{background:var(--g);color:#fff}
 .own{font-size:11px;color:var(--txl);background:var(--bg);padding:3px 9px;border-radius:7px}
-
-/* ── MATCH ── */
 .match-banner{background:linear-gradient(120deg,var(--gd),#1a5f7a);border-radius:var(--r);padding:1.2rem 1.5rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1rem;color:#fff}
 .match-banner i{font-size:32px;opacity:.8;flex-shrink:0}
 .match-banner h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:3px}
@@ -143,8 +129,6 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .mtit{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .msub{font-size:12px;color:var(--txm);margin-top:2px}
 .mreason{font-size:12px;color:var(--g);margin-top:4px;display:flex;align-items:flex-start;gap:4px}
-
-/* ── ANALYTICS ── */
 .dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.1rem}
 .dcard{background:#fff;border:.5px solid var(--bd);border-radius:var(--r);padding:1rem}
 .dnum{font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;line-height:1;margin-top:.4rem}
@@ -162,8 +146,6 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .ai-insights{background:linear-gradient(135deg,#edfaf4,#e3f1fd);border:1px solid #aad9c3;border-radius:var(--r);padding:1.2rem}
 .ai-ins-hd{display:flex;align-items:center;gap:7px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:var(--gd);margin-bottom:.8rem}
 .insight-item{display:flex;gap:8px;padding:.65rem .9rem;background:rgba(255,255,255,.75);border-radius:8px;margin-bottom:.5rem;font-size:13.5px;align-items:flex-start;line-height:1.5}
-
-/* ── MSGS ── */
 .mlayout{display:grid;grid-template-columns:272px 1fr;height:calc(100vh - 56px);overflow:hidden}
 .mlist{background:#fff;border-right:.5px solid var(--bd);overflow-y:auto;display:flex;flex-direction:column}
 .mlh{padding:.95rem 1rem;border-bottom:.5px solid var(--bd);font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;position:sticky;top:0;background:#fff}
@@ -192,12 +174,11 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .sbtn:hover{background:var(--gd)}
 .icobtn{width:34px;height:34px;border-radius:50%;background:var(--bg);color:var(--txm);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;transition:.2s}
 .icobtn:hover{background:var(--gl);color:var(--gd);border-color:var(--gm)}
-.offer-bar{display:flex;align-items:center;gap:8px;background:#fff9ee;border:1px solid #f0c97a;border-radius:10px;padding:.55rem .9rem;animation:fi .2s ease}
+.offer-bar{display:flex;align-items:center;gap:8px;background:#fff9ee;border:1px solid #f0c97a;border-radius:10px;padding:.55rem .9rem}
 .offer-bar label{font-size:12.5px;font-weight:600;color:var(--a);white-space:nowrap;margin:0}
 .offer-bar .opw{position:relative;flex:1}
 .offer-bar .opw span{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--a);pointer-events:none;font-weight:600}
 .offer-bar .opw input{width:100%;padding:6px 10px 6px 26px;border:1px solid #f0c97a;border-radius:8px;font-size:14px;font-weight:600;color:var(--a);background:#fff;outline:none}
-.offer-bar .opw input:focus{border-color:var(--a)}
 .offer-bar .cls{background:none;border:none;cursor:pointer;color:var(--txm);font-size:17px;padding:2px;flex-shrink:0}
 .img-strip{display:flex;gap:6px;flex-wrap:wrap;padding:.3rem 0 .1rem}
 .img-thumb{position:relative;width:58px;height:58px;border-radius:8px;overflow:hidden;border:1px solid var(--bd);flex-shrink:0}
@@ -207,15 +188,13 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .bubble-offer.me{margin-left:auto;border-bottom-right-radius:4px}
 .bubble-offer.them{margin-right:auto;border-bottom-left-radius:4px}
 .boffer-lbl{font-size:11px;font-weight:600;color:var(--a);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;display:flex;align-items:center;gap:4px}
-.boffer-val{font-family:"Syne",sans-serif;font-weight:800;font-size:1.2rem;color:var(--a)}
+.boffer-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--a)}
 .bubble-img{border-radius:10px;overflow:hidden;cursor:pointer;max-width:220px}
 .bubble-img.me{margin-left:auto}
 .bubble-img.them{margin-right:auto}
 .bubble-img img{width:100%;display:block;border-radius:10px;border:.5px solid var(--bd)}
 .echat{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--txl);gap:10px;text-align:center;padding:2rem}
 .echat i{font-size:48px;opacity:.18}
-
-/* ── PROFILE ── */
 .phero{background:linear-gradient(135deg,var(--dk),#1a3a2e);border-radius:var(--r);padding:1.8rem;margin-bottom:1.1rem;display:flex;align-items:center;gap:1.3rem}
 .pbav{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:#fff;flex-shrink:0}
 .pname{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;color:#fff}
@@ -227,60 +206,49 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
 .slbl{font-size:12px;color:var(--txm);margin-top:3px}
 .fcard{background:#fff;border-radius:var(--r);border:.5px solid var(--bd);padding:1.4rem}
 .fctitle{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;margin-bottom:1.1rem}
-
-/* ── MODAL ── */
 .mover{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;align-items:center;justify-content:center;padding:1rem}
 .mover.on{display:flex}
 .modal{background:#fff;border-radius:14px;padding:1.8rem;width:100%;max-width:460px;border:.5px solid var(--bd);max-height:90vh;overflow-y:auto}
 .mhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.3rem}
 .mtitle{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem}
-.xbtn{background:none;border:none;color:var(--txm);font-size:19px;cursor:pointer;padding:2px;transition:.2s}
-.xbtn:hover{color:var(--tx)}
-
-/* ── AI PANEL ── */
+.xbtn{background:none;border:none;color:var(--txm);font-size:19px;cursor:pointer;padding:2px}
 .aipanel{background:linear-gradient(135deg,#edfaf4,#e3f1fd);border:1px solid #aad9c3;border-radius:9px;padding:1rem;margin-bottom:1rem}
 .aihd{display:flex;align-items:center;gap:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--gd);margin-bottom:.65rem}
 .aiuse{display:inline-flex;align-items:center;gap:4px;margin-top:.55rem;background:var(--g);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;transition:.2s}
 .aiuse:hover{background:var(--gd)}
-
-/* ── TOAST ── */
 .toast{position:fixed;bottom:20px;right:20px;background:var(--dk);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;z-index:9999;transform:translateY(80px);opacity:0;transition:.3s;display:flex;align-items:center;gap:8px;max-width:310px;box-shadow:0 8px 28px rgba(0,0,0,.2)}
 .toast.on{transform:translateY(0);opacity:1}
 .toast.ok i{color:var(--g)}
 .toast.er i{color:var(--c)}
-
 .empty{text-align:center;padding:3.5rem 2rem;color:var(--txl);grid-column:1/-1}
 .empty i{font-size:50px;opacity:.16;margin-bottom:.8rem;display:block}
 .empty p{font-size:14px;line-height:1.6}
 .pricewrap{position:relative}
 .pricewrap span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--txm);font-size:14px;pointer-events:none}
 .pricewrap input{padding-left:32px}
-
+.loading-full{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 56px);gap:12px;color:var(--txm)}
+.loading-full i{font-size:36px;color:var(--g)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin{animation:spin .7s linear infinite}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .fi{animation:fi .22s ease forwards}
+/* Public feed wrapper */
+.pub-wrap{max-width:1200px;margin:0 auto;padding:1.8rem}
 </style>
 </head>
 <body>
 
-<!-- TOAST -->
 <div class="toast" id="toast"><i id="ticon" class="ti ti-check"></i><span id="tmsg"></span></div>
-
-<!-- NOTIF PANEL -->
 <div class="notif-panel" id="notifPanel">
-  <div class="np-hd"><span>Notificações</span><span class="np-all" onclick="markAllRead()">Marcar todas lidas</span></div>
+  <div class="np-hd"><span>Notificações</span><span class="np-all" onclick="markAllRead()">Marcar lidas</span></div>
   <div id="notifList"></div>
 </div>
 
 <!-- MSG MODAL -->
 <div class="mover" id="msgMod">
   <div class="modal">
-    <div class="mhd"><span class="mtitle" id="modTitle">Contatar comprador</span><button class="xbtn" onclick="closeMod()"><i class="ti ti-x"></i></button></div>
-    <div class="aipanel">
-      <div class="aihd"><i class="ti ti-sparkles"></i>Sugestão gerada por IA</div>
-      <div id="aiTxt" style="font-size:13.5px;color:var(--tx);line-height:1.55"><i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando mensagem personalizada...</div>
-    </div>
+    <div class="mhd"><span class="mtitle" id="modTitle">Contatar comprador</span><button class="xbtn" onclick="closeMsgMod()"><i class="ti ti-x"></i></button></div>
+    <div class="aipanel"><div class="aihd"><i class="ti ti-sparkles"></i>Sugestão da IA</div><div id="aiTxt" style="font-size:13.5px;color:var(--tx);line-height:1.55"><i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando...</div></div>
     <div class="fld"><label>Sua mensagem</label><textarea id="modMsg" rows="4" placeholder="Ou escreva sua própria mensagem..."></textarea></div>
     <button class="btn g full" onclick="sendModMsg()"><i class="ti ti-send"></i>Enviar mensagem</button>
   </div>
@@ -294,47 +262,24 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
   </div>
 </div>
 
-
-
 <!-- USER PROFILE MODAL -->
 <div class="mover" id="userProfileMod">
-  <div class="modal" style="max-width:500px;max-height:80vh;overflow-y:auto">
-    <div class="mhd">
-      <span class="mtitle">Perfil do usuário</span>
-      <button class="xbtn" onclick="document.getElementById('userProfileMod').classList.remove('on')"><i class="ti ti-x"></i></button>
-    </div>
+  <div class="modal" style="max-width:500px">
+    <div class="mhd"><span class="mtitle">Perfil do usuário</span><button class="xbtn" onclick="document.getElementById('userProfileMod').classList.remove('on')"><i class="ti ti-x"></i></button></div>
     <div id="userProfileContent"></div>
   </div>
 </div>
 
-
-<!-- USER PROFILE MODAL -->
-<div class="mover" id="userProfileMod">
-  <div class="modal" style="max-width:500px;max-height:80vh;overflow-y:auto">
-    <div class="mhd">
-      <span class="mtitle">Perfil do usuário</span>
-      <button class="xbtn" onclick="document.getElementById('userProfileMod').classList.remove('on')"><i class="ti ti-x"></i></button>
-    </div>
-    <div id="userProfileContent"></div>
-  </div>
-</div>
-
-<!-- AUTH MODAL -->
+<!-- AUTH MODAL (sobre o feed público) -->
 <div class="mover" id="authMod">
   <div class="modal" style="max-width:420px">
-    <div class="mhd">
-      <span class="mtitle" id="authModTitle">Entrar</span>
-      <button class="xbtn" onclick="closeAuthModal()"><i class="ti ti-x"></i></button>
-    </div>
-    <!-- LOGIN PANEL -->
+    <div class="mhd"><span class="mtitle" id="authModTitle">Entrar</span><button class="xbtn" onclick="closeAuthModal()"><i class="ti ti-x"></i></button></div>
     <div id="authLogin">
       <div class="fld"><label>E-mail</label><input type="email" id="le" placeholder="seu@email.com"></div>
       <div class="fld"><label>Senha</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
-      <button class="btn g full" onclick="login()">Entrar na plataforma</button>
-      <p style="font-size:12px;color:var(--txl);text-align:center;margin-top:.7rem">Teste: <b>ana@q.com</b> / 123 &nbsp;·&nbsp; <b>carlos@q.com</b> / 123</p>
-      <div class="aswitch">Sem conta? <a onclick="showAuthModal('reg')">Criar gratuitamente</a></div>
+      <button class="btn g full" id="loginBtn" onclick="login()">Entrar na plataforma</button>
+      <div class="aswitch" style="margin-top:.8rem">Sem conta? <a onclick="showAuthModal('reg')">Criar gratuitamente</a></div>
     </div>
-    <!-- REGISTER PANEL -->
     <div id="authReg" style="display:none">
       <div class="role-tabs">
         <button class="rtab on" id="tb-buy" onclick="setRole('buyer')"><i class="ti ti-shopping-cart"></i> Comprador</button>
@@ -342,35 +287,16 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
       </div>
       <div class="fld"><label>Nome completo</label><input type="text" id="rn" placeholder="Seu nome"></div>
       <div class="fld"><label>E-mail</label><input type="email" id="re" placeholder="seu@email.com"></div>
-      <div class="fld"><label>Senha</label><input type="password" id="rp" placeholder="Mínimo 3 caracteres"></div>
-      <button class="btn g full" onclick="register()">Criar conta gratuita</button>
-      <div class="aswitch">Já tem conta? <a onclick="showAuthModal('login')">Faça login</a></div>
+      <div class="fld"><label>Senha</label><input type="password" id="rp" placeholder="Mínimo 6 caracteres"></div>
+      <button class="btn g full" id="regBtn" onclick="register()">Criar conta gratuita</button>
+      <div class="aswitch" style="margin-top:.8rem">Já tem conta? <a onclick="showAuthModal('login')">Faça login</a></div>
     </div>
-  </div>
-</div>
-
-<!-- PUBLIC FEED SCREEN -->
-<div class="scr on" id="scr-public">
-  <div style="max-width:1200px;margin:0 auto;padding:1.8rem">
-    <div class="fhead fi" style="margin-bottom:1rem">
-      <div class="ftitle">Explorar desejos</div>
-      <div style="display:flex;gap:7px;align-items:center">
-        <select onchange="pubSortMode=this.value;buildPubGrid()" style="font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;outline:none;cursor:pointer">
-          <option value="new">Mais recentes</option>
-          <option value="price">Maior valor</option>
-          <option value="offers">Mais ofertas</option>
-        </select>
-        <button class="btn g sm" onclick="showAuthModal('login')" id="pubPostBtn"><i class="ti ti-plus"></i>Publicar desejo</button>
-      </div>
-    </div>
-    <div class="chips" id="pubChips"></div>
-    <div class="grid" id="pubGrid"></div>
   </div>
 </div>
 
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#" onclick="CU&&view('feed');return false">quero<em>comprar</em></a>
+  <a class="logo" href="#" onclick="CU?view('feed'):showPublic();return false">quero<em>comprar</em></a>
   <div class="nsearch" id="navSearch">
     <i class="ti ti-search si"></i>
     <input type="text" placeholder="Buscar produtos..." id="searchInp"
@@ -385,24 +311,26 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
   </div>
 </nav>
 
-      <div class="asub">Publique o que procura ou ofereça o que tem</div>
-      <div class="role-tabs">
-        <button class="rtab on" id="tb-buy" onclick="setRole('buyer')"><i class="ti ti-shopping-cart"></i> Comprador</button>
-        <button class="rtab" id="tb-sel" onclick="setRole('seller')"><i class="ti ti-tag"></i> Vendedor</button>
+<!-- TELA PÚBLICA (feed sem login) -->
+<div class="scr on" id="scr-public">
+  <div class="pub-wrap">
+    <div class="fhead fi">
+      <div class="ftitle">Explorar desejos</div>
+      <div style="display:flex;gap:7px;align-items:center">
+        <select onchange="pubSortMode=this.value;buildPubGrid()" style="font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;outline:none;cursor:pointer">
+          <option value="new">Mais recentes</option><option value="price">Maior valor</option><option value="offers">Mais ofertas</option>
+        </select>
+        <button class="btn g sm" onclick="showAuthModal('login')"><i class="ti ti-plus"></i>Publicar desejo</button>
       </div>
-      <div class="fld"><label>Nome completo</label><input type="text" id="rn" placeholder="Seu nome"></div>
-      <div class="fld"><label>E-mail</label><input type="email" id="re" placeholder="seu@email.com"></div>
-      <div class="fld"><label>Senha</label><input type="password" id="rp" placeholder="Mínimo 3 caracteres"></div>
-      <button class="btn g full" onclick="register()">Criar conta gratuita</button>
-      <div class="aswitch">Já tem conta? <a onclick="show('login')">Faça login</a></div>
     </div>
+    <div class="chips" id="pubChips"></div>
+    <div class="grid" id="pubGrid"></div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- APP (logado) -->
 <div class="scr" id="scr-app">
   <div class="lay">
-    <!-- SIDEBAR -->
     <div class="side">
       <div class="ssec">Descobrir</div>
       <button class="si-btn on" id="sn-feed" onclick="view('feed')"><i class="ti ti-layout-grid"></i>Explorar</button>
@@ -418,463 +346,391 @@ textarea{resize:vertical;min-height:78px;line-height:1.5}
         <button class="si-btn" style="color:var(--c)" onclick="logout()"><i class="ti ti-logout"></i>Sair</button>
       </div>
     </div>
-    <!-- CONTENT -->
     <div class="cnt" id="cnt"></div>
   </div>
 </div>
 
 <script>
+/* ════════════════════════════════════════════════
+   SUPABASE INIT
+════════════════════════════════════════════════ */
+const SUPA_URL = 'https://ylkhhylumtewwxivebez.supabase.co';
+const SUPA_KEY = 'sb_publishable_wtmqB-s1-wtOaX7VVqUhpQ_hDJS-BrN';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-/* ── PUBLIC FEED ── */
-let pubFilter='Todos', pubSortMode='new';
+/* ════════════════════════════════════════════════
+   GLOBALS
+════════════════════════════════════════════════ */
+const COLS = ['#1D9E75','#BA7517','#D85A30','#378ADD','#639922','#534AB7','#D4537E'];
+const CATS = ['Todos','Eletrônicos','Veículos','Imóveis','Roupas','Móveis','Esportes','Livros','Outros'];
+let CU = null;           // { id, email, name, role, city, phone }
+let CUProfile = null;    // raw profile row
+let selRole = 'buyer';
+let activeFilter = 'Todos';
+let pubFilter = 'Todos';
+let pubSortMode = 'new';
+let sortMode = 'new';
+let activeConv = null;
+let modWishId = null;
+let notifOpen = false;
+let pendingAction = null;
+let WISHES = [];
+let CONVS = [];
+let PROFILES = {};       // uid -> profile cache
+let pendingImgs = [];
+let offerOpen = false;
+let msgChannel = null;
 
-function initApp(){
-  // Always show search bar
-  const ns=document.getElementById('navSearch'); if(ns) ns.style.display='flex';
-  if(CU){ enter(); }
-  else {
-    // Update nav to show login/register buttons
-    document.getElementById('navR').innerHTML=`
-      <button class="nbtn" onclick="showAuthModal('login')" style="margin-right:6px">Entrar</button>
-      <button class="nbtn p" onclick="showAuthModal('reg')">Criar conta</button>`;
-    show('public');
-    buildPubGrid();
+/* ════════════════════════════════════════════════
+   BOOT
+════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', async () => {
+  buildPubChips();
+  await loadPublicWishes();
+  // Check existing session
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    await setSession(session.user);
   }
+  // Listen for auth changes (login/logout in other tabs)
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await setSession(session.user);
+    } else if (event === 'SIGNED_OUT') {
+      CU = null; CUProfile = null;
+      show('public'); refreshNavPublic();
+    }
+  });
+});
+
+async function setSession(user) {
+  // Load profile
+  let { data: prof } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (!prof) {
+    // Profile not yet created (first login via OAuth etc) — skip
+    return;
+  }
+  CU = { id: user.id, email: user.email, name: prof.name, role: prof.role, city: prof.city || '', phone: prof.phone || '' };
+  CUProfile = prof;
+  PROFILES[CU.id] = CU;
+  enter();
 }
 
-function showAuthModal(panel){
+/* ════════════════════════════════════════════════
+   AUTH MODAL
+════════════════════════════════════════════════ */
+function showAuthModal(panel) {
+  const isLogin = panel === 'login';
+  document.getElementById('authModTitle').textContent = isLogin ? 'Entrar' : 'Criar conta';
+  document.getElementById('authLogin').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('authReg').style.display   = isLogin ? 'none'  : 'block';
   document.getElementById('authMod').classList.add('on');
-  const isLogin = panel==='login';
-  document.getElementById('authModTitle').textContent = isLogin?'Entrar':'Criar conta';
-  document.getElementById('authLogin').style.display = isLogin?'block':'none';
-  document.getElementById('authReg').style.display   = isLogin?'none':'block';
 }
-function closeAuthModal(){
+function closeAuthModal() {
   document.getElementById('authMod').classList.remove('on');
-  pendingAction=null;
+  pendingAction = null;
 }
-
-let pendingAction=null;
-function requireLogin(fn){
-  if(CU){ fn(); return; }
-  pendingAction=fn;
+function setRole(r) {
+  selRole = r;
+  document.getElementById('tb-buy').classList.toggle('on', r === 'buyer');
+  document.getElementById('tb-sel').classList.toggle('on', r === 'seller');
+}
+function requireLogin(fn) {
+  if (CU) { fn(); return; }
+  pendingAction = fn;
   showAuthModal('login');
 }
 
-function buildPubGrid(){
-  // chips
-  const chips=document.getElementById('pubChips');
-  if(chips) chips.innerHTML=
-    ['Todos','Eletrônicos','Veículos','Imóveis','Roupas','Móveis','Esportes','Livros','Outros']
-    .map(c=>`<div class="chip${c===pubFilter?' on':''}" onclick="pubFilterCat('${c}')">${c}</div>`).join('');
-  const g=document.getElementById('pubGrid'); if(!g) return;
-  let ws=pubFilter==='Todos'?[...WISHES]:WISHES.filter(w=>w.cat===pubFilter&&!w.closed);
-  ws=ws.filter(w=>!w.closed);
-  if(pubSortMode==='new')   ws.sort((a,b)=>b.ts-a.ts);
-  else if(pubSortMode==='price') ws.sort((a,b)=>b.price-a.price);
-  else ws.sort((a,b)=>(b.offers||0)-(a.offers||0));
-  g.innerHTML=ws.length?ws.map(pubCardHTML).join(''):
-    '<div class="empty" style="grid-column:1/-1"><i class="ti ti-mood-empty"></i><p>Nenhum desejo nessa categoria</p></div>';
+async function login() {
+  const email = document.getElementById('le').value.trim();
+  const pass  = document.getElementById('lp').value;
+  if (!email || !pass) { toast('Preencha e-mail e senha', 'er'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Entrando...';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = 'Entrar na plataforma';
+  if (error) { toast(error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos' : error.message, 'er'); return; }
+  await setSession(data.user);
+  closeAuthModal();
+  if (pendingAction) { const fn = pendingAction; pendingAction = null; setTimeout(fn, 400); }
 }
-function pubFilterCat(c){
-  pubFilter=c; buildPubGrid();
-  document.querySelectorAll('#pubChips .chip').forEach(x=>x.classList.toggle('on',x.textContent===c));
+
+async function register() {
+  const name  = document.getElementById('rn').value.trim();
+  const email = document.getElementById('re').value.trim();
+  const pass  = document.getElementById('rp').value;
+  if (!name || !email || !pass) { toast('Preencha todos os campos', 'er'); return; }
+  if (pass.length < 6) { toast('Senha com mínimo 6 caracteres', 'er'); return; }
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.textContent = 'Criando conta...';
+  const { data, error } = await sb.auth.signUp({ email, password: pass });
+  if (error) { btn.disabled = false; btn.textContent = 'Criar conta gratuita'; toast(error.message, 'er'); return; }
+  // Create profile
+  const { error: pe } = await sb.from('profiles').insert({ id: data.user.id, name, role: selRole, phone: '', city: '' });
+  btn.disabled = false; btn.textContent = 'Criar conta gratuita';
+  if (pe) { toast('Erro ao criar perfil: ' + pe.message, 'er'); return; }
+  await setSession(data.user);
+  closeAuthModal();
+  toast('Conta criada com sucesso! Bem-vindo(a)!');
 }
-function pubCardHTML(w){
-  const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
+
+async function logout() {
+  if (msgChannel) { sb.removeChannel(msgChannel); msgChannel = null; }
+  await sb.auth.signOut();
+  CU = null; CUProfile = null; activeConv = null; CONVS = [];
+  show('public'); refreshNavPublic();
+}
+
+/* ════════════════════════════════════════════════
+   NAV
+════════════════════════════════════════════════ */
+function refreshNavPublic() {
+  document.getElementById('navR').innerHTML = `
+    <button class="nbtn" onclick="showAuthModal('login')" style="margin-right:6px">Entrar</button>
+    <button class="nbtn p" onclick="showAuthModal('reg')">Criar conta</button>`;
+}
+function refreshNavLoggedIn() {
+  const initials = CU.name ? CU.name[0].toUpperCase() : '?';
+  document.getElementById('navR').innerHTML = `
+    <div style="display:flex;align-items:center;gap:9px">
+      <button class="navico" onclick="toggleNotif()" id="notifBtn"><i class="ti ti-bell"></i></button>
+      <div class="upill" onclick="view('prof')">
+        <div class="av" style="background:${colorFor(CU.id)}">${initials}</div>
+        <span class="uname">${CU.name.split(' ')[0]}</span>
+      </div>
+    </div>`;
+}
+function colorFor(uid) {
+  if (!uid) return COLS[0];
+  // Use last 6 chars of uuid to get index
+  const n = parseInt(uid.replace(/-/g,'').slice(-4), 16) || 0;
+  return COLS[n % COLS.length];
+}
+
+/* ════════════════════════════════════════════════
+   SCREENS
+════════════════════════════════════════════════ */
+function show(s) {
+  document.querySelectorAll('.scr').forEach(x => x.classList.remove('on'));
+  document.getElementById('scr-' + s).classList.add('on');
+}
+function showPublic() { show('public'); buildPubGrid(); }
+
+async function enter() {
+  document.getElementById('matchpill').style.display = 'inline';
+  refreshNavLoggedIn();
+  show('app');
+  await loadWishes();
+  view('feed');
+  loadConvs();
+  subscribeMessages();
+}
+
+/* ════════════════════════════════════════════════
+   DATA — WISHES
+════════════════════════════════════════════════ */
+async function loadPublicWishes() {
+  const { data, error } = await sb.from('wishes').select('*, profiles(name,role,city)').order('created_at', { ascending: false });
+  if (error) { console.error(error); return; }
+  WISHES = (data || []).map(mapWish);
+  buildPubGrid();
+}
+
+async function loadWishes() {
+  const { data, error } = await sb.from('wishes').select('*, profiles(name,role,city)').order('created_at', { ascending: false });
+  if (error) { console.error(error); return; }
+  WISHES = (data || []).map(mapWish);
+}
+
+function mapWish(r) {
+  const prof = r.profiles || {};
+  return {
+    id: r.id,
+    uid: r.user_id,
+    uname: prof.name || '?',
+    urole: prof.role || 'buyer',
+    ucity: prof.city || '',
+    title: r.title,
+    cat: r.category,
+    cond: r.condition,
+    price: Number(r.price),
+    desc: r.description || '',
+    ts: new Date(r.created_at).getTime(),
+    views: r.views || 0,
+    offers: r.offers || 0,
+    closed: r.closed || false
+  };
+}
+
+/* ════════════════════════════════════════════════
+   PUBLIC FEED
+════════════════════════════════════════════════ */
+function buildPubChips() {
+  const el = document.getElementById('pubChips'); if (!el) return;
+  el.innerHTML = CATS.map(c =>
+    `<div class="chip${c===pubFilter?' on':''}" onclick="pubFilterCat('${c}')">${c}</div>`
+  ).join('');
+}
+function pubFilterCat(c) {
+  pubFilter = c; buildPubGrid();
+  document.querySelectorAll('#pubChips .chip').forEach(x => x.classList.toggle('on', x.textContent === c));
+}
+function buildPubGrid() {
+  const g = document.getElementById('pubGrid'); if (!g) return;
+  let ws = pubFilter === 'Todos' ? [...WISHES] : WISHES.filter(w => w.cat === pubFilter);
+  ws = ws.filter(w => !w.closed);
+  if (pubSortMode === 'new')   ws.sort((a,b) => b.ts - a.ts);
+  else if (pubSortMode === 'price') ws.sort((a,b) => b.price - a.price);
+  else ws.sort((a,b) => (b.offers||0) - (a.offers||0));
+  g.innerHTML = ws.length ? ws.map(pubCardHTML).join('') :
+    '<div class="empty" style="grid-column:1/-1"><i class="ti ti-mood-empty"></i><p>Nenhum desejo publicado ainda.</p></div>';
+}
+function pubCardHTML(w) {
   return `<div class="wcard fi">
     <div class="wch">
       <div class="wcu">
-        <div class="av" style="background:${COLS[u.id%COLS.length]};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile(${u.id})">${u.name[0]}</div>
-        <div><div class="wun" style="cursor:pointer" onclick="showUserProfile(${u.id})">${u.name}</div><div class="wt">${relTime(w.ts)}</div></div>
+        <div class="av" style="background:${colorFor(w.uid)};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname[0]}</div>
+        <div><div class="wun" style="cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname}</div><div class="wt">${relTime(w.ts)}</div></div>
       </div>
       <span class="cat">${w.cat}</span>
     </div>
-    <div class="wtitle" onclick="pubShowDetail(${w.id})">${w.title}</div>
+    <div class="wtitle" onclick="showDetail(${w.id})">${w.title}</div>
     <div class="wdesc">${w.desc}</div>
     <div class="wcf">
-      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond}${w.views?' · '+w.views+' vistas':''}</div></div>
+      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond}</div></div>
       <button class="msgbtn" onclick="requireLogin(()=>openMsgMod(${w.id}))"><i class="ti ti-send" style="font-size:13px"></i>Tenho isso!</button>
     </div>
   </div>`;
 }
-function pubShowDetail(wid){
-  const w=WISHES.find(x=>x.id===wid); if(!w) return;
-  if(w.views!=null)w.views++; sv();
-  const u=USERS.find(x=>x.id===w.uid)||{name:'?'};
-  document.getElementById('detContent').innerHTML=`
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
-      <div class="av" style="background:${COLS[u.id%COLS.length]};width:40px;height:40px;border-radius:50%;font-size:15px;flex-shrink:0;cursor:pointer" onclick="document.getElementById('detMod').classList.remove('on');showUserProfile(${u.id})">${u.name[0]}</div>
-      <div>
-        <div style="font-weight:600;font-size:15px;cursor:pointer" onclick="document.getElementById('detMod').classList.remove('on');showUserProfile(${u.id})">${u.name}</div>
-        <div style="font-size:12px;color:var(--txl)">${u.city||'Localização não informada'} · ${relTime(w.ts)}</div>
-      </div>
-    </div>
-    <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem">${w.title}</h2>
-    <div style="display:flex;gap:7px;margin-bottom:.9rem">
-      <span class="cat">${w.cat}</span>
-      <span style="font-size:11px;background:var(--bg);color:var(--txm);padding:3px 9px;border-radius:8px">${w.cond}</span>
-      ${w.closed?'<span style="font-size:11px;background:#e8f5ee;color:var(--gd);padding:3px 9px;border-radius:8px;font-weight:600">✓ Negócio fechado</span>':''}
-    </div>
-    <p style="font-size:14px;color:var(--txm);line-height:1.65;margin-bottom:1rem">${w.desc}</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.1rem">
-      <div style="background:var(--gl);border-radius:9px;padding:.9rem;text-align:center">
-        <div style="font-size:11px;color:var(--gd);margin-bottom:3px">Valor máximo</div>
-        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--gd)">R$ ${fmt(w.price)}</div>
-      </div>
-      <div style="background:var(--bg);border-radius:9px;padding:.9rem;text-align:center">
-        <div style="font-size:11px;color:var(--txm);margin-bottom:3px">Visualizações</div>
-        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem">${w.views||0}</div>
-      </div>
-    </div>
-    ${!w.closed
-      ?`<button class="btn g full" onclick="document.getElementById('detMod').classList.remove('on');requireLogin(()=>openMsgMod(${w.id}))">
-          <i class="ti ti-send"></i>Tenho isso! Contatar comprador
-        </button>`
-      :'<div style="text-align:center;background:var(--gl);color:var(--gd);padding:.75rem;border-radius:8px;font-weight:600">✓ Negócio já fechado</div>'}`;
-  document.getElementById('detMod').classList.add('on');
-}
 
-/* ── USER PROFILE MODAL ── */
-function showUserProfile(uid){
-  const u=USERS.find(x=>x.id===uid); if(!u) return;
-  const isBuyer=u.role==='buyer'||u.role==='both';
-  const isSeller=u.role==='seller'||u.role==='both';
-  const wishes=WISHES.filter(w=>w.uid===uid&&!w.closed);
-  const closed=WISHES.filter(w=>w.uid===uid&&w.closed);
-
-  let content=`
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.3rem">
-      <div class="av" style="background:${COLS[u.id%COLS.length]};width:52px;height:52px;border-radius:50%;font-size:1.2rem;flex-shrink:0">${u.name[0]}</div>
-      <div>
-        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem">${u.name}</div>
-        <div style="font-size:13px;color:var(--txl);margin-top:2px">${u.city||'Localização não informada'}</div>
-        <div style="font-size:11px;margin-top:5px;display:inline-block;padding:2px 10px;border-radius:12px;background:var(--gl);color:var(--gd)">${isBuyer&&isSeller?'Comprador & Vendedor':isBuyer?'Comprador':'Vendedor'}</div>
-      </div>
-    </div>`;
-
-  if(isBuyer&&wishes.length){
-    content+=`<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px"><i class="ti ti-heart" style="color:var(--c)"></i>Deseja comprar</div>
-      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
-        ${wishes.map(w=>`<div style="border:.5px solid var(--bd);border-radius:9px;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;cursor:pointer;transition:.15s" onmouseover="this.style.borderColor='var(--gm)'" onmouseout="this.style.borderColor='var(--bd)'" onclick="document.getElementById('userProfileMod').classList.remove('on');pubShowDetail(${w.id})">
-          <div>
-            <div style="font-weight:600;font-size:14px">${w.title}</div>
-            <div style="font-size:12px;color:var(--txm);margin-top:2px">${w.cat} · ${w.cond}</div>
-          </div>
-          <div style="text-align:right;flex-shrink:0">
-            <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ ${fmt(w.price)}</div>
-            <div style="font-size:11px;color:var(--txl);margin-top:1px">${w.views||0} vistas</div>
-          </div>
-        </div>`).join('')}
-      </div>`;
-  }
-
-  if(isSeller){
-    const sells=CONVS.filter(c=>c.from===uid);
-    content+=`<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px"><i class="ti ti-tag" style="color:var(--g)"></i>Ofertas enviadas</div>`;
-    if(sells.length){
-      content+=`<div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
-        ${sells.map(c=>{
-          const w=WISHES.find(x=>x.id===c.wid);
-          if(!w)return'';
-          const last=c.msgs[c.msgs.length-1];
-          return `<div style="border:.5px solid var(--bd);border-radius:9px;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem">
-            <div><div style="font-weight:600;font-size:14px">${w.title}</div>
-            <div style="font-size:12px;color:var(--txm);margin-top:2px">${last?last.text.substring(0,40)+'...':''}</div></div>
-            <span style="font-size:11px;background:var(--gl);color:var(--gd);padding:2px 8px;border-radius:7px">Ofertado</span>
-          </div>`;
-        }).join('')}
-      </div>`;
-    } else {
-      content+=`<p style="font-size:13px;color:var(--txl);margin-bottom:.8rem">Nenhuma oferta enviada ainda.</p>`;
-    }
-  }
-
-  if(closed.length){
-    content+=`<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px"><i class="ti ti-check" style="color:var(--gd)"></i>Negócios fechados</div>
-      <div style="display:flex;flex-direction:column;gap:.5rem">
-        ${closed.map(w=>`<div style="border:.5px solid #b5ddc8;background:var(--gl);border-radius:9px;padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-weight:600;font-size:13.5px">${w.title}</div>
-          <span style="font-size:11px;color:var(--gd);font-weight:600">✓ Fechado</span>
-        </div>`).join('')}
-      </div>`;
-  }
-
-  document.getElementById('userProfileContent').innerHTML=content;
-  document.getElementById('userProfileMod').classList.add('on');
-}
-
-/* ── CLOSE DEAL ── */
-function closeDeal(wid){
-  const w=WISHES.find(x=>x.id===wid); if(!w) return;
-  if(!confirm('Marcar este negócio como fechado?')) return;
-  w.closed=true; sv();
-  toast('Negócio fechado! Parabéns! 🎉');
-  // refresh views
-  buildPubGrid();
-  const el=document.getElementById('cnt');
-  if(document.getElementById('sn-mine')&&document.getElementById('sn-mine').classList.contains('on')) renderMine(el);
-  if(document.getElementById('sn-feed')&&document.getElementById('sn-feed').classList.contains('on')) renderFeed(el);
-  document.getElementById('detMod').classList.remove('on');
-}
-
-const COLS=['#1D9E75','#BA7517','#D85A30','#378ADD','#639922','#534AB7','#D4537E'];
-const CATS=['Todos','Eletrônicos','Veículos','Imóveis','Roupas','Móveis','Esportes','Livros','Outros'];
-let CU=null, selRole='buyer', activeFilter='Todos', activeConv=null, modWishId=null, notifOpen=false, sortMode='new';
-
-/* ── SEED DATA ── */
-const USERS=[
-  {id:1,name:'Ana Silva',email:'ana@q.com',pass:'123',role:'buyer',city:'Rio de Janeiro',phone:''},
-  {id:2,name:'Carlos Mendes',email:'carlos@q.com',pass:'123',role:'seller',city:'São Paulo',phone:''},
-  {id:3,name:'Beatriz Costa',email:'bi@q.com',pass:'123',role:'buyer',city:'Belo Horizonte',phone:''},
-];
-let WISHES=[
-  {id:1,uid:1,title:'iPhone 15 Pro Max 256GB',cat:'Eletrônicos',cond:'Seminovo',price:5500,desc:'Procuro iPhone 15 Pro Max em bom estado. Prefiro preto ou azul. Com ou sem nota, desde que funcione perfeitamente.',ts:Date.now()-7200000,views:34,offers:2,closed:false},
-  {id:2,uid:3,title:'Bicicleta speed Trek',cat:'Esportes',cond:'Usado',price:3000,desc:'Qualquer Trek de estrada aro 700, tamanho M ou L. Pequenos arranhões ok.',ts:Date.now()-18000000,views:18,offers:1,closed:false},
-  {id:3,uid:1,title:'Sofá retrátil 3 lugares',cat:'Móveis',cond:'Seminovo',price:1800,desc:'Sofá em couro ou tecido, cores neutras, bom estado para apartamento.',ts:Date.now()-86400000,views:22,offers:0,closed:false},
-  {id:4,uid:3,title:'Notebook Dell ou Lenovo i5+',cat:'Eletrônicos',cond:'Qualquer',price:2200,desc:'8GB RAM mínimo, SSD. Para faculdade de engenharia.',ts:Date.now()-172800000,views:41,offers:3,closed:false},
-  {id:5,uid:1,title:'Câmera DSLR para iniciante',cat:'Eletrônicos',cond:'Seminovo',price:2800,desc:'Canon ou Nikon com lente kit. Modelo 2018 em diante.',ts:Date.now()-259200000,views:15,offers:1,closed:false},
-  {id:6,uid:3,title:'Violão elétrico acústico',cat:'Outros',cond:'Qualquer',price:900,desc:'Yamaha, Takamine ou similar. Estou aprendendo música.',ts:Date.now()-345600000,views:9,offers:0,closed:false},
-  {id:7,uid:1,title:'Mesa de escritório L',cat:'Móveis',cond:'Qualquer',price:600,desc:'Mesa em L para home office. Pode ser MDF ou madeira. Cor clara.',ts:Date.now()-432000000,views:7,offers:0,closed:false},
-];
-let CONVS=[
-  {id:1,from:2,to:1,wid:1,msgs:[
-    {uid:2,text:'Oi Ana! Tenho um iPhone 15 Pro Max preto com nota fiscal e ainda na garantia Apple.',ts:Date.now()-3600000},
-    {uid:1,text:'Tem fotos? Está com algum arranhão?',ts:Date.now()-3540000},
-    {uid:2,text:'Zero arranhões, sempre com capinha. Mando fotos agora!',ts:Date.now()-3480000},
-  ]},
-  {id:2,from:2,to:3,wid:2,msgs:[
-    {uid:2,text:'Boa tarde Beatriz! Tenho uma Trek Domane SL5 2022 tamanho M disponível.',ts:Date.now()-86400000},
-    {uid:3,text:'Que tamanho exatamente? E qual o histórico de uso?',ts:Date.now()-82800000},
-  ]},
-];
-let NOTIFS=[
-  {id:1,uid:1,type:'msg',text:'Carlos Mendes enviou uma mensagem sobre seu anúncio de iPhone.',ts:Date.now()-3600000,read:false,wid:1},
-  {id:2,uid:1,type:'offer',text:'Nova oferta recebida no anúncio "Sofá retrátil 3 lugares".',ts:Date.now()-7200000,read:false,wid:3},
-  {id:3,uid:1,type:'match',text:'IA encontrou 3 vendedores compatíveis com seu desejo de iPhone.',ts:Date.now()-14400000,read:true,wid:1},
-  {id:4,uid:3,type:'msg',text:'Carlos respondeu sobre sua bicicleta Trek.',ts:Date.now()-86400000,read:false,wid:2},
-];
-let nwid=8, ncid=3, nuid=4, nnid=5;
-
-/* ── PERSISTENCE ── */
-function sv(){
-  try{
-    localStorage.setItem("qc3_w",JSON.stringify(WISHES));
-    localStorage.setItem("qc3_c",JSON.stringify(CONVS));
-    localStorage.setItem("qc3_u",JSON.stringify(USERS));
-    localStorage.setItem("qc3_n",JSON.stringify(NOTIFS));
-    if(CU) localStorage.setItem("qc3_cu",String(CU.id));
-  }catch(e){}
-}
-(function ld(){
-  try{
-    const w=localStorage.getItem("qc3_w"),c=localStorage.getItem("qc3_c"),
-          u=localStorage.getItem("qc3_u"),n=localStorage.getItem("qc3_n");
-    if(w)WISHES=JSON.parse(w);
-    if(c)CONVS=JSON.parse(c);
-    if(n)NOTIFS=JSON.parse(n);
-    if(u){const pu=JSON.parse(u);pu.forEach(x=>{if(!USERS.find(y=>y.id===x.id))USERS.push(x)})}
-    if(WISHES.length)nwid=Math.max(...WISHES.map(x=>x.id))+1;
-    if(CONVS.length)ncid=Math.max(...CONVS.map(x=>x.id))+1;
-    const cuid=localStorage.getItem("qc3_cu");
-    if(cuid){const u2=USERS.find(x=>x.id===parseInt(cuid));if(u2)CU=u2;}
-  }catch(e){}
-})();
-window.addEventListener("DOMContentLoaded",()=>{ initApp(); });
-
-/* ── AUTH ── */
-function show(s){
-  document.querySelectorAll(".scr").forEach(x=>x.classList.remove("on"));
-  document.getElementById("scr-"+s).classList.add("on");
-}
-function setRole(r){
-  selRole=r;
-  document.getElementById('tb-buy').classList.toggle('on',r==='buyer');
-  document.getElementById('tb-sel').classList.toggle('on',r==='seller');
-}
-function login(){
-  const e=document.getElementById("le").value.trim(), p=document.getElementById("lp").value;
-  const u=USERS.find(x=>x.email===e&&x.pass===p);
-  if(!u){toast("E-mail ou senha incorretos","er");return}
-  CU=u; activeConv=null;
-  closeAuthModal();
-  enter();
-  if(pendingAction){const fn=pendingAction;pendingAction=null;setTimeout(fn,300);}
-}
-function register(){
-  const n=val('rn'), e=val('re'), p=val('rp');
-  if(!n||!e||!p){toast('Preencha todos os campos','er');return}
-  if(USERS.find(x=>x.email===e)){toast('E-mail já cadastrado','er');return}
-  const u={id:nuid++,name:n,email:e,pass:p,role:selRole,city:'',phone:''};
-  USERS.push(u); CU=u; sv(); closeAuthModal(); enter(); toast('Conta criada com sucesso!');
-}
-function logout(){
-  CU=null; activeConv=null;
-  try{localStorage.removeItem("qc3_cu");}catch(e){}
-  initApp();
-}
-function enter(){
-  document.getElementById("matchpill").style.display="inline";
-  sv(); refreshNav(); show("app"); view("feed");
-}
-
-function getUnread(){return CONVS.filter(c=>c.to===CU.id).length}
-function getUnreadN(){return NOTIFS.filter(n=>n.uid===CU.id&&!n.read).length}
-
-function refreshNav(){
-  const ur=getUnread(), un=getUnreadN();
-  document.getElementById('navR').innerHTML=`
-    <div style="display:flex;align-items:center;gap:9px">
-      <button class="navico" onclick="toggleNotif()" id="notifBtn">
-        <i class="ti ti-bell"></i>
-        ${un>0?'<span class="ndot"></span>':''}
-      </button>
-      <div class="upill" onclick="view('prof')">
-        <div class="av" style="background:${COLS[CU.id%COLS.length]}">${CU.name[0]}</div>
-        <span class="uname">${CU.name.split(' ')[0]}</span>
-        ${ur>0?`<span class="nbadge">${ur}</span>`:''}
-      </div>
-    </div>`;
-  const d=document.getElementById('msdot');
-  if(d){d.style.display=ur>0?'inline':'none';d.textContent=ur;}
-}
-
-/* ── NOTIFICATIONS ── */
-function toggleNotif(){
-  notifOpen=!notifOpen;
-  document.getElementById('notifPanel').classList.toggle('on',notifOpen);
-  if(notifOpen) buildNotifPanel();
-}
-function buildNotifPanel(){
-  const el=document.getElementById('notifList'); if(!el) return;
-  const myN=NOTIFS.filter(n=>n.uid===CU.id).sort((a,b)=>b.ts-a.ts);
-  if(!myN.length){el.innerHTML='<div style="padding:1.5rem;text-align:center;font-size:13px;color:var(--txl)">Nenhuma notificação</div>';return}
-  const icons={msg:'ti-message-2',offer:'ti-tag',match:'ti-sparkles'};
-  const bgs={msg:'var(--bl)',offer:'var(--al)',match:'var(--gl)'};
-  const fgs={msg:'var(--b)',offer:'var(--a)',match:'var(--g)'};
-  el.innerHTML=myN.map(n=>`
-    <div class="ni${n.read?'':' unread'}" onclick="clickNotif(${n.id})">
-      <div class="niico" style="background:${bgs[n.type]||'#eee'};color:${fgs[n.type]||'#666'}">
-        <i class="ti ${icons[n.type]||'ti-bell'}"></i>
-      </div>
-      <div style="flex:1">
-        <div class="nitxt">${n.text}</div>
-        <div class="nitime">${relTime(n.ts)}</div>
-      </div>
-      ${!n.read?'<div style="width:7px;height:7px;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:4px"></div>':''}
-    </div>`).join('');
-}
-function clickNotif(id){
-  const n=NOTIFS.find(x=>x.id===id); if(!n) return;
-  n.read=true; sv(); notifOpen=false;
-  document.getElementById('notifPanel').classList.remove('on');
-  refreshNav();
-  if(n.type==='msg') view('msgs');
-  else if(n.wid) showDetail(n.wid);
-}
-function markAllRead(){
-  NOTIFS.filter(n=>n.uid===CU.id).forEach(n=>n.read=true);
-  sv(); buildNotifPanel(); refreshNav();
-}
-
-/* ── SEARCH ── */
-function doSearch(q){
-  const drop=document.getElementById('sdrop');
-  if(!q.trim()){drop.innerHTML='';return}
-  const res=WISHES.filter(w=>
-    w.title.toLowerCase().includes(q.toLowerCase())||
-    w.cat.toLowerCase().includes(q.toLowerCase())||
+/* ════════════════════════════════════════════════
+   SEARCH
+════════════════════════════════════════════════ */
+function doSearch(q) {
+  const drop = document.getElementById('sdrop');
+  if (!q.trim()) { drop.innerHTML = ''; return; }
+  const res = WISHES.filter(w =>
+    w.title.toLowerCase().includes(q.toLowerCase()) ||
+    w.cat.toLowerCase().includes(q.toLowerCase()) ||
     w.desc.toLowerCase().includes(q.toLowerCase())
-  ).slice(0,6);
-  if(!res.length){drop.innerHTML='<div style="padding:.9rem;font-size:13px;color:var(--txl);text-align:center">Nenhum resultado</div>';return}
-  drop.innerHTML=res.map(w=>{
-    const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
-    return `<div class="sitem" onmousedown="showDetail(${w.id})">
-      <div class="av" style="background:${COLS[u.id%COLS.length]};border-radius:7px;width:34px;height:34px;font-size:12px;flex-shrink:0">${u.name[0]}</div>
+  ).slice(0, 6);
+  if (!res.length) { drop.innerHTML = '<div style="padding:.9rem;font-size:13px;color:var(--txl);text-align:center">Nenhum resultado</div>'; return; }
+  drop.innerHTML = res.map(w =>
+    `<div class="sitem" onmousedown="showDetail(${w.id})">
+      <div class="av" style="background:${colorFor(w.uid)};border-radius:7px;width:34px;height:34px;font-size:12px;flex-shrink:0">${w.uname[0]}</div>
       <div><div style="font-size:13.5px;font-weight:500">${w.title}</div>
       <div style="font-size:12px;color:var(--txm)">${w.cat} · até R$ ${fmt(w.price)}</div></div>
-    </div>`;
-  }).join('');
+    </div>`
+  ).join('');
 }
 
-/* ── VIEWS ── */
-function view(vn){
-  ['feed','match','mine','new','msgs','dash','prof'].forEach(x=>{
-    const s=document.getElementById('sn-'+x); if(s) s.classList.remove('on');
+/* ════════════════════════════════════════════════
+   NOTIFICATIONS (client-side from conversations)
+════════════════════════════════════════════════ */
+let NOTIFS = [];
+function toggleNotif() {
+  notifOpen = !notifOpen;
+  document.getElementById('notifPanel').classList.toggle('on', notifOpen);
+  if (notifOpen) buildNotifPanel();
+}
+function buildNotifPanel() {
+  const el = document.getElementById('notifList'); if (!el) return;
+  const myN = NOTIFS.filter(n => n.uid === CU.id).sort((a,b) => b.ts - a.ts);
+  if (!myN.length) { el.innerHTML = '<div style="padding:1.5rem;text-align:center;font-size:13px;color:var(--txl)">Nenhuma notificação</div>'; return; }
+  const icons = { msg:'ti-message-2', offer:'ti-tag', match:'ti-sparkles' };
+  const bgs   = { msg:'var(--bl)', offer:'var(--al)', match:'var(--gl)' };
+  const fgs   = { msg:'var(--b)', offer:'var(--a)', match:'var(--g)' };
+  el.innerHTML = myN.map(n =>
+    `<div class="ni${n.read?'':' unread'}" onclick="clickNotif('${n.id}')">
+      <div class="niico" style="background:${bgs[n.type]||'#eee'};color:${fgs[n.type]||'#666'}"><i class="ti ${icons[n.type]||'ti-bell'}"></i></div>
+      <div style="flex:1"><div class="nitxt">${n.text}</div><div class="nitime">${relTime(n.ts)}</div></div>
+      ${!n.read ? '<div style="width:7px;height:7px;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:4px"></div>' : ''}
+    </div>`
+  ).join('');
+}
+function clickNotif(id) {
+  const n = NOTIFS.find(x => x.id === id); if (!n) return;
+  n.read = true; notifOpen = false;
+  document.getElementById('notifPanel').classList.remove('on');
+  refreshNavLoggedIn();
+  if (n.convId) { activeConv = CONVS.find(c => c.id === n.convId); view('msgs'); }
+}
+function markAllRead() { NOTIFS.filter(n => n.uid === CU.id).forEach(n => n.read = true); buildNotifPanel(); }
+function pushNotif(type, text, convId) {
+  NOTIFS.push({ id: Date.now().toString(), uid: CU.id, type, text, ts: Date.now(), read: false, convId });
+  buildNotifPanel();
+}
+
+/* ════════════════════════════════════════════════
+   VIEWS (logged in)
+════════════════════════════════════════════════ */
+function view(vn) {
+  ['feed','match','mine','new','msgs','dash','prof'].forEach(x => {
+    const s = document.getElementById('sn-' + x); if (s) s.classList.remove('on');
   });
-  const s=document.getElementById('sn-'+vn); if(s) s.classList.add('on');
-  const el=document.getElementById('cnt');
-  notifOpen=false; document.getElementById('notifPanel').classList.remove('on');
-  if(vn==='msgs'){
-    el.classList.add('msgs-view');
-  } else {
-    el.classList.remove('msgs-view');
-  }
-  if(vn==='feed')      renderFeed(el);
-  else if(vn==='match')renderMatch(el);
-  else if(vn==='mine') renderMine(el);
-  else if(vn==='new')  renderNew(el);
-  else if(vn==='msgs') renderMsgs(el);
-  else if(vn==='dash') renderDash(el);
-  else if(vn==='prof') renderProf(el);
+  const s = document.getElementById('sn-' + vn); if (s) s.classList.add('on');
+  const el = document.getElementById('cnt');
+  el.style.padding = '1.8rem'; el.style.margin = '';
+  el.classList.remove('msgs-view');
+  notifOpen = false; document.getElementById('notifPanel').classList.remove('on');
+  if (vn === 'feed')       renderFeed(el);
+  else if (vn === 'match') renderMatch(el);
+  else if (vn === 'mine')  renderMine(el);
+  else if (vn === 'new')   renderNew(el);
+  else if (vn === 'msgs')  { el.classList.add('msgs-view'); el.style.padding='0'; renderMsgs(el); }
+  else if (vn === 'dash')  renderDash(el);
+  else if (vn === 'prof')  renderProf(el);
 }
 
-/* ── FEED ── */
-function renderFeed(el){
-  el.innerHTML=`<div class="fhead fi">
+/* ── FEED (logado) ── */
+function renderFeed(el) {
+  el.innerHTML = `<div class="fhead fi">
     <div class="ftitle">Explorar desejos</div>
     <div style="display:flex;gap:7px;align-items:center">
       <select onchange="sortMode=this.value;buildGrid()" style="font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;outline:none;cursor:pointer">
-        <option value="new">Mais recentes</option>
-        <option value="price">Maior valor</option>
-        <option value="offers">Mais ofertas</option>
+        <option value="new">Mais recentes</option><option value="price">Maior valor</option><option value="offers">Mais ofertas</option>
       </select>
       <button class="btn g sm" onclick="view('new')"><i class="ti ti-plus"></i>Publicar</button>
     </div>
   </div>
-  <div class="chips" id="chips">
-    ${CATS.map(c=>`<div class="chip${c===activeFilter?' on':''}" onclick="filterCat('${c}')">${c}</div>`).join('')}
-  </div>
+  <div class="chips" id="chips">${CATS.map(c=>`<div class="chip${c===activeFilter?' on':''}" onclick="filterCat('${c}')">${c}</div>`).join('')}</div>
   <div class="grid fi" id="wgrid"></div>`;
   buildGrid();
 }
-function filterCat(c){
-  activeFilter=c; buildGrid();
-  document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.textContent===c));
+function filterCat(c) {
+  activeFilter = c; buildGrid();
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.textContent === c));
 }
-function buildGrid(){
-  const g=document.getElementById('wgrid'); if(!g) return;
-  let ws=activeFilter==='Todos'?[...WISHES]:WISHES.filter(w=>w.cat===activeFilter);
-  if(sortMode==='new')    ws.sort((a,b)=>b.ts-a.ts);
-  else if(sortMode==='price')   ws.sort((a,b)=>b.price-a.price);
-  else ws.sort((a,b)=>(b.offers||0)-(a.offers||0));
-  g.innerHTML=ws.length ? ws.map(cardHTML).join('') :
-    '<div class="empty"><i class="ti ti-mood-empty"></i><p>Nenhum desejo nessa categoria ainda.</p></div>';
+function buildGrid() {
+  const g = document.getElementById('wgrid'); if (!g) return;
+  let ws = activeFilter === 'Todos' ? [...WISHES] : WISHES.filter(w => w.cat === activeFilter);
+  if (sortMode === 'new')   ws.sort((a,b) => b.ts - a.ts);
+  else if (sortMode === 'price') ws.sort((a,b) => b.price - a.price);
+  else ws.sort((a,b) => (b.offers||0) - (a.offers||0));
+  g.innerHTML = ws.length ? ws.map(cardHTML).join('') :
+    '<div class="empty"><i class="ti ti-mood-empty"></i><p>Nenhum desejo nessa categoria.</p></div>';
 }
-function cardHTML(w){
-  const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
-  const mine=CU&&w.uid===CU.id;
-  if(w.closed){
-    return `<div class="wcard fi" style="opacity:.6">
-      <div class="wch">
-        <div class="wcu">
-          <div class="av" style="background:${COLS[u.id%COLS.length]};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile(${u.id})">${u.name[0]}</div>
-          <div><div class="wun" style="cursor:pointer" onclick="showUserProfile(${u.id})">${u.name}</div><div class="wt">${relTime(w.ts)}</div></div>
-        </div>
-        <span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:8px;background:var(--gl);color:var(--gd)">✓ Fechado</span>
+function cardHTML(w) {
+  const mine = CU && w.uid === CU.id;
+  if (w.closed) return `<div class="wcard fi" style="opacity:.55">
+    <div class="wch">
+      <div class="wcu">
+        <div class="av" style="background:${colorFor(w.uid)};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname[0]}</div>
+        <div><div class="wun">${w.uname}</div><div class="wt">${relTime(w.ts)}</div></div>
       </div>
-      <div class="wtitle" style="text-decoration:line-through;color:var(--txl)">${w.title}</div>
-      <div class="wcf" style="padding-top:.6rem;border-top:.5px solid var(--bd)">
-        <div><div class="price" style="color:var(--txl)">R$ ${fmt(w.price)}</div></div>
-        <span class="own">Negócio fechado</span>
-      </div>
-    </div>`;
-  }
+      <span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:8px;background:var(--gl);color:var(--gd)">✓ Fechado</span>
+    </div>
+    <div class="wtitle" style="text-decoration:line-through;color:var(--txl)">${w.title}</div>
+    <div class="wcf" style="padding-top:.6rem;border-top:.5px solid var(--bd)">
+      <div><div class="price" style="color:var(--txl)">R$ ${fmt(w.price)}</div></div>
+      <span class="own">Negócio fechado</span>
+    </div>
+  </div>`;
   return `<div class="wcard fi">
     <div class="wch">
       <div class="wcu">
-        <div class="av" style="background:${COLS[u.id%COLS.length]};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile(${u.id})">${u.name[0]}</div>
-        <div><div class="wun" style="cursor:pointer" onclick="showUserProfile(${u.id})">${u.name}</div><div class="wt">${relTime(w.ts)}</div></div>
+        <div class="av" style="background:${colorFor(w.uid)};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname[0]}</div>
+        <div><div class="wun" style="cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname}</div><div class="wt">${relTime(w.ts)}</div></div>
       </div>
       <span class="cat">${w.cat}</span>
     </div>
@@ -883,76 +739,67 @@ function cardHTML(w){
     <div class="wcf">
       <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond}${w.views?' · '+w.views+' vistas':''}</div></div>
       ${mine
-        ?`<div style="display:flex;gap:5px"><button class="btn g xs" onclick="openCloseDealModal(${w.id})"><i class="ti ti-check"></i>Fechar negócio</button></div>`
-        :`<button class="msgbtn" onclick="requireLogin(()=>openMsgMod(${w.id}))"><i class="ti ti-send" style="font-size:13px"></i>Tenho isso!</button>`}
+        ? `<button class="btn g xs" onclick="confirmCloseDeal(${w.id})"><i class="ti ti-check"></i>Fechar negócio</button>`
+        : `<button class="msgbtn" onclick="openMsgMod(${w.id})"><i class="ti ti-send" style="font-size:13px"></i>Tenho isso!</button>`}
     </div>
   </div>`;
 }
 
 /* ── MATCH IA ── */
-async function renderMatch(el){
-  el.innerHTML=`<div class="match-banner fi">
-    <i class="ti ti-sparkles"></i>
-    <div><h3>Match inteligente por IA</h3><p>A IA analisa todos os desejos da plataforma e aponta as melhores oportunidades para o seu perfil de vendedor.</p></div>
+async function renderMatch(el) {
+  el.innerHTML = `<div class="match-banner fi"><i class="ti ti-sparkles"></i>
+    <div><h3>Match inteligente por IA</h3><p>A IA analisa todos os desejos e aponta as melhores oportunidades de venda para você.</p></div>
   </div>
   <div id="matchArea" style="text-align:center;padding:3rem;color:var(--txm)">
     <i class="ti ti-loader spin" style="font-size:32px;color:var(--g)"></i>
-    <p style="margin-top:.9rem;font-size:14px">Analisando oportunidades com IA...</p>
+    <p style="margin-top:.9rem;font-size:14px">Analisando com IA...</p>
   </div>`;
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`Você é um sistema de match de marketplace. Analise desejos de compra e retorne JSON com os 4 melhores para um vendedor, ordenados por oportunidade de venda. Retorne APENAS JSON válido sem markdown: {"matches":[{"id":1,"score":92,"reason":"razão curta em português max 10 palavras"}]}`,
-        messages:[{role:'user',content:`Desejos disponíveis: ${JSON.stringify(WISHES.map(w=>({id:w.id,title:w.title,cat:w.cat,price:w.price,cond:w.cond,offers:w.offers||0})))}. Gere os 4 melhores matches para um vendedor.`}]
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:1000,
+        system:`Analise desejos de compra e retorne JSON com os 4 melhores para um vendedor. APENAS JSON: {"matches":[{"id":1,"score":92,"reason":"razão curta em pt-BR max 10 palavras"}]}`,
+        messages:[{role:'user',content:`Desejos: ${JSON.stringify(WISHES.filter(w=>!w.closed&&w.uid!==CU.id).map(w=>({id:w.id,title:w.title,cat:w.cat,price:w.price,cond:w.cond})))}`}]
       })
     });
-    const data=await resp.json();
-    let txt=(data.content&&data.content[0]&&data.content[0].text)||'';
-    txt=txt.replace(/```json|```/g,'').trim();
-    const {matches}=JSON.parse(txt);
-    renderMatchCards(matches);
-  }catch(e){
-    // fallback
-    const fallback=WISHES.filter(w=>!CU||w.uid!==CU.id).sort((a,b)=>b.price-a.price).slice(0,4)
-      .map((w,i)=>({id:w.id,score:[95,87,79,71][i],reason:'Alto orçamento com bom potencial de venda'}));
-    renderMatchCards(fallback);
+    const data = await resp.json();
+    let txt = (data.content&&data.content[0]&&data.content[0].text)||'';
+    txt = txt.replace(/```json|```/g,'').trim();
+    renderMatchCards(JSON.parse(txt).matches);
+  } catch(e) {
+    const fb = WISHES.filter(w=>!w.closed&&w.uid!==CU.id).sort((a,b)=>b.price-a.price).slice(0,4)
+      .map((w,i)=>({id:w.id,score:[95,87,79,71][i],reason:'Alto orçamento com bom potencial'}));
+    renderMatchCards(fb);
   }
 }
-function renderMatchCards(matches){
-  const el=document.getElementById('matchArea'); if(!el) return;
-  el.innerHTML=`<div class="match-list fi">${matches.map(m=>{
-    const w=WISHES.find(x=>x.id===m.id); if(!w) return '';
-    const u=USERS.find(x=>x.id===w.uid)||{name:'?',id:0};
-    const mine=CU&&w.uid===CU.id;
-    const scoreColor=m.score>=85?'var(--g)':m.score>=70?'var(--a)':'var(--c)';
+function renderMatchCards(matches) {
+  const el = document.getElementById('matchArea'); if (!el) return;
+  el.innerHTML = `<div class="match-list fi">${matches.map(m => {
+    const w = WISHES.find(x => x.id === m.id); if (!w) return '';
+    const sc = m.score >= 85 ? 'var(--g)' : m.score >= 70 ? 'var(--a)' : 'var(--c)';
     return `<div class="mcard">
-      <div class="mscore" style="border-color:${scoreColor};color:${scoreColor};background:${scoreColor}18">${m.score}<span style="font-size:9px">%</span></div>
+      <div class="mscore" style="border-color:${sc};color:${sc};background:${sc}18">${m.score}<span style="font-size:9px">%</span></div>
       <div class="minfo">
         <div class="mtit">${w.title}</div>
-        <div class="msub">até R$ ${fmt(w.price)} · ${w.cat} · ${u.name} · ${w.cond}</div>
-        <div class="mreason"><i class="ti ti-sparkles" style="font-size:12px;flex-shrink:0;margin-top:1px"></i>${m.reason}</div>
+        <div class="msub">até R$ ${fmt(w.price)} · ${w.cat} · ${w.uname} · ${w.cond}</div>
+        <div class="mreason"><i class="ti ti-sparkles" style="font-size:12px;flex-shrink:0"></i>${m.reason}</div>
       </div>
-      ${!mine
-        ?`<button class="btn g sm" onclick="openMsgMod(${w.id})" style="flex-shrink:0">Contatar</button>`
-        :'<span class="own" style="flex-shrink:0">Seu</span>'}
+      <button class="btn g sm" onclick="openMsgMod(${w.id})" style="flex-shrink:0">Contatar</button>
     </div>`;
   }).join('')}</div>`;
 }
 
 /* ── MINE ── */
-function renderMine(el){
-  const mine=WISHES.filter(w=>w.uid===CU.id).sort((a,b)=>b.ts-a.ts);
-  el.innerHTML=`<div class="fhead fi">
-    <div class="ftitle">Meus desejos</div>
-    <button class="btn g sm" onclick="view('new')"><i class="ti ti-plus"></i>Publicar</button>
-  </div>
+function renderMine(el) {
+  const mine = WISHES.filter(w => w.uid === CU.id).sort((a,b) => b.ts - a.ts);
+  el.innerHTML = `<div class="fhead fi"><div class="ftitle">Meus desejos</div>
+    <button class="btn g sm" onclick="view('new')"><i class="ti ti-plus"></i>Publicar</button></div>
   <div class="grid fi">${mine.length ? mine.map(mineCard).join('') :
-    '<div class="empty"><i class="ti ti-heart"></i><p>Nenhum desejo publicado ainda.<br>Clique em "Publicar desejo" para começar!</p></div>'}</div>`;
+    '<div class="empty"><i class="ti ti-heart"></i><p>Nenhum desejo publicado ainda.</p></div>'}</div>`;
 }
-function mineCard(w){
-  const msgs=CONVS.filter(c=>c.wid===w.id).length;
+function mineCard(w) {
+  const convCount = CONVS.filter(c => c.wish_id === w.id).length;
   return `<div class="wcard fi">
     <div class="wch">
       <div><div class="wtitle" onclick="showDetail(${w.id})">${w.title}</div><div class="wt">${relTime(w.ts)}</div></div>
@@ -960,47 +807,39 @@ function mineCard(w){
     </div>
     <div class="wdesc">${w.desc}</div>
     <div class="wcf">
-      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond} · ${w.views||0} vistas</div></div>
+      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond}</div></div>
       <div style="display:flex;gap:5px;align-items:center">
-        ${msgs?`<span style="font-size:12px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:7px;display:flex;align-items:center;gap:3px"><i class="ti ti-message-2" style="font-size:11px"></i>${msgs}</span>`:''}
+        ${convCount ? `<span style="font-size:12px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:7px"><i class="ti ti-message-2" style="font-size:11px"></i> ${convCount}</span>` : ''}
         ${w.closed
-          ?'<span style="font-size:11px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:7px;font-weight:600">✓ Fechado</span>'
-          :`<button class="btn g xs" onclick="openCloseDealModal(${w.id})" title="Fechar negócio"><i class="ti ti-check"></i>Fechar</button>`}
-        <button class="btn out xs" onclick="delWish(${w.id})" title="Remover"><i class="ti ti-trash"></i></button>
+          ? '<span style="font-size:11px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:7px;font-weight:600">✓ Fechado</span>'
+          : `<button class="btn g xs" onclick="confirmCloseDeal(${w.id})"><i class="ti ti-check"></i>Fechar</button>`}
+        <button class="btn out xs" onclick="delWish(${w.id})"><i class="ti ti-trash"></i></button>
       </div>
     </div>
   </div>`;
 }
-function delWish(id){
-  if(!confirm('Remover este anúncio?')) return;
-  WISHES=WISHES.filter(w=>w.id!==id); sv();
-  renderMine(document.getElementById('cnt')); toast('Anúncio removido');
+async function delWish(id) {
+  if (!confirm('Remover este anúncio?')) return;
+  const { error } = await sb.from('wishes').delete().eq('id', id).eq('user_id', CU.id);
+  if (error) { toast('Erro ao remover: ' + error.message, 'er'); return; }
+  WISHES = WISHES.filter(w => w.id !== id);
+  toast('Anúncio removido');
+  renderMine(document.getElementById('cnt'));
 }
 
 /* ── NEW ── */
-function renderNew(el){
-  el.innerHTML=`<div class="ftitle fi" style="margin-bottom:1.2rem">Publicar desejo de compra</div>
+function renderNew(el) {
+  el.innerHTML = `<div class="ftitle fi" style="margin-bottom:1.2rem">Publicar desejo de compra</div>
   <div class="fcard fi" style="max-width:560px">
     <div class="fld"><label>O que você procura?</label><input type="text" id="wt" placeholder="Ex: iPhone 15 Pro Max 256GB"></div>
     <div class="fld2">
-      <div><label>Categoria</label><select id="wc">
-        <option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option>
-        <option>Roupas</option><option>Móveis</option><option>Esportes</option>
-        <option>Livros</option><option>Outros</option>
-      </select></div>
-      <div><label>Condição</label><select id="wco">
-        <option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option>
-      </select></div>
+      <div><label>Categoria</label><select id="wc"><option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option><option>Roupas</option><option>Móveis</option><option>Esportes</option><option>Livros</option><option>Outros</option></select></div>
+      <div><label>Condição</label><select id="wco"><option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option></select></div>
     </div>
-    <div class="fld"><label>Valor máximo que pagaria</label>
-      <div class="pricewrap"><span>R$</span><input type="number" id="wp" placeholder="0" min="0"></div>
-    </div>
-    <div class="fld"><label>Descrição detalhada</label>
-      <textarea id="wd" placeholder="Cor, modelo específico, versão, requisitos mínimos, observações..."></textarea>
-    </div>
-    <div style="background:var(--gl);border-radius:8px;padding:.75rem 1rem;font-size:13.5px;color:var(--gd);margin-bottom:1rem;display:flex;gap:7px;align-items:flex-start">
-      <i class="ti ti-bulb" style="flex-shrink:0;margin-top:1px"></i>
-      Quanto mais detalhado o anúncio, mais ofertas relevantes você recebe de vendedores.
+    <div class="fld"><label>Valor máximo</label><div class="pricewrap"><span>R$</span><input type="number" id="wp" placeholder="0" min="0"></div></div>
+    <div class="fld"><label>Descrição</label><textarea id="wd" placeholder="Cor, modelo, requisitos, observações..."></textarea></div>
+    <div style="background:var(--gl);border-radius:8px;padding:.75rem 1rem;font-size:13.5px;color:var(--gd);margin-bottom:1rem;display:flex;gap:7px">
+      <i class="ti ti-bulb" style="flex-shrink:0;margin-top:1px"></i>Quanto mais detalhar, mais ofertas relevantes você recebe.
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn g" id="pubBtn" onclick="publish()"><i class="ti ti-plus"></i>Publicar desejo</button>
@@ -1008,328 +847,303 @@ function renderNew(el){
     </div>
   </div>`;
 }
-function publish(){
-  const t=val('wt'), c=val('wc'), co=val('wco'), p=val('wp'), d=val('wd');
-  if(!t||!p){toast('Preencha produto e valor máximo','er');return}
-  const btn=document.getElementById('pubBtn');
-  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader spin"></i> Publicando...';
-  setTimeout(()=>{
-    WISHES.unshift({id:nwid++,uid:CU.id,title:t,cat:c,cond:co,price:parseFloat(p),desc:d||'Sem descrição adicional.',ts:Date.now(),views:0,offers:0});
-    sv(); toast('Desejo publicado com sucesso!'); view('feed');
-  },700);
+async function publish() {
+  const title = val('wt'), category = val('wc'), condition = val('wco'), price = val('wp'), description = val('wd');
+  if (!title || !price) { toast('Preencha produto e valor máximo','er'); return; }
+  const btn = document.getElementById('pubBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader spin"></i> Publicando...';
+  const { data, error } = await sb.from('wishes').insert({
+    user_id: CU.id, title, category, condition, price: parseFloat(price),
+    description: description || '', views: 0, offers: 0, closed: false
+  }).select('*, profiles(name,role,city)').single();
+  btn.disabled = false; btn.innerHTML = '<i class="ti ti-plus"></i>Publicar desejo';
+  if (error) { toast('Erro: ' + error.message, 'er'); return; }
+  WISHES.unshift(mapWish(data));
+  toast('Desejo publicado!');
+  view('feed');
 }
 
-/* ── MSGS ── */
-function renderMsgs(el){
-  el.innerHTML=`<div class="mlayout">
-    <div class="mlist"><div class="mlh">Mensagens</div><div id="mlistin"></div></div>
+/* ════════════════════════════════════════════════
+   CONVERSATIONS (Supabase)
+════════════════════════════════════════════════ */
+async function loadConvs() {
+  const { data, error } = await sb.from('conversations')
+    .select('*, wishes(title,price), buyer:profiles!conversations_buyer_id_fkey(name), seller:profiles!conversations_seller_id_fkey(name)')
+    .or(`buyer_id.eq.${CU.id},seller_id.eq.${CU.id}`)
+    .order('created_at', { ascending: false });
+  if (error) { console.error('loadConvs:', error); return; }
+  CONVS = data || [];
+}
+
+function subscribeMessages() {
+  if (msgChannel) sb.removeChannel(msgChannel);
+  msgChannel = sb.channel('messages-' + CU.id)
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'messages' }, async payload => {
+      const msg = payload.new;
+      // Find the conversation
+      const conv = CONVS.find(c => c.id === msg.conversation_id);
+      if (!conv) { await loadConvs(); return; }
+      // Append message to active conversation if open
+      if (activeConv && activeConv.id === msg.conversation_id && msg.sender_id !== CU.id) {
+        const senderName = conv.buyer_id === msg.sender_id ? conv.buyer?.name : conv.seller?.name;
+        appendBubble(msg, false);
+        scrollChat();
+      }
+      // Push notification for incoming messages
+      if (msg.sender_id !== CU.id) {
+        const senderConv = CONVS.find(c=>c.id===msg.conversation_id);
+        const wTitle = senderConv?.wishes?.title || 'produto';
+        pushNotif('msg', `Nova mensagem sobre "${wTitle.substring(0,30)}"`, msg.conversation_id);
+      }
+      buildConvList();
+    })
+    .subscribe();
+}
+
+/* ── MSGS VIEW ── */
+async function renderMsgs(el) {
+  el.innerHTML = `<div class="mlayout">
+    <div class="mlist"><div class="mlh">Mensagens</div><div id="mlistin"><div style="padding:1.5rem;text-align:center;color:var(--txl);font-size:13px"><i class="ti ti-loader spin" style="color:var(--g)"></i></div></div></div>
     <div class="chat" id="chatarea">${ecHTML()}</div>
   </div>`;
+  await loadConvs();
   buildConvList();
-  if(activeConv){const c=CONVS.find(x=>x.id===activeConv.id);if(c) openConv(c.id);}
+  if (activeConv) {
+    const fresh = CONVS.find(c => c.id === activeConv.id);
+    if (fresh) openConv(fresh);
+  }
 }
-function buildConvList(){
-  const el=document.getElementById('mlistin'); if(!el) return;
-  const myC=CONVS.filter(c=>c.from===CU.id||c.to===CU.id);
-  if(!myC.length){el.innerHTML='<p style="padding:1.5rem;font-size:13px;color:var(--txl);text-align:center">Nenhuma conversa ainda</p>';return}
-  el.innerHTML=myC.map(c=>{
-    const oid=c.from===CU.id?c.to:c.from;
-    const ou=USERS.find(x=>x.id===oid)||{name:'?',id:0};
-    const last=c.msgs[c.msgs.length-1];
-    const w=WISHES.find(x=>x.id===c.wid);
-    const isOn=activeConv&&activeConv.id===c.id;
-    return `<div class="mi${isOn?' on':''}" onclick="openConv(${c.id})">
-      <div class="av" style="background:${COLS[ou.id%COLS.length]};width:36px;height:36px;border-radius:50%;font-size:12.5px;flex-shrink:0">${ou.name[0]}</div>
+function buildConvList() {
+  const el = document.getElementById('mlistin'); if (!el) return;
+  if (!CONVS.length) { el.innerHTML = '<p style="padding:1.5rem;font-size:13px;color:var(--txl);text-align:center">Nenhuma conversa ainda</p>'; return; }
+  el.innerHTML = CONVS.map(c => {
+    const isMe = c.buyer_id === CU.id;
+    const other = isMe ? c.seller : c.buyer;
+    const otherName = other?.name || '?';
+    const otherUid = isMe ? c.seller_id : c.buyer_id;
+    const w = c.wishes;
+    const isOn = activeConv && activeConv.id === c.id;
+    return `<div class="mi${isOn?' on':''}" onclick='openConvById(${c.id})'>
+      <div class="av" style="background:${colorFor(otherUid)};width:36px;height:36px;border-radius:50%;font-size:12.5px;flex-shrink:0">${otherName[0]}</div>
       <div style="flex:1;min-width:0">
-        <div class="min">${ou.name}</div>
-        <div class="mip">${last?esc(last.text):''}</div>
-        ${w?`<div class="miwish"><i class="ti ti-tag" style="font-size:10px"></i> ${w.title}</div>`:''}
+        <div class="min">${otherName}</div>
+        <div class="mip">${c._lastMsg||'...'}</div>
+        ${w ? `<div class="miwish"><i class="ti ti-tag" style="font-size:10px"></i> ${w.title}</div>` : ''}
       </div>
-      ${c.to===CU.id&&!isOn?'<div class="unrd"></div>':''}
     </div>`;
   }).join('');
 }
-function openConv(cid){
-  activeConv=CONVS.find(c=>c.id===cid); buildConvList();
-  const ca=document.getElementById('chatarea'); if(!ca) return;
-  const oid=activeConv.from===CU.id?activeConv.to:activeConv.from;
-  const ou=USERS.find(x=>x.id===oid)||{name:'?',id:0};
-  const w=WISHES.find(x=>x.id===activeConv.wid);
-  ca.innerHTML=`
-    <div class="chh">
-      <div class="av" style="background:${COLS[ou.id%COLS.length]};width:38px;height:38px;border-radius:50%;font-size:14px;flex-shrink:0">${ou.name[0]}</div>
-      <div>
-        <div class="chname">${ou.name}</div>
-        ${w?`<div class="chwish"><i class="ti ti-tag" style="font-size:11px"></i> ${w.title} — até R$ ${fmt(w.price)}</div>`:''}
-      </div>
+async function openConvById(cid) {
+  const c = CONVS.find(x => x.id === cid); if (!c) return;
+  openConv(c);
+}
+async function openConv(c) {
+  activeConv = c; buildConvList();
+  const ca = document.getElementById('chatarea'); if (!ca) return;
+  const isMe = c.buyer_id === CU.id;
+  const other = isMe ? c.seller : c.buyer;
+  const otherName = other?.name || '?';
+  const otherUid = isMe ? c.seller_id : c.buyer_id;
+  const w = c.wishes;
+  ca.innerHTML = `<div class="chh">
+    <div class="av" style="background:${colorFor(otherUid)};width:38px;height:38px;border-radius:50%;font-size:14px;flex-shrink:0;cursor:pointer" onclick="showUserProfile('${otherUid}')">${otherName[0]}</div>
+    <div>
+      <div class="chname">${otherName}</div>
+      ${w ? `<div class="chwish"><i class="ti ti-tag" style="font-size:11px"></i> ${w.title} — até R$ ${fmt(w.price)}</div>` : ''}
     </div>
-    <div class="chscroll" id="chscroll">${activeConv.msgs.map(bubHTML).join('')}</div>
-    <div class="chinput" id="chinput">
-      <div id="imgStrip" class="img-strip" style="display:none"></div>
-      <div id="offerBar" class="offer-bar" style="display:none">
-        <label><i class="ti ti-tag" style="font-size:13px"></i> Sua oferta</label>
-        <div class="opw"><span>R$</span><input type="number" id="offerVal" placeholder="0" min="0"></div>
-        <button class="cls" onclick="toggleOffer()" title="Fechar"><i class="ti ti-x"></i></button>
-      </div>
-      <div class="chinput-toolbar">
-        <button class="icobtn" onclick="document.getElementById('fileInp').click()" title="Enviar foto"><i class="ti ti-photo"></i></button>
-        <button class="icobtn" id="offerToggleBtn" onclick="toggleOffer()" title="Fazer oferta de preço"><i class="ti ti-currency-dollar"></i></button>
-        <input type="file" id="fileInp" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
-        <input class="msgtxt" type="text" id="chin" placeholder="Escreva uma mensagem..." onkeydown="if(event.key==='Enter')sendMsg()">
-        <button class="sbtn" onclick="sendMsg()"><i class="ti ti-send" style="font-size:15px"></i></button>
-      </div>
-    </div>`;
+  </div>
+  <div class="chscroll" id="chscroll">
+    <div style="text-align:center;padding:2rem;color:var(--txl)"><i class="ti ti-loader spin" style="color:var(--g)"></i></div>
+  </div>
+  <div class="chinput" id="chinput">
+    <div id="imgStrip" class="img-strip" style="display:none"></div>
+    <div id="offerBar" class="offer-bar" style="display:none">
+      <label><i class="ti ti-tag" style="font-size:13px"></i> Sua oferta</label>
+      <div class="opw"><span>R$</span><input type="number" id="offerVal" placeholder="0" min="0"></div>
+      <button class="cls" onclick="toggleOffer()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="chinput-toolbar">
+      <button class="icobtn" onclick="document.getElementById('fileInp').click()" title="Foto"><i class="ti ti-photo"></i></button>
+      <button class="icobtn" onclick="toggleOffer()" title="Oferta"><i class="ti ti-currency-dollar"></i></button>
+      <input type="file" id="fileInp" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+      <input class="msgtxt" type="text" id="chin" placeholder="Escreva uma mensagem..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="sbtn" onclick="sendMsg()"><i class="ti ti-send" style="font-size:15px"></i></button>
+    </div>
+  </div>`;
+  // Load messages
+  const { data: msgs } = await sb.from('messages').select('*').eq('conversation_id', c.id).order('created_at', { ascending: true });
+  const sc = document.getElementById('chscroll'); if (!sc) return;
+  sc.innerHTML = (msgs||[]).map(m => bubHTML(m)).join('');
   scrollChat();
 }
-function bubHTML(m){
-  const me=m.uid===CU.id;
-  if(m.type==='offer'){
+function bubHTML(m) {
+  const me = m.sender_id === CU.id;
+  const data = m.data ? (typeof m.data === 'string' ? JSON.parse(m.data) : m.data) : null;
+  if (data && data.type === 'offer') {
     return `<div class="bubble-offer ${me?'me':'them'}" style="margin-bottom:2px">
       <div class="boffer-lbl"><i class="ti ti-tag" style="font-size:12px"></i>Oferta de preço</div>
-      <div class="boffer-val">R$ ${fmt(m.price)}</div>
-      ${m.text?`<div style="font-size:13px;color:var(--txm);margin-top:5px">${esc(m.text)}</div>`:''}
-      <div class="btime">${fmtT(m.ts)}</div>
+      <div class="boffer-val">R$ ${fmt(data.price)}</div>
+      ${m.text && m.text !== '_offer_' ? `<div style="font-size:13px;color:var(--txm);margin-top:5px">${esc(m.text)}</div>` : ''}
+      <div class="btime">${fmtT(m.created_at)}</div>
     </div>`;
   }
-  if(m.type==='img'){
+  if (data && data.type === 'img') {
     return `<div class="bubble-img ${me?'me':'them'}" style="margin-bottom:2px">
-      <img src="${m.src}" alt="Foto" onclick="openImg('${m.src}')">
-      <div class="btime" style="padding:2px 6px;font-size:10px;color:var(--txl)">${fmtT(m.ts)}</div>
+      <img src="${data.src}" alt="Foto" onclick="openImg('${data.src}')">
+      <div class="btime" style="padding:2px 6px;font-size:10px;color:var(--txl)">${fmtT(m.created_at)}</div>
     </div>`;
   }
-  return `<div><div class="bubble ${me?'me':'them'}">${esc(m.text)}<div class="btime">${fmtT(m.ts)}</div></div></div>`;
+  return `<div><div class="bubble ${me?'me':'them'}">${esc(m.text)}<div class="btime">${fmtT(m.created_at)}</div></div></div>`;
 }
-function ecHTML(){return`<div class="echat"><i class="ti ti-message-2"></i><p style="font-size:14px;font-weight:500">Selecione uma conversa</p><p style="font-size:13px;color:var(--txl);margin-top:4px">ou use "Tenho isso!" em qualquer anúncio</p></div>`}
-let pendingImgs=[];
-let offerOpen=false;
+function appendBubble(m, scroll=true) {
+  const sc = document.getElementById('chscroll'); if (!sc) return;
+  sc.innerHTML += bubHTML(m);
+  if (scroll) scrollChat();
+}
+function ecHTML() { return `<div class="echat"><i class="ti ti-message-2"></i><p style="font-size:14px;font-weight:500">Selecione uma conversa</p><p style="font-size:13px;margin-top:4px">ou use "Tenho isso!" em qualquer anúncio</p></div>`; }
+function scrollChat() { const s = document.getElementById('chscroll'); if (s) setTimeout(()=>{ s.scrollTop=s.scrollHeight; },50); }
 
-function toggleOffer(){
-  offerOpen=!offerOpen;
-  const bar=document.getElementById('offerBar');
-  const btn=document.getElementById('offerToggleBtn');
-  if(bar){bar.style.display=offerOpen?'flex':'none';}
-  if(btn){btn.classList.toggle('icobtn',true);btn.style.background=offerOpen?'var(--al)':'';}
-  if(offerOpen) setTimeout(()=>{const v=document.getElementById('offerVal');if(v)v.focus();},50);
+async function sendMsg() {
+  if (!activeConv) return;
+  const inp = document.getElementById('chin');
+  const text = inp ? inp.value.trim() : '';
+  const offerEl = document.getElementById('offerVal');
+  const price = offerEl ? parseFloat(offerEl.value) : null;
+  const hasOffer = offerOpen && price && price > 0;
+  const hasImgs = pendingImgs.length > 0;
+  if (!text && !hasOffer && !hasImgs) return;
+
+  async function insertMsg(payload) {
+    const { data: msg, error } = await sb.from('messages').insert(payload).select().single();
+    if (error) { toast('Erro ao enviar: ' + error.message, 'er'); return null; }
+    return msg;
+  }
+
+  // Images
+  for (const src of pendingImgs) {
+    const msg = await insertMsg({ conversation_id: activeConv.id, sender_id: CU.id, text: '_img_', data: { type:'img', src } });
+    if (msg) appendBubble(msg);
+  }
+  pendingImgs = []; renderImgStrip();
+
+  // Offer
+  if (hasOffer) {
+    const msg = await insertMsg({ conversation_id: activeConv.id, sender_id: CU.id, text: text || '_offer_', data: { type:'offer', price } });
+    if (msg) appendBubble(msg);
+    offerEl.value = ''; offerOpen = false;
+    const ob = document.getElementById('offerBar'); if (ob) ob.style.display = 'none';
+  } else if (text) {
+    const msg = await insertMsg({ conversation_id: activeConv.id, sender_id: CU.id, text });
+    if (msg) appendBubble(msg);
+  }
+  if (inp) inp.value = '';
+  scrollChat();
+  buildConvList();
 }
 
-function handleFiles(files){
-  Array.from(files).forEach(f=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      pendingImgs.push(e.target.result);
-      renderImgStrip();
-    };
+function toggleOffer() {
+  offerOpen = !offerOpen;
+  const bar = document.getElementById('offerBar');
+  if (bar) bar.style.display = offerOpen ? 'flex' : 'none';
+  if (offerOpen) setTimeout(() => { const v=document.getElementById('offerVal'); if(v) v.focus(); }, 50);
+}
+function handleFiles(files) {
+  Array.from(files).forEach(f => {
+    const r = new FileReader();
+    r.onload = e => { pendingImgs.push(e.target.result); renderImgStrip(); };
     r.readAsDataURL(f);
   });
-  document.getElementById('fileInp').value='';
+  document.getElementById('fileInp').value = '';
 }
-
-function renderImgStrip(){
-  const strip=document.getElementById('imgStrip');
-  if(!strip) return;
-  if(!pendingImgs.length){strip.style.display='none';strip.innerHTML='';return;}
-  strip.style.display='flex';
-  strip.innerHTML=pendingImgs.map((src,i)=>`
-    <div class="img-thumb">
-      <img src="${src}">
-      <button class="rm" onclick="removeImg(${i})"><i class="ti ti-x" style="font-size:9px"></i></button>
-    </div>`).join('');
+function renderImgStrip() {
+  const strip = document.getElementById('imgStrip'); if (!strip) return;
+  if (!pendingImgs.length) { strip.style.display='none'; strip.innerHTML=''; return; }
+  strip.style.display = 'flex';
+  strip.innerHTML = pendingImgs.map((src,i) =>
+    `<div class="img-thumb"><img src="${src}"><button class="rm" onclick="removeImg(${i})"><i class="ti ti-x" style="font-size:9px"></i></button></div>`
+  ).join('');
 }
-
-function removeImg(i){pendingImgs.splice(i,1);renderImgStrip();}
-
-function openImg(src){
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
-  ov.innerHTML=`<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.5)">`;
-  ov.onclick=()=>document.body.removeChild(ov);
+function removeImg(i) { pendingImgs.splice(i,1); renderImgStrip(); }
+function openImg(src) {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  ov.innerHTML = `<img src="${src}" style="max-width:90vw;max-height:90vh;border-radius:10px">`;
+  ov.onclick = () => document.body.removeChild(ov);
   document.body.appendChild(ov);
 }
 
-function sendMsg(){
-  const inp=document.getElementById('chin');
-  const text=inp?inp.value.trim():'';
-  const offerVal=document.getElementById('offerVal');
-  const price=offerVal?parseFloat(offerVal.value):null;
-  const hasOffer=offerOpen&&price&&price>0;
-  const hasImgs=pendingImgs.length>0;
-  if(!text&&!hasOffer&&!hasImgs){return;}
-
-  const sc=document.getElementById('chscroll');
-  function pushAndRender(msg){
-    activeConv.msgs.push(msg);
-    if(sc){sc.innerHTML+=bubHTML(msg);scrollChat();}
-  }
-
-  // send images first
-  pendingImgs.forEach(src=>{
-    pushAndRender({uid:CU.id,type:'img',src,ts:Date.now()});
-  });
-  pendingImgs=[];renderImgStrip();
-
-  // send offer
-  if(hasOffer){
-    pushAndRender({uid:CU.id,type:'offer',price,text,ts:Date.now()});
-    offerVal.value='';
-    offerOpen=false;
-    const bar=document.getElementById('offerBar');if(bar)bar.style.display='none';
-  } else if(text){
-    // plain text
-    pushAndRender({uid:CU.id,text,ts:Date.now()});
-  }
-
-  if(inp) inp.value='';
-  sv(); buildConvList(); refreshNav();
-}
-function scrollChat(){const s=document.getElementById('chscroll');if(s)setTimeout(()=>{s.scrollTop=s.scrollHeight},50)}
-
-/* ── ANALYTICS ── */
-function renderDash(el){
-  const myW=WISHES.filter(w=>w.uid===CU.id);
-  const tv=myW.reduce((a,w)=>a+(w.views||0),0);
-  const to=myW.reduce((a,w)=>a+(w.offers||0),0);
-  const cr=myW.length?Math.round((to/Math.max(tv,1))*100):0;
-  const catC={};
-  WISHES.forEach(w=>{catC[w.cat]=(catC[w.cat]||0)+1});
-  const topC=Object.entries(catC).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const maxC=Math.max(...topC.map(x=>x[1]),1);
-  const pr=[{l:'<500',n:0},{l:'500-1k',n:0},{l:'1k-3k',n:0},{l:'3k-6k',n:0},{l:'>6k',n:0}];
-  WISHES.forEach(w=>{
-    if(w.price<500)pr[0].n++;
-    else if(w.price<1000)pr[1].n++;
-    else if(w.price<3000)pr[2].n++;
-    else if(w.price<6000)pr[3].n++;
-    else pr[4].n++;
-  });
-  const maxP=Math.max(...pr.map(x=>x.n),1);
-
-  el.innerHTML=`
-  <div class="ftitle fi" style="margin-bottom:1.1rem">Analytics da plataforma</div>
-  <div class="dash-grid fi">
-    <div class="dcard"><div class="dlbl">Total de desejos</div><div class="dnum">${WISHES.length}</div><div class="dtag up">↑ ativos</div></div>
-    <div class="dcard"><div class="dlbl">Vistas nos seus anúncios</div><div class="dnum">${tv}</div><div class="dtag up">${myW.length} anúncios</div></div>
-    <div class="dcard"><div class="dlbl">Ofertas recebidas</div><div class="dnum">${to}</div><div class="dtag ${to>0?'up':'dn'}">${to>0?to+' ativas':'nenhuma'}</div></div>
-    <div class="dcard"><div class="dlbl">Taxa de contato</div><div class="dnum">${cr}%</div><div class="dtag ${cr>5?'up':'dn'}">vista → oferta</div></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
-    <div class="chart-card fi">
-      <div class="chart-title">Desejos por categoria</div>
-      <div class="bar-chart">
-        ${topC.map(([cat,n])=>`<div class="bar-col">
-          <div class="bar-val">${n}</div>
-          <div class="bar" style="height:${Math.round((n/maxC)*95)}px;background:var(--g)"></div>
-          <div class="bar-lbl">${cat.substring(0,6)}</div>
-        </div>`).join('')}
-      </div>
-    </div>
-    <div class="chart-card fi">
-      <div class="chart-title">Distribuição de orçamentos</div>
-      <div class="bar-chart">
-        ${pr.map(r=>`<div class="bar-col">
-          <div class="bar-val">${r.n}</div>
-          <div class="bar" style="height:${Math.round((r.n/maxP)*95)}px;background:var(--b)"></div>
-          <div class="bar-lbl">${r.l}</div>
-        </div>`).join('')}
-      </div>
-    </div>
-  </div>
-  <div class="ai-insights fi" id="aiIns">
-    <div class="ai-ins-hd" id="insHd"><i class="ti ti-sparkles"></i>Insights da IA <i class="ti ti-loader spin" style="font-size:13px;margin-left:auto;color:var(--g)"></i></div>
-    <div id="insItems"><p style="font-size:13px;color:var(--txm)">Analisando dados da plataforma...</p></div>
-  </div>`;
-  fetchInsights(topC,tv,to,cr);
-}
-async function fetchInsights(topC,tv,to,cr){
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:800,
-        system:`Analista de marketplace brasileiro. Gere 3 insights de negócio práticos e específicos com base nos dados. Retorne APENAS JSON sem markdown: {"insights":[{"icon":"ti-trending-up","text":"insight aqui"}]}. Use ícones Tabler: ti-trending-up, ti-bulb, ti-target, ti-alert-triangle, ti-star, ti-users.`,
-        messages:[{role:'user',content:`Marketplace querocomprar: ${WISHES.length} desejos, categorias: ${topC.map(([c,n])=>c+':'+n).join(', ')}, ${tv} visualizações nos meus anúncios, ${to} ofertas recebidas, taxa de contato ${cr}%. Gere 3 insights estratégicos.`}]
+/* ── MSG MODAL ── */
+async function openMsgMod(wid) {
+  if (!CU) { requireLogin(() => openMsgMod(wid)); return; }
+  const w = WISHES.find(x => x.id === wid); if (!w) return;
+  if (w.uid === CU.id) { toast('Este é seu próprio anúncio','er'); return; }
+  modWishId = wid;
+  document.getElementById('modTitle').textContent = w.title.length > 40 ? w.title.substring(0,40)+'...' : w.title;
+  document.getElementById('modMsg').value = '';
+  document.getElementById('aiTxt').innerHTML = '<i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando sugestão...';
+  document.getElementById('msgMod').classList.add('on');
+  // AI suggestion
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:800,
+        system:`Gere mensagem inicial curta (2-3 frases) persuasiva de vendedor para comprador em pt-BR informal. Retorne APENAS a mensagem.`,
+        messages:[{role:'user',content:`Comprador procura: "${w.title}". Categoria: ${w.cat}. Orçamento: R$ ${fmt(w.price)}. Condição: ${w.cond}. Desc: ${w.desc}`}]
       })
     });
-    const data=await resp.json();
-    let txt=(data.content&&data.content[0]&&data.content[0].text)||'';
-    txt=txt.replace(/```json|```/g,'').trim();
-    const {insights}=JSON.parse(txt);
-    document.getElementById('insHd').innerHTML='<i class="ti ti-sparkles"></i>Insights da IA';
-    document.getElementById('insItems').innerHTML=insights.map(ins=>`
-      <div class="insight-item">
-        <i class="ti ${ins.icon}" style="color:var(--g);flex-shrink:0;margin-top:2px"></i>
-        <span>${ins.text}</span>
-      </div>`).join('');
-  }catch(e){
-    document.getElementById('insHd').innerHTML='<i class="ti ti-sparkles"></i>Insights';
-    document.getElementById('insItems').innerHTML=`
-      <div class="insight-item"><i class="ti ti-trending-up" style="color:var(--g);flex-shrink:0;margin-top:2px"></i><span>Eletrônicos lidera com mais desejos e maiores orçamentos na plataforma — alta oportunidade para vendedores do segmento.</span></div>
-      <div class="insight-item"><i class="ti ti-target" style="color:var(--b);flex-shrink:0;margin-top:2px"></i><span>Anúncios com descrições detalhadas recebem em média 3x mais contatos. Incentive compradores a detalhar o que buscam.</span></div>
-      <div class="insight-item"><i class="ti ti-bulb" style="color:var(--a);flex-shrink:0;margin-top:2px"></i><span>A faixa de R$ 1k–3k concentra a maior parte dos orçamentos — ideal para seminovos e produtos recondicionados.</span></div>`;
+    const data = await resp.json();
+    const txt = data.content&&data.content[0]&&data.content[0].text;
+    if (txt) {
+      document.getElementById('aiTxt').innerHTML = `${esc(txt)}<br>
+        <button class="aiuse" onclick="document.getElementById('modMsg').value=${JSON.stringify(txt)}">
+          <i class="ti ti-check" style="font-size:12px"></i>Usar esta mensagem</button>`;
+    }
+  } catch(e) {
+    document.getElementById('aiTxt').innerHTML = 'Apresente-se e descreva o produto que tem a oferecer.';
   }
 }
-
-/* ── PROFILE ── */
-function renderProf(el){
-  const myW=WISHES.filter(w=>w.uid===CU.id).length;
-  const recvd=CONVS.filter(c=>c.to===CU.id).length;
-  const active=CONVS.filter(c=>c.from===CU.id||c.to===CU.id).length;
-  const roleLabel={buyer:'Comprador',seller:'Vendedor',both:'Comprador & Vendedor'};
-  el.innerHTML=`
-  <div class="phero fi">
-    <div class="pbav" style="background:${COLS[CU.id%COLS.length]}">${CU.name[0]}</div>
-    <div>
-      <div class="pname">${CU.name}</div>
-      <div class="pemail">${CU.email}</div>
-      <div class="prole">${roleLabel[CU.role]||'Usuário'}</div>
-    </div>
-  </div>
-  <div class="stats fi">
-    <div class="stat"><div class="snum">${myW}</div><div class="slbl">Desejos publicados</div></div>
-    <div class="stat"><div class="snum">${recvd}</div><div class="slbl">Ofertas recebidas</div></div>
-    <div class="stat"><div class="snum">${active}</div><div class="slbl">Conversas ativas</div></div>
-  </div>
-  <div class="fcard fi" style="max-width:510px">
-    <div class="fctitle">Editar perfil</div>
-    <div class="fld"><label>Nome</label><input type="text" id="en" value="${CU.name}"></div>
-    <div class="fld2">
-      <div><label>Telefone</label><input type="text" id="ep" value="${CU.phone||''}" placeholder="(11) 99999-9999"></div>
-      <div><label>Cidade</label><input type="text" id="ec" value="${CU.city||''}" placeholder="São Paulo - SP"></div>
-    </div>
-    <div class="fld"><label>Papel na plataforma</label>
-      <select id="erole">
-        <option value="buyer" ${CU.role==='buyer'?'selected':''}>Comprador — Publico desejos de compra</option>
-        <option value="seller" ${CU.role==='seller'?'selected':''}>Vendedor — Ofereço produtos</option>
-        <option value="both" ${CU.role==='both'?'selected':''}>Ambos — Compro e vendo</option>
-      </select>
-    </div>
-    <button class="btn g" onclick="saveProf()"><i class="ti ti-check"></i>Salvar alterações</button>
-  </div>`;
-}
-function saveProf(){
-  const n=val('en'), p=val('ep'), c=val('ec'), r=document.getElementById('erole').value;
-  if(n) CU.name=n; CU.phone=p; CU.city=c; CU.role=r;
-  const u=USERS.find(x=>x.id===CU.id); if(u) Object.assign(u,{name:n,phone:p,city:c,role:r});
-  sv(); toast('Perfil atualizado!'); renderProf(document.getElementById('cnt'));
+function closeMsgMod() { document.getElementById('msgMod').classList.remove('on'); modWishId = null; }
+async function sendModMsg() {
+  const text = document.getElementById('modMsg').value.trim();
+  if (!text) { toast('Digite uma mensagem','er'); return; }
+  const w = WISHES.find(x => x.id === modWishId); if (!w) return;
+  let { data: existing } = await sb.from('conversations')
+    .select('*, wishes(title,price), buyer:profiles!conversations_buyer_id_fkey(name), seller:profiles!conversations_seller_id_fkey(name)')
+    .eq('wish_id', modWishId).eq('seller_id', CU.id).maybeSingle();
+  if (!existing) {
+    const { data: newConv, error } = await sb.from('conversations').insert({
+      wish_id: modWishId, buyer_id: w.uid, seller_id: CU.id
+    }).select('*, wishes(title,price), buyer:profiles!conversations_buyer_id_fkey(name), seller:profiles!conversations_seller_id_fkey(name)').single();
+    if (error) { toast('Erro: ' + error.message, 'er'); return; }
+    CONVS.unshift(newConv); existing = newConv;
+  }
+  const { error } = await sb.from('messages').insert({ conversation_id: existing.id, sender_id: CU.id, text });
+  if (error) { toast('Erro: ' + error.message, 'er'); return; }
+  await sb.from('wishes').update({ offers: (w.offers||0)+1 }).eq('id', modWishId);
+  w.offers = (w.offers||0)+1;
+  closeMsgMod(); toast('Mensagem enviada!');
+  activeConv = existing; view('msgs');
 }
 
 /* ── DETAIL MODAL ── */
-function showDetail(wid){
-  const w=WISHES.find(x=>x.id===wid); if(!w) return;
-  if(w.views!=null) w.views++; sv();
-  const u=USERS.find(x=>x.id===w.uid)||{name:'?'};
-  const mine=CU&&w.uid===CU.id;
-  document.getElementById('detContent').innerHTML=`
+function showDetail(wid) {
+  const w = WISHES.find(x => x.id === wid); if (!w) return;
+  const mine = CU && w.uid === CU.id;
+  document.getElementById('detContent').innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
-      <div class="av" style="background:${COLS[u.id%COLS.length]};width:40px;height:40px;border-radius:50%;font-size:15px;flex-shrink:0;cursor:pointer" onclick="document.getElementById('detMod').classList.remove('on');showUserProfile(${u.id})">${u.name[0]}</div>
+      <div class="av" style="background:${colorFor(w.uid)};width:40px;height:40px;border-radius:50%;font-size:15px;flex-shrink:0;cursor:pointer"
+        onclick="document.getElementById('detMod').classList.remove('on');showUserProfile('${w.uid}')">${w.uname[0]}</div>
       <div>
-        <div style="font-weight:600;font-size:15px;cursor:pointer" onclick="document.getElementById('detMod').classList.remove('on');showUserProfile(${u.id})">${u.name}</div>
-        <div style="font-size:12px;color:var(--txl)">${u.city||'Localização não informada'} · ${relTime(w.ts)}</div>
+        <div style="font-weight:600;font-size:15px;cursor:pointer"
+          onclick="document.getElementById('detMod').classList.remove('on');showUserProfile('${w.uid}')">${w.uname}</div>
+        <div style="font-size:12px;color:var(--txl)">${w.ucity||'Localização não informada'} · ${relTime(w.ts)}</div>
       </div>
     </div>
     <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem">${w.title}</h2>
     <div style="display:flex;gap:7px;margin-bottom:.9rem">
       <span class="cat">${w.cat}</span>
       <span style="font-size:11px;background:var(--bg);color:var(--txm);padding:3px 9px;border-radius:8px">${w.cond}</span>
+      ${w.closed ? '<span style="font-size:11px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:8px;font-weight:600">\u2713 Fechado</span>' : ''}
     </div>
     <p style="font-size:14px;color:var(--txm);line-height:1.65;margin-bottom:1rem">${w.desc}</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.1rem">
@@ -1338,119 +1152,252 @@ function showDetail(wid){
         <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--gd)">R$ ${fmt(w.price)}</div>
       </div>
       <div style="background:var(--bg);border-radius:9px;padding:.9rem;text-align:center">
-        <div style="font-size:11px;color:var(--txm);margin-bottom:3px">Visualizações</div>
-        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem">${w.views||0}</div>
+        <div style="font-size:11px;color:var(--txm);margin-bottom:3px">Ofertas recebidas</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem">${w.offers||0}</div>
       </div>
     </div>
     ${w.closed
-      ?'<div style="text-align:center;background:var(--gl);color:var(--gd);padding:.75rem;border-radius:8px;font-weight:600;font-size:14px">✓ Negócio já fechado</div>'
-      : !mine
-        ?`<button class="btn g full" onclick="document.getElementById('detMod').classList.remove('on');openMsgMod(${w.id})">
-            <i class="ti ti-send"></i>Tenho isso! Contatar comprador
-          </button>`
-        :`<button class="btn g full" onclick="closeDeal(${w.id})">
-            <i class="ti ti-check"></i>Marcar como negócio fechado
-          </button>`}`;
+      ? '<div style="text-align:center;background:var(--gl);color:var(--gd);padding:.75rem;border-radius:8px;font-weight:600">\u2713 Negócio já fechado</div>'
+      : mine
+        ? `<button class="btn g full" onclick="document.getElementById('detMod').classList.remove('on');confirmCloseDeal(${w.id})">
+            <i class="ti ti-check"></i>Marcar como negócio fechado</button>`
+        : `<button class="btn g full" onclick="document.getElementById('detMod').classList.remove('on');${CU?`openMsgMod(${w.id})`:`requireLogin(()=>openMsgMod(${w.id}))`}">
+            <i class="ti ti-send"></i>Tenho isso! Contatar comprador</button>`}`;
   document.getElementById('detMod').classList.add('on');
 }
 
-/* ── MSG MODAL + AI ── */
-async function openMsgMod(wid){
-  modWishId=wid;
-  const w=WISHES.find(x=>x.id===wid); if(!w) return;
-  document.getElementById('modTitle').textContent=w.title.length>40?w.title.substring(0,40)+'...':w.title;
-  document.getElementById('modMsg').value='';
-  document.getElementById('aiTxt').innerHTML='<i class="ti ti-loader spin" style="color:var(--g)"></i> Gerando sugestão personalizada...';
-  document.getElementById('msgMod').classList.add('on');
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:800,
-        system:`Gere uma mensagem inicial curta (2-3 frases) e persuasiva que um vendedor usaria para contatar um comprador. Escreva em português brasileiro informal e direto. Retorne APENAS a mensagem, sem aspas nem explicações.`,
-        messages:[{role:'user',content:`O comprador procura: "${w.title}". Categoria: ${w.cat}. Orçamento: até R$ ${fmt(w.price)}. Condição: ${w.cond}. Descrição: ${w.desc}`}]
-      })
-    });
-    const data=await resp.json();
-    const txt=data.content&&data.content[0]&&data.content[0].text;
-    if(txt){
-      const safe=esc(txt);
-      document.getElementById('aiTxt').innerHTML=`${safe}<br>
-        <button class="aiuse" onclick="document.getElementById('modMsg').value=${JSON.stringify(txt)}">
-          <i class="ti ti-check" style="font-size:12px"></i>Usar esta mensagem
-        </button>`;
-    }
-  }catch(e){
-    document.getElementById('aiTxt').innerHTML='Apresente-se e descreva o produto que você tem a oferecer. Seja direto e mencione o preço.';
-  }
-}
-function closeMod(){document.getElementById('msgMod').classList.remove('on');modWishId=null}
-function sendModMsg(){
-  const text=document.getElementById('modMsg').value.trim();
-  if(!text){toast('Digite uma mensagem antes de enviar','er');return}
-  const w=WISHES.find(x=>x.id===modWishId);
-  if(w.uid===CU.id){toast('Você não pode contatar a si mesmo','er');return}
-  let conv=CONVS.find(c=>c.from===CU.id&&c.wid===modWishId);
-  if(!conv){conv={id:ncid++,from:CU.id,to:w.uid,wid:modWishId,msgs:[]};CONVS.push(conv)}
-  conv.msgs.push({uid:CU.id,text,ts:Date.now()});
-  if(w.offers!=null) w.offers++;
-  NOTIFS.push({id:nnid++,uid:w.uid,type:'msg',
-    text:`${CU.name} enviou uma mensagem sobre "${w.title.substring(0,30)}".`,
-    ts:Date.now(),read:false,wid:w.id});
-  sv(); closeMod(); toast('Mensagem enviada com sucesso!');
-  activeConv=conv; view('msgs'); refreshNav();
-}
-
-/* ── UTILS ── */
-function val(id){const e=document.getElementById(id);return e?e.value.trim():''}
-function fmt(n){return Number(n).toLocaleString('pt-BR')}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function fmtT(ts){const d=new Date(ts);return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
-function relTime(ts){
-  const d=Date.now()-ts;
-  if(d<60000) return 'agora';
-  if(d<3600000) return Math.floor(d/60000)+'min atrás';
-  if(d<86400000) return Math.floor(d/3600000)+'h atrás';
-  return Math.floor(d/86400000)+'d atrás';
-}
-function toast(msg,type='ok'){
-  const t=document.getElementById('toast');
-  document.getElementById('tmsg').textContent=msg;
-  document.getElementById('ticon').className='ti '+(type==='ok'?'ti-check':'ti-alert-circle');
-  t.className='toast on '+type;
-  setTimeout(()=>t.classList.remove('on'),3000);
-}
-
-/* ── GLOBAL CLICK ── */
-document.addEventListener('click',e=>{
-  if(notifOpen&&!e.target.closest('#notifPanel')&&!e.target.closest('#notifBtn')){
-    notifOpen=false;
-    document.getElementById('notifPanel').classList.remove('on');
-  }
-});
-
-/* ── CLOSE DEAL MODAL ── */
-function openCloseDealModal(wid){
-  const w=WISHES.find(x=>x.id===wid); if(!w) return;
-  // Reuse detMod for quick close deal confirmation
-  const u=USERS.find(x=>x.id===w.uid)||{name:'?'};
-  document.getElementById('detContent').innerHTML=`
+/* ── CLOSE DEAL ── */
+function confirmCloseDeal(wid) {
+  const w = WISHES.find(x => x.id === wid); if (!w) return;
+  document.getElementById('detContent').innerHTML = `
     <div style="text-align:center;padding:1rem 0">
-      <div style="font-size:3rem;margin-bottom:.5rem">🎉</div>
+      <div style="font-size:3rem;margin-bottom:.5rem">\uD83C\uDF89</div>
       <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Fechar negócio</div>
-      <div style="font-size:14px;color:var(--txm);margin-bottom:1.3rem">Confirme que o produto foi vendido/comprado e o anúncio será marcado como concluído.</div>
+      <div style="font-size:14px;color:var(--txm);margin-bottom:1.3rem">Confirme que o produto foi vendido/comprado.</div>
       <div style="background:var(--gl);border-radius:10px;padding:1rem;margin-bottom:1.3rem">
         <div style="font-weight:600;font-size:15px">${w.title}</div>
-        <div style="font-size:13px;color:var(--txm);margin-top:3px">${w.cat} · até R$ ${fmt(w.price)}</div>
+        <div style="font-size:13px;color:var(--txm);margin-top:3px">até R$ ${fmt(w.price)}</div>
       </div>
       <div style="display:flex;gap:8px">
         <button class="btn out full" onclick="document.getElementById('detMod').classList.remove('on')">Cancelar</button>
-        <button class="btn g full" onclick="closeDeal(${w.id})"><i class="ti ti-check"></i>Confirmar negócio fechado</button>
+        <button class="btn g full" onclick="closeDeal(${w.id})"><i class="ti ti-check"></i>Confirmar fechado</button>
       </div>
     </div>`;
   document.getElementById('detMod').classList.add('on');
 }
+async function closeDeal(wid) {
+  const { error } = await sb.from('wishes').update({ closed: true }).eq('id', wid).eq('user_id', CU.id);
+  if (error) { toast('Erro: ' + error.message, 'er'); return; }
+  const w = WISHES.find(x => x.id === wid); if (w) w.closed = true;
+  toast('Negócio fechado! Parabéns! \uD83C\uDF89');
+  document.getElementById('detMod').classList.remove('on');
+  buildGrid(); buildPubGrid();
+  if (document.getElementById('sn-mine')?.classList.contains('on')) renderMine(document.getElementById('cnt'));
+}
 
+/* ── USER PROFILE MODAL ── */
+async function showUserProfile(uid) {
+  document.getElementById('userProfileContent').innerHTML =
+    '<div style="text-align:center;padding:2rem"><i class="ti ti-loader spin" style="color:var(--g);font-size:24px"></i></div>';
+  document.getElementById('userProfileMod').classList.add('on');
+  const { data: prof } = await sb.from('profiles').select('*').eq('id', uid).single();
+  if (!prof) {
+    document.getElementById('userProfileContent').innerHTML =
+      '<p style="text-align:center;color:var(--txl);padding:1.5rem">Perfil não encontrado</p>';
+    return;
+  }
+  const isBuyer  = prof.role === 'buyer'  || prof.role === 'both';
+  const isSeller = prof.role === 'seller' || prof.role === 'both';
+  const userWishes = WISHES.filter(w => w.uid === uid);
+  const open   = userWishes.filter(w => !w.closed);
+  const closed = userWishes.filter(w =>  w.closed);
+  const sellerConvs = CONVS.filter(c => c.seller_id === uid);
+  let content = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.3rem">
+      <div class="av" style="background:${colorFor(uid)};width:52px;height:52px;border-radius:50%;font-size:1.2rem;flex-shrink:0">${prof.name[0]}</div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem">${prof.name}</div>
+        <div style="font-size:13px;color:var(--txl);margin-top:2px">${prof.city||'Localização não informada'}</div>
+        <div style="font-size:11px;margin-top:5px;display:inline-block;padding:2px 10px;border-radius:12px;background:var(--gl);color:var(--gd)">
+          ${isBuyer&&isSeller?'Comprador & Vendedor':isBuyer?'Comprador':'Vendedor'}</div>
+      </div>
+    </div>`;
+  if (isBuyer && open.length) {
+    content += `<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
+      <i class="ti ti-heart" style="color:var(--c)"></i>Deseja comprar (${open.length})</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
+        ${open.map(w=>`
+          <div style="border:.5px solid var(--bd);border-radius:9px;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;cursor:pointer"
+            onclick="document.getElementById('userProfileMod').classList.remove('on');showDetail(${w.id})">
+            <div>
+              <div style="font-weight:600;font-size:14px">${w.title}</div>
+              <div style="font-size:12px;color:var(--txm);margin-top:2px">${w.cat} · ${w.cond}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ ${fmt(w.price)}</div>
+              <div style="font-size:11px;color:var(--txl)">${w.offers||0} ofertas</div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }
+  if (isSeller && sellerConvs.length) {
+    content += `<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
+      <i class="ti ti-tag" style="color:var(--g)"></i>Ofertas enviadas (${sellerConvs.length})</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
+        ${sellerConvs.map(c=>{const w=c.wishes;return w?`
+          <div style="border:.5px solid var(--bd);border-radius:9px;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between">
+            <div style="font-weight:600;font-size:14px">${w.title}</div>
+            <span style="font-size:11px;background:var(--gl);color:var(--gd);padding:2px 8px;border-radius:7px">Ofertado</span>
+          </div>`:'';}).join('')}
+      </div>`;
+  }
+  if (closed.length) {
+    content += `<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
+      <i class="ti ti-check" style="color:var(--gd)"></i>Negócios fechados (${closed.length})</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        ${closed.map(w=>`
+          <div style="border:.5px solid #b5ddc8;background:var(--gl);border-radius:9px;padding:.7rem 1rem;display:flex;justify-content:space-between">
+            <div style="font-weight:600;font-size:13.5px">${w.title}</div>
+            <span style="font-size:11px;color:var(--gd);font-weight:600">\u2713 Fechado</span>
+          </div>`).join('')}
+      </div>`;
+  }
+  if (!open.length && !sellerConvs.length && !closed.length) {
+    content += '<p style="font-size:13px;color:var(--txl);text-align:center;padding:.5rem 0">Nenhuma atividade ainda.</p>';
+  }
+  document.getElementById('userProfileContent').innerHTML = content;
+}
+
+/* ── ANALYTICS ── */
+async function renderDash(el) {
+  await loadWishes();
+  const myW = WISHES.filter(w => w.uid === CU.id);
+  const tv = myW.length, to = myW.reduce((a,w)=>a+(w.offers||0),0);
+  const catC = {}; WISHES.forEach(w=>{ catC[w.cat]=(catC[w.cat]||0)+1; });
+  const topC = Object.entries(catC).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxC = Math.max(...topC.map(x=>x[1]),1);
+  const pr = [{l:'<500',n:0},{l:'500-1k',n:0},{l:'1k-3k',n:0},{l:'3k-6k',n:0},{l:'>6k',n:0}];
+  WISHES.forEach(w=>{ if(w.price<500)pr[0].n++;else if(w.price<1000)pr[1].n++;else if(w.price<3000)pr[2].n++;else if(w.price<6000)pr[3].n++;else pr[4].n++; });
+  const maxP = Math.max(...pr.map(x=>x.n),1);
+  el.innerHTML = `<div class="ftitle fi" style="margin-bottom:1.1rem">Analytics da plataforma</div>
+  <div class="dash-grid fi">
+    <div class="dcard"><div class="dlbl">Total de desejos</div><div class="dnum">${WISHES.length}</div><div class="dtag up">ativos</div></div>
+    <div class="dcard"><div class="dlbl">Meus anúncios</div><div class="dnum">${tv}</div><div class="dtag up">${myW.filter(w=>!w.closed).length} abertos</div></div>
+    <div class="dcard"><div class="dlbl">Ofertas recebidas</div><div class="dnum">${to}</div><div class="dtag ${to>0?'up':'dn'}">${to>0?'ativas':'nenhuma'}</div></div>
+    <div class="dcard"><div class="dlbl">Fechados</div><div class="dnum">${myW.filter(w=>w.closed).length}</div><div class="dtag up">negócios</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">
+    <div class="chart-card fi"><div class="chart-title">Desejos por categoria</div>
+      <div class="bar-chart">${topC.map(([cat,n])=>`<div class="bar-col"><div class="bar-val">${n}</div><div class="bar" style="height:${Math.round((n/maxC)*95)}px;background:var(--g)"></div><div class="bar-lbl">${cat.substring(0,6)}</div></div>`).join('')}</div>
+    </div>
+    <div class="chart-card fi"><div class="chart-title">Distribuição de orçamentos</div>
+      <div class="bar-chart">${pr.map(r=>`<div class="bar-col"><div class="bar-val">${r.n}</div><div class="bar" style="height:${Math.round((r.n/maxP)*95)}px;background:var(--b)"></div><div class="bar-lbl">${r.l}</div></div>`).join('')}</div>
+    </div>
+  </div>
+  <div class="ai-insights fi" id="aiIns">
+    <div class="ai-ins-hd" id="insHd"><i class="ti ti-sparkles"></i>Insights da IA
+      <i class="ti ti-loader spin" style="font-size:13px;margin-left:auto;color:var(--g)"></i></div>
+    <div id="insItems"><p style="font-size:13px;color:var(--txm)">Analisando...</p></div>
+  </div>`;
+  fetchInsights(topC, tv, to);
+}
+async function fetchInsights(topC, tv, to) {
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:800,
+        system:`Analista de marketplace. Gere 3 insights práticos em pt-BR. APENAS JSON: {"insights":[{"icon":"ti-trending-up","text":"insight"}]}. Ícones: ti-trending-up, ti-bulb, ti-target, ti-star, ti-users.`,
+        messages:[{role:'user',content:`${WISHES.length} desejos, categorias: ${topC.map(([c,n])=>c+':'+n).join(',')}, ${tv} meus, ${to} ofertas.`}]
+      })
+    });
+    const data = await resp.json();
+    let txt = (data.content&&data.content[0]&&data.content[0].text)||'';
+    txt = txt.replace(/```json|```/g,'').trim();
+    const { insights } = JSON.parse(txt);
+    document.getElementById('insHd').innerHTML = '<i class="ti ti-sparkles"></i>Insights da IA';
+    document.getElementById('insItems').innerHTML = insights.map(ins =>
+      `<div class="insight-item"><i class="ti ${ins.icon}" style="color:var(--g);flex-shrink:0;margin-top:2px"></i><span>${ins.text}</span></div>`
+    ).join('');
+  } catch(e) {
+    document.getElementById('insHd').innerHTML = '<i class="ti ti-sparkles"></i>Insights';
+    document.getElementById('insItems').innerHTML = `
+      <div class="insight-item"><i class="ti ti-trending-up" style="color:var(--g);flex-shrink:0"></i><span>Eletrônicos lidera com mais desejos e maiores orçamentos — alta oportunidade.</span></div>
+      <div class="insight-item"><i class="ti ti-target" style="color:var(--b);flex-shrink:0"></i><span>Anúncios detalhados recebem em média 3x mais contatos de vendedores.</span></div>
+      <div class="insight-item"><i class="ti ti-bulb" style="color:var(--a);flex-shrink:0"></i><span>Faixa R$ 1k–3k concentra mais orçamentos — ideal para seminovos.</span></div>`;
+  }
+}
+
+/* ── PROFILE ── */
+function renderProf(el) {
+  const myW = WISHES.filter(w => w.uid === CU.id).length;
+  const convs = CONVS.filter(c => c.buyer_id===CU.id||c.seller_id===CU.id).length;
+  const roleLabel = { buyer:'Comprador', seller:'Vendedor', both:'Comprador & Vendedor' };
+  el.innerHTML = `
+  <div class="phero fi">
+    <div class="pbav" style="background:${colorFor(CU.id)}">${CU.name[0]}</div>
+    <div>
+      <div class="pname">${CU.name}</div>
+      <div class="pemail">${CU.email}</div>
+      <div class="prole">${roleLabel[CU.role]||'Usuário'}</div>
+    </div>
+  </div>
+  <div class="stats fi">
+    <div class="stat"><div class="snum">${myW}</div><div class="slbl">Desejos publicados</div></div>
+    <div class="stat"><div class="snum">${convs}</div><div class="slbl">Conversas</div></div>
+    <div class="stat"><div class="snum">${WISHES.filter(w=>w.uid===CU.id&&w.closed).length}</div><div class="slbl">Negócios fechados</div></div>
+  </div>
+  <div class="fcard fi" style="max-width:510px">
+    <div class="fctitle">Editar perfil</div>
+    <div class="fld"><label>Nome</label><input type="text" id="en" value="${CU.name}"></div>
+    <div class="fld2">
+      <div><label>Telefone</label><input type="text" id="ep" value="${CU.phone||''}" placeholder="(11) 99999-9999"></div>
+      <div><label>Cidade</label><input type="text" id="ec" value="${CU.city||''}" placeholder="São Paulo"></div>
+    </div>
+    <div class="fld"><label>Papel na plataforma</label>
+      <select id="erole">
+        <option value="buyer" ${CU.role==='buyer'?'selected':''}>Comprador</option>
+        <option value="seller" ${CU.role==='seller'?'selected':''}>Vendedor</option>
+        <option value="both" ${CU.role==='both'?'selected':''}>Ambos</option>
+      </select>
+    </div>
+    <button class="btn g" onclick="saveProf()"><i class="ti ti-check"></i>Salvar alterações</button>
+  </div>`;
+}
+async function saveProf() {
+  const name = val('en'), phone = val('ep'), city = val('ec'), role = document.getElementById('erole').value;
+  const { error } = await sb.from('profiles').update({ name, phone, city, role }).eq('id', CU.id);
+  if (error) { toast('Erro: ' + error.message, 'er'); return; }
+  CU.name = name; CU.phone = phone; CU.city = city; CU.role = role;
+  toast('Perfil atualizado!'); renderProf(document.getElementById('cnt')); refreshNavLoggedIn();
+}
+
+/* ════════════════ UTILS ════════════════ */
+function val(id) { const e=document.getElementById(id); return e?e.value.trim():''; }
+function fmt(n) { return Number(n).toLocaleString('pt-BR'); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtT(ts) {
+  const d = new Date(ts);
+  return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+}
+function relTime(ts) {
+  const d = Date.now() - (typeof ts==='number'?ts:new Date(ts).getTime());
+  if (d<60000)   return 'agora';
+  if (d<3600000) return Math.floor(d/60000)+'min atrás';
+  if (d<86400000)return Math.floor(d/3600000)+'h atrás';
+  return Math.floor(d/86400000)+'d atrás';
+}
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  document.getElementById('tmsg').textContent = msg;
+  document.getElementById('ticon').className = 'ti '+(type==='ok'?'ti-check':'ti-alert-circle');
+  t.className = 'toast on '+type;
+  setTimeout(()=>t.classList.remove('on'), 3000);
+}
+document.addEventListener('click', e => {
+  if (notifOpen && !e.target.closest('#notifPanel') && !e.target.closest('#notifBtn')) {
+    notifOpen = false; document.getElementById('notifPanel').classList.remove('on');
+  }
+});
 </script>
 </body>
 </html>
