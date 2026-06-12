@@ -2112,10 +2112,6 @@
       CU = { id: user.id, email: user.email, name: prof.name, role: prof.role, city: prof.city || '', phone: prof.phone || '' };
       CUProfile = prof;
       PROFILES[CU.id] = CU;
-      // ── APENAS ESTA LINHA ADICIONADA (Segura e usando o seu "sb") ──
-      // Ela envia o nome do perfil direto para o Authentication do Supabase
-      await sb.auth.updateUser({ data: { display_name: prof.name } });
-      
       enter();
     }
 
