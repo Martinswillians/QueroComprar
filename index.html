@@ -1984,7 +1984,13 @@
   </div>
 
   <!-- NAV -->
+  <!-- Overlay mobile sidebar -->
+  <div class="side-overlay" id="sideOverlay" onclick="closeSidebar()"></div>
+
   <nav>
+    <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()" aria-label="Menu">
+      <i class="ti ti-menu-2"></i>
+    </button>
     <a class="logo" href="#" onclick="CU?view('feed'):showPublic();return false">quero<em>comprar</em></a>
     <div class="nsearch" id="navSearch">
       <i class="ti ti-search si"></i>
@@ -2022,7 +2028,7 @@
   <!-- APP (logado) -->
   <div class="scr" id="scr-app">
     <div class="lay">
-      <div class="side">
+      <div class="side" id="sideBar">
         <div class="ssec">Descobrir</div>
         <button class="si-btn on" id="sn-feed" onclick="view('feed')"><i class="ti ti-layout-grid"></i>Explorar</button>
         <button class="si-btn" id="sn-match" onclick="view('match')"><i class="ti ti-sparkles"></i>Match por IA<span
@@ -3189,6 +3195,154 @@
         notifOpen = false; document.getElementById('notifPanel').classList.remove('on');
       }
     });
+
+    /* ════════════════════════════════════════════════
+       RESPONSIVO — SIDEBAR MOBILE
+    ════════════════════════════════════════════════ */
+    function isMobile() { return window.innerWidth <= 768; }
+
+    function toggleSidebar() {
+      const side    = document.getElementById('sideBar');
+      const overlay = document.getElementById('sideOverlay');
+      if (!side) return;
+      const isOpen = side.classList.contains('open');
+      if (isOpen) { closeSidebar(); } else { openSidebar(); }
+    }
+
+    function openSidebar() {
+      const side    = document.getElementById('sideBar');
+      const overlay = document.getElementById('sideOverlay');
+      if (side)    side.classList.add('open');
+      if (overlay) overlay.classList.add('on');
+    }
+
+    function closeSidebar() {
+      const side    = document.getElementById('sideBar');
+      const overlay = document.getElementById('sideOverlay');
+      if (side)    side.classList.remove('open');
+      if (overlay) overlay.classList.remove('on');
+    }
+
+    // Fechar sidebar ao clicar em qualquer item do menu no mobile
+    document.addEventListener('click', e => {
+      if (!isMobile()) return;
+      const btn = e.target.closest('.si-btn');
+      if (btn && document.getElementById('sideBar')?.classList.contains('open')) {
+        setTimeout(closeSidebar, 150);
+      }
+    });
+
+    // No mobile: msgs abre lista de conversas primeiro
+    const _origRenderMsgs = typeof renderMsgs === 'function' ? renderMsgs : null;
+
+    function mobileOpenConvList() {
+      const layout = document.querySelector('.mlayout');
+      if (!layout || !isMobile()) return;
+      layout.classList.remove('mobile-show-chat');
+      layout.classList.add('mobile-show-list');
+    }
+
+    function mobileOpenChat() {
+      const layout = document.querySelector('.mlayout');
+      if (!layout) return;
+      if (isMobile()) {
+        layout.classList.remove('mobile-show-list');
+        layout.classList.add('mobile-show-chat');
+      }
+    }
+
+    // Patch openConv para mobile: abrir chat e esconder lista
+    const _origOpenConv = typeof openConv === 'function' ? openConv : null;
+    if (_origOpenConv) {
+      window.openConv = async function(c) {
+        await _origOpenConv(c);
+        mobileOpenChat();
+        // Adicionar botão voltar no cabeçalho do chat
+        addBackButton();
+      };
+    }
+
+    // Patch openConvById
+    const _origOpenConvById = typeof openConvById === 'function' ? openConvById : null;
+    if (_origOpenConvById) {
+      window.openConvById = async function(cid) {
+        await _origOpenConvById(cid);
+        mobileOpenChat();
+        addBackButton();
+      };
+    }
+
+    function addBackButton() {
+      if (!isMobile()) return;
+      const chh = document.querySelector('.chh');
+      if (!chh || chh.querySelector('.back-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'back-btn';
+      btn.innerHTML = '<i class="ti ti-arrow-left"></i>';
+      btn.onclick = () => {
+        mobileOpenConvList();
+      };
+      chh.insertBefore(btn, chh.firstChild);
+    }
+
+    // Ao renderizar msgs no mobile, mostrar lista primeiro
+    const _origViewFn = window.view;
+    window.view = function(vn) {
+      _origViewFn(vn);
+      if (vn === 'msgs' && isMobile()) {
+        setTimeout(() => {
+          const layout = document.querySelector('.mlayout');
+          if (layout) {
+            layout.classList.add('mobile-show-list');
+          }
+        }, 50);
+      }
+    };
+
+    // Mostrar/esconder hamburguer conforme login
+    function updateMenuToggle() {
+      const toggle = document.getElementById('menuToggle');
+      if (!toggle) return;
+      // Sempre visível em mobile no scr-app; esconde na tela pública
+      const appVisible = document.getElementById('scr-app')?.classList.contains('on');
+      toggle.style.display = appVisible ? '' : 'none';
+    }
+
+    // Chamar ao entrar/sair
+    const _origEnter = window.enter;
+    window.enter = async function() {
+      await _origEnter();
+      updateMenuToggle();
+    };
+
+    const _origLogout = window.logout;
+    window.logout = async function() {
+      await _origLogout();
+      updateMenuToggle();
+      closeSidebar();
+    };
+
+    const _origShow = window.show;
+    window.show = function(s) {
+      _origShow(s);
+      updateMenuToggle();
+      if (isMobile()) closeSidebar();
+    };
+
+    // Ajuste ao redimensionar
+    window.addEventListener('resize', () => {
+      if (!isMobile()) {
+        closeSidebar();
+        // Restaurar layout de msgs no desktop
+        const layout = document.querySelector('.mlayout');
+        if (layout) {
+          layout.classList.remove('mobile-show-list', 'mobile-show-chat');
+        }
+      }
+    });
+
+    // Init
+    updateMenuToggle();
   </script>
 </body>
 
