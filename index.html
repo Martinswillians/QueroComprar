@@ -1908,76 +1908,6 @@
       .stat { padding: .7rem .5rem; }
       nav { padding: 0 .7rem; gap: 6px; }
     }
-
-    /* ==========================================
-       PASSO 6 & 10: ESTILOS PREVIEW E CARD OLX 
-       ========================================== */
-    #previewImages {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .previmg {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 1px solid var(--bd);
-    }
-
-    .wcard {
-      overflow: hidden;
-      padding: 0;
-      border-radius: 14px;
-      background: #fff;
-      border: .5px solid var(--bd);
-      transition: border-color .2s, box-shadow .2s;
-    }
-
-    .wimg {
-      position: relative;
-      height: 220px;
-      overflow: hidden;
-    }
-
-    .wimg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: .4s;
-    }
-
-    .wcard:hover .wimg img {
-      transform: scale(1.05);
-    }
-
-    .badge-new {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: #00A650;
-      color: white;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .wbody {
-      padding: 16px;
-    }
-
-    .wmeta {
-      display: flex;
-      gap: 14px;
-      margin-top: 10px;
-      margin-bottom: 12px;
-      font-size: 12px;
-      color: var(--txm);
-    }
-
   </style>
 </head>
 
@@ -2149,51 +2079,6 @@
     let pendingImgs = [];
     let offerOpen = false;
     let msgChannel = null;
-
-// ... códigos anteriores que já estavam aí ...
-
-    // ==========================================
-    // CÓDIGO DOS PASSOS 5 E 7 ADICIONADOS AQUI:
-    // ==========================================
-    let selectedFiles = [];
-
-    document.addEventListener('change', (e) => {
-      if (e.target.id !== 'wishImages') return;
-      selectedFiles = [...e.target.files];
-      renderPreview();
-    });
-
-    function renderPreview() {
-      const box = document.getElementById('previewImages');
-      if (!box) return;
-      box.innerHTML = '';
-
-      selectedFiles.forEach(file => {
-        const url = URL.createObjectURL(file);
-        box.innerHTML += `<img src="${url}" class="previmg">`;
-      });
-    }
-
-    async function uploadWishImages() {
-      const urls = [];
-      for (const file of selectedFiles) {
-        const ext = file.name.split('.').pop();
-        const name = `${Date.now()}-${Math.random()}.${ext}`;
-
-        const { error } = await sb.storage
-          .from('wish-images')
-          .upload(name, file);
-
-        if (error) throw error;
-
-        const { data } = sb.storage
-          .from('wish-images')
-          .getPublicUrl(name);
-
-        urls.push(data.publicUrl);
-      }
-      return urls;
-    }
 
     /* ════════════════════════════════════════════════
        BOOT
@@ -2416,41 +2301,24 @@
     }
 
     function mapWish(r, profMap) {
-  const prof =
-    (profMap && profMap[r.user_id]) ||
-    PROFILES[r.user_id] ||
-    {};
-
-  return {
-    id: r.id,
-    uid: r.user_id,
-
-    uname: prof.name || '?',
-    urole: prof.role || 'buyer',
-    ucity: prof.city || '',
-
-    title: r.title,
-    cat: r.category,
-    cond: r.condition,
-
-    price: Number(r.price),
-
-    desc: r.description || '',
-
-    images: r.images || [],
-
-    featured:
-      r.featured_image ||
-      (r.images?.[0] || null),
-
-    ts: new Date(r.created_at).getTime(),
-
-    views: r.views || 0,
-    offers: r.offers || 0,
-
-    closed: r.closed || false
-  };
-}
+      const prof = (profMap && profMap[r.user_id]) || PROFILES[r.user_id] || {};
+      return {
+        id: r.id,
+        uid: r.user_id,
+        uname: prof.name || '?',
+        urole: prof.role || 'buyer',
+        ucity: prof.city || '',
+        title: r.title,
+        cat: r.category,
+        cond: r.condition,
+        price: Number(r.price),
+        desc: r.description || '',
+        ts: new Date(r.created_at).getTime(),
+        views: r.views || 0,
+        offers: r.offers || 0,
+        closed: r.closed || false
+      };
+    }
 
     /* ════════════════════════════════════════════════
        PUBLIC FEED
@@ -2600,59 +2468,40 @@
       g.innerHTML = ws.length ? ws.map(cardHTML).join('') :
         '<div class="empty"><i class="ti ti-mood-empty"></i><p>Nenhum desejo nessa categoria.</p></div>';
     }
-function cardHTML(w) {
-  const mine = CU && w.uid === CU.id;
-  
-  return `<div class="wcard">
-    ${
-      w.featured
-        ? `<div class="wimg">
-            <img src="${w.featured}">
-            <div class="badge-new">Novo</div>
-          </div>`
-        : ''
-    }
-
-    <div class="wbody">
-      <div class="wch">
-        <div class="wcu">
-          <div class="av" style="background:${colorFor(w.uid)}">${w.uname[0]}</div>
-          <div>
-            <div class="wun">${w.uname}</div>
-            <div class="wt">${w.ucity}</div>
-          </div>
-        </div>
-        <div class="cat">${w.cat}</div>
+    function cardHTML(w) {
+      const mine = CU && w.uid === CU.id;
+      if (w.closed) return `<div class="wcard fi" style="opacity:.55">
+    <div class="wch">
+      <div class="wcu">
+        <div class="av" style="background:${colorFor(w.uid)};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname[0]}</div>
+        <div><div class="wun">${w.uname}</div><div class="wt">${relTime(w.ts)}</div></div>
       </div>
-
-      <div class="wtitle" onclick="showDetail(${w.id})">
-        ${w.title}
-      </div>
-
-      <div class="wdesc">
-        ${w.desc}
-      </div>
-
-      <div class="wmeta">
-        <span>👁 ${w.views}</span>
-        <span>💬 ${w.offers}</span>
-      </div>
-
-      <div class="wcf">
-        <div>
-          <div class="price">R$ ${fmt(w.price)}</div>
-          <div class="psub">${w.cond}</div>
-        </div>
-        
-        ${
-          mine
-            ? `<span class="own">Meu anúncio</span>`
-            : `<button class="msgbtn" onclick="requireLogin(()=>openMsgMod(${w.id}))"><i class="ti ti-send" style="font-size:13px"></i>Ofertar</button>`
-        }
-      </div>
+      <span style="font-size:11px;font-weight:600;padding:2px 9px;border-radius:8px;background:var(--gl);color:var(--gd)">✓ Fechado</span>
+    </div>
+    <div class="wtitle" style="text-decoration:line-through;color:var(--txl)">${w.title}</div>
+    <div class="wcf" style="padding-top:.6rem;border-top:.5px solid var(--bd)">
+      <div><div class="price" style="color:var(--txl)">R$ ${fmt(w.price)}</div></div>
+      <span class="own">Negócio fechado</span>
     </div>
   </div>`;
-}
+      return `<div class="wcard fi">
+    <div class="wch">
+      <div class="wcu">
+        <div class="av" style="background:${colorFor(w.uid)};width:30px;height:30px;border-radius:50%;font-size:11px;flex-shrink:0;cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname[0]}</div>
+        <div><div class="wun" style="cursor:pointer" onclick="showUserProfile('${w.uid}')">${w.uname}</div><div class="wt">${relTime(w.ts)}</div></div>
+      </div>
+      <span class="cat">${w.cat}</span>
+    </div>
+    <div class="wtitle" onclick="showDetail(${w.id})">${w.title}</div>
+    <div class="wdesc">${w.desc}</div>
+    <div class="wcf">
+      <div><div class="price">até R$ ${fmt(w.price)}</div><div class="psub">${w.cond}${w.views ? ' · ' + w.views + ' vistas' : ''}</div></div>
+      ${mine
+          ? `<button class="btn g xs" onclick="confirmCloseDeal(${w.id})"><i class="ti ti-check"></i>Fechar negócio</button>`
+          : `<button class="msgbtn" onclick="openMsgMod(${w.id})"><i class="ti ti-send" style="font-size:13px"></i>Tenho isso!</button>`}
+    </div>
+  </div>`;
+    }
 
     /* ── MATCH IA ── */
     async function renderMatch(el) {
@@ -2738,20 +2587,14 @@ function cardHTML(w) {
 
     /* ── NEW ── */
     function renderNew(el) {
-  el.innerHTML = `<div class="fcard fi" style="max-width:560px">
+      el.innerHTML = `<div class="ftitle fi" style="margin-bottom:1.2rem">Publicar desejo de compra</div>
+  <div class="fcard fi" style="max-width:560px">
     <div class="fld"><label>O que você procura?</label><input type="text" id="wt" placeholder="Ex: iPhone 15 Pro Max 256GB"></div>
     <div class="fld2">
       <div><label>Categoria</label><select id="wc"><option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option><option>Roupas</option><option>Móveis</option><option>Esportes</option><option>Livros</option><option>Outros</option></select></div>
       <div><label>Condição</label><select id="wco"><option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option></select></div>
     </div>
     <div class="fld"><label>Valor máximo</label><div class="pricewrap"><span>R$</span><input type="number" id="wp" placeholder="0" min="0"></div></div>
-    
-    <div class="fld">
-      <label>Fotos do produto desejado</label>
-      <input type="file" id="wishImages" accept="image/*" multiple>
-      <div id="previewImages"></div>
-    </div>
-
     <div class="fld"><label>Descrição</label><textarea id="wd" placeholder="Cor, modelo, requisitos, observações..."></textarea></div>
     <div style="background:var(--gl);border-radius:8px;padding:.75rem 1rem;font-size:13.5px;color:var(--gd);margin-bottom:1rem;display:flex;gap:7px">
       <i class="ti ti-bulb" style="flex-shrink:0;margin-top:1px"></i>Quanto mais detalhar, mais ofertas relevantes você recebe.
@@ -2761,56 +2604,22 @@ function cardHTML(w) {
       <button class="btn out" onclick="view('feed')">Cancelar</button>
     </div>
   </div>`;
-}
-async function publish() {
-  const title = document.getElementById('wt').value.trim();
-  const category = document.getElementById('wc').value;
-  const condition = document.getElementById('wco').value;
-  const price = document.getElementById('wp').value;
-  const description = document.getElementById('wd').value.trim();
-
-  if (!title || !price) {
-    toast('Preencha o título e o valor máximo', 'er');
-    return;
-  }
-
-  const btn = document.getElementById('pubBtn');
-  btn.disabled = true;
-  btn.textContent = 'Publicando...';
-
-  try {
-    // PASSO 8: Faz o upload das imagens antes de salvar no banco
-    const imageUrls = await uploadWishImages();
-
-    const { error } = await sb.from('wishes').insert({
-      user_id: CU.id,
-      title,
-      category,
-      condition,
-      price: Number(price),
-      description,
-      images: imageUrls,
-      featured_image: imageUrls[0] || null
-    });
-
-    if (error) throw error;
-
-    toast('Desejo publicado com sucesso!');
-    selectedFiles = []; // Limpa os arquivos selecionados
-    await loadPublicWishes();
-    view('feed');
-  } catch (err) {
-    console.error(err);
-    toast(err.message, 'er');
-  } finally {
-    btn.disabled = false;
-    if (btn.querySelector('i')) {
-      btn.innerHTML = '<i class="ti ti-plus"></i>Publicar desejo';
-    } else {
-      btn.textContent = 'Publicar desejo';
     }
-  }
-}
+    async function publish() {
+      const title = val('wt'), category = val('wc'), condition = val('wco'), price = val('wp'), description = val('wd');
+      if (!title || !price) { toast('Preencha produto e valor máximo', 'er'); return; }
+      const btn = document.getElementById('pubBtn');
+      btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader spin"></i> Publicando...';
+      const { data, error } = await sb.from('wishes').insert({
+        user_id: CU.id, title, category, condition, price: parseFloat(price),
+        description: description || '', views: 0, offers: 0, closed: false
+      }).select('*').single();
+      btn.disabled = false; btn.innerHTML = '<i class="ti ti-plus"></i>Publicar desejo';
+      if (error) { toast('Erro: ' + error.message, 'er'); return; }
+      WISHES.unshift(mapWish(data, { [CU.id]: CU }));
+      toast('Desejo publicado!');
+      view('feed');
+    }
 
     /* ════════════════════════════════════════════════
        CONVERSATIONS (Supabase)
