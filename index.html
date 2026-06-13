@@ -1714,200 +1714,6 @@
       margin: 0 auto;
       padding: 1.8rem
     }
-
-    /* ════════════════════════════════════════════════
-       RESPONSIVO — MOBILE FIRST
-    ════════════════════════════════════════════════ */
-
-    /* Hamburguer button (mobile) */
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      padding: 4px;
-      flex-shrink: 0;
-    }
-
-    /* Overlay para fechar sidebar no mobile */
-    .side-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.4);
-      z-index: 149;
-    }
-    .side-overlay.on { display: block; }
-
-    @media (max-width: 768px) {
-
-      /* ── NAV ── */
-      nav {
-        padding: 0 .9rem;
-        gap: 8px;
-      }
-      .nsearch {
-        flex: 1;
-        max-width: none;
-        margin-left: 0;
-      }
-      .nsearch input {
-        font-size: 12px;
-        padding: 6px 10px 6px 30px;
-      }
-      /* Esconde nome, mostra só avatar */
-      .uname { display: none; }
-      .upill { padding: 3px 6px 3px 3px; gap: 5px; }
-      /* Esconde botões Entrar/Criar conta em texto, mostra ícones */
-      .nbtn { padding: 5px 10px; font-size: 12px; }
-      .menu-toggle { display: flex; }
-
-      /* ── LAYOUT (sidebar vira drawer) ── */
-      .lay {
-        grid-template-columns: 1fr;
-        position: relative;
-      }
-      .side {
-        position: fixed;
-        top: 56px;
-        left: 0;
-        bottom: 0;
-        width: 220px;
-        z-index: 150;
-        transform: translateX(-100%);
-        transition: transform .25s ease;
-        box-shadow: 4px 0 20px rgba(0,0,0,.15);
-        overflow-y: auto;
-      }
-      .side.open {
-        transform: translateX(0);
-      }
-      .cnt {
-        padding: 1rem;
-        max-height: none;
-        min-height: calc(100vh - 56px);
-        overflow-y: auto;
-      }
-      .cnt.msgs-view {
-        padding: 0;
-        height: calc(100vh - 56px);
-      }
-
-      /* ── FEED ── */
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .fhead {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: .6rem;
-      }
-      .fhead > div:last-child {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .chips {
-        gap: 4px;
-      }
-      .chip {
-        padding: 4px 10px;
-        font-size: 12px;
-      }
-
-      /* ── MSGS (chat full width no mobile) ── */
-      .mlayout {
-        grid-template-columns: 1fr;
-        height: calc(100vh - 56px);
-      }
-      .mlist {
-        display: none;
-        width: 100%;
-        height: calc(100vh - 56px);
-        position: fixed;
-        top: 56px;
-        left: 0;
-        z-index: 50;
-        background: #fff;
-      }
-      .mlist.show-list {
-        display: flex;
-      }
-      .chat {
-        height: calc(100vh - 56px);
-        display: flex;
-        flex-direction: column;
-      }
-      .chscroll {
-        padding: .8rem;
-      }
-      .bubble { max-width: 85%; }
-      .chinput { padding: .5rem .6rem; }
-      /* Botão voltar para lista no mobile */
-      .chh {
-        position: relative;
-      }
-      .back-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--bg);
-        border: none;
-        cursor: pointer;
-        color: var(--tx);
-        font-size: 18px;
-        flex-shrink: 0;
-      }
-      /* Esconde empty state, mostra lista diretamente */
-      .mobile-show-list .mlist { display: flex; }
-      .mobile-show-list .chat { display: none; }
-      .mobile-show-chat .mlist { display: none; }
-      .mobile-show-chat .chat { display: flex; }
-
-      /* ── PERFIL ── */
-      .phero {
-        padding: 1.2rem;
-        gap: .9rem;
-      }
-      .pbav { width: 50px; height: 50px; font-size: 1.1rem; }
-      .pname { font-size: 1rem; }
-      .stats { grid-template-columns: repeat(3,1fr); gap: .5rem; }
-      .snum { font-size: 1.3rem; }
-      .fld2 { grid-template-columns: 1fr; }
-
-      /* ── ANALYTICS ── */
-      .dash-grid { grid-template-columns: repeat(2,1fr); }
-      .chart-card > div[style*="grid-template-columns:1fr 1fr"] {
-        display: flex; flex-direction: column;
-      }
-
-      /* ── MODAIS ── */
-      .modal { padding: 1.3rem; }
-      .mover { padding: .5rem; align-items: flex-end; }
-      .modal { border-radius: 14px 14px 0 0; max-height: 92vh; }
-
-      /* ── NOTIFICAÇÕES ── */
-      .notif-panel { left: 8px; right: 8px; width: auto; }
-
-      /* ── MATCH BANNER ── */
-      .match-banner { flex-direction: column; gap: .7rem; padding: 1rem; }
-      .match-banner i { font-size: 24px; }
-      .mcard { flex-wrap: wrap; }
-
-      /* ── PUBLIC FEED ── */
-      .pub-wrap { padding: 1rem; }
-    }
-
-    @media (max-width: 480px) {
-      .dash-grid { grid-template-columns: 1fr 1fr; }
-      .stats { gap: .4rem; }
-      .stat { padding: .7rem .5rem; }
-      nav { padding: 0 .7rem; gap: 6px; }
-    }
   </style>
 </head>
 
@@ -1983,14 +1789,28 @@
     </div>
   </div>
 
-  <!-- NAV -->
-  <!-- Overlay mobile sidebar -->
-  <div class="side-overlay" id="sideOverlay" onclick="closeSidebar()"></div>
 
+  <!-- LOGOUT CONFIRM MODAL -->
+  <div class="mover" id="logoutMod">
+    <div class="modal" style="max-width:360px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">👋</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Sair da conta?</div>
+      <div style="font-size:14px;color:var(--txm);margin-bottom:1.5rem;line-height:1.5">
+        Você será desconectado e precisará fazer login novamente para acessar sua conta.
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn out full" onclick="document.getElementById('logoutMod').classList.remove('on')">
+          <i class="ti ti-x"></i>Cancelar
+        </button>
+        <button class="btn full" onclick="confirmLogout()" style="background:var(--c);color:#fff">
+          <i class="ti ti-logout"></i>Sair da conta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
   <nav>
-    <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()" aria-label="Menu">
-      <i class="ti ti-menu-2"></i>
-    </button>
     <a class="logo" href="#" onclick="CU?view('feed'):showPublic();return false">quero<em>comprar</em></a>
     <div class="nsearch" id="navSearch">
       <i class="ti ti-search si"></i>
@@ -2028,7 +1848,7 @@
   <!-- APP (logado) -->
   <div class="scr" id="scr-app">
     <div class="lay">
-      <div class="side" id="sideBar">
+      <div class="side">
         <div class="ssec">Descobrir</div>
         <button class="si-btn on" id="sn-feed" onclick="view('feed')"><i class="ti ti-layout-grid"></i>Explorar</button>
         <button class="si-btn" id="sn-match" onclick="view('match')"><i class="ti ti-sparkles"></i>Match por IA<span
@@ -2042,7 +1862,7 @@
         <button class="si-btn" id="sn-dash" onclick="view('dash')"><i class="ti ti-chart-bar"></i>Analytics</button>
         <button class="si-btn" id="sn-prof" onclick="view('prof')"><i class="ti ti-user"></i>Perfil</button>
         <div style="margin-top:auto;padding-top:1rem;border-top:.5px solid var(--bd)">
-          <button class="si-btn" style="color:var(--c)" onclick="logout()"><i class="ti ti-logout"></i>Sair</button>
+          <button class="si-btn" style="color:var(--c)" onclick="askLogout()"><i class="ti ti-logout"></i>Sair</button>
         </div>
       </div>
       <div class="cnt" id="cnt"></div>
@@ -2112,7 +1932,7 @@
       CU = { id: user.id, email: user.email, name: prof.name, role: prof.role, city: prof.city || '', phone: prof.phone || '' };
       CUProfile = prof;
       PROFILES[CU.id] = CU;
-           enter();
+      enter();
     }
 
     /* ════════════════════════════════════════════════
@@ -2225,6 +2045,43 @@
         btn.disabled = false;
         btn.textContent = 'Criar conta gratuita';
 
+      }
+    }
+
+    /* ════════════════════════════════════════════════
+       LOGOUT COM CONFIRMAÇÃO
+    ════════════════════════════════════════════════ */
+    function askLogout() {
+      document.getElementById('logoutMod').classList.add('on');
+    }
+
+    async function confirmLogout() {
+      // Fechar modal imediatamente
+      document.getElementById('logoutMod').classList.remove('on');
+
+      try {
+        // Encerrar canal realtime se existir
+        if (typeof msgChannel !== 'undefined' && msgChannel) {
+          sb.removeChannel(msgChannel);
+          msgChannel = null;
+        }
+        // Deslogar do Supabase
+        await sb.auth.signOut();
+      } catch (err) {
+        console.error('Erro ao fazer logout:', err);
+      } finally {
+        // Limpar estado local
+        CU          = null;
+        CUProfile   = null;
+        activeConv  = null;
+        CONVS       = [];
+        WISHES      = [];
+        NOTIFS      = [];
+        // Voltar para tela pública
+        show('public');
+        refreshNavPublic();
+        buildPubGrid();
+        toast('Você saiu da conta. Até logo!');
       }
     }
 
@@ -3195,154 +3052,6 @@
         notifOpen = false; document.getElementById('notifPanel').classList.remove('on');
       }
     });
-
-    /* ════════════════════════════════════════════════
-       RESPONSIVO — SIDEBAR MOBILE
-    ════════════════════════════════════════════════ */
-    function isMobile() { return window.innerWidth <= 768; }
-
-    function toggleSidebar() {
-      const side    = document.getElementById('sideBar');
-      const overlay = document.getElementById('sideOverlay');
-      if (!side) return;
-      const isOpen = side.classList.contains('open');
-      if (isOpen) { closeSidebar(); } else { openSidebar(); }
-    }
-
-    function openSidebar() {
-      const side    = document.getElementById('sideBar');
-      const overlay = document.getElementById('sideOverlay');
-      if (side)    side.classList.add('open');
-      if (overlay) overlay.classList.add('on');
-    }
-
-    function closeSidebar() {
-      const side    = document.getElementById('sideBar');
-      const overlay = document.getElementById('sideOverlay');
-      if (side)    side.classList.remove('open');
-      if (overlay) overlay.classList.remove('on');
-    }
-
-    // Fechar sidebar ao clicar em qualquer item do menu no mobile
-    document.addEventListener('click', e => {
-      if (!isMobile()) return;
-      const btn = e.target.closest('.si-btn');
-      if (btn && document.getElementById('sideBar')?.classList.contains('open')) {
-        setTimeout(closeSidebar, 150);
-      }
-    });
-
-    // No mobile: msgs abre lista de conversas primeiro
-    const _origRenderMsgs = typeof renderMsgs === 'function' ? renderMsgs : null;
-
-    function mobileOpenConvList() {
-      const layout = document.querySelector('.mlayout');
-      if (!layout || !isMobile()) return;
-      layout.classList.remove('mobile-show-chat');
-      layout.classList.add('mobile-show-list');
-    }
-
-    function mobileOpenChat() {
-      const layout = document.querySelector('.mlayout');
-      if (!layout) return;
-      if (isMobile()) {
-        layout.classList.remove('mobile-show-list');
-        layout.classList.add('mobile-show-chat');
-      }
-    }
-
-    // Patch openConv para mobile: abrir chat e esconder lista
-    const _origOpenConv = typeof openConv === 'function' ? openConv : null;
-    if (_origOpenConv) {
-      window.openConv = async function(c) {
-        await _origOpenConv(c);
-        mobileOpenChat();
-        // Adicionar botão voltar no cabeçalho do chat
-        addBackButton();
-      };
-    }
-
-    // Patch openConvById
-    const _origOpenConvById = typeof openConvById === 'function' ? openConvById : null;
-    if (_origOpenConvById) {
-      window.openConvById = async function(cid) {
-        await _origOpenConvById(cid);
-        mobileOpenChat();
-        addBackButton();
-      };
-    }
-
-    function addBackButton() {
-      if (!isMobile()) return;
-      const chh = document.querySelector('.chh');
-      if (!chh || chh.querySelector('.back-btn')) return;
-      const btn = document.createElement('button');
-      btn.className = 'back-btn';
-      btn.innerHTML = '<i class="ti ti-arrow-left"></i>';
-      btn.onclick = () => {
-        mobileOpenConvList();
-      };
-      chh.insertBefore(btn, chh.firstChild);
-    }
-
-    // Ao renderizar msgs no mobile, mostrar lista primeiro
-    const _origViewFn = window.view;
-    window.view = function(vn) {
-      _origViewFn(vn);
-      if (vn === 'msgs' && isMobile()) {
-        setTimeout(() => {
-          const layout = document.querySelector('.mlayout');
-          if (layout) {
-            layout.classList.add('mobile-show-list');
-          }
-        }, 50);
-      }
-    };
-
-    // Mostrar/esconder hamburguer conforme login
-    function updateMenuToggle() {
-      const toggle = document.getElementById('menuToggle');
-      if (!toggle) return;
-      // Sempre visível em mobile no scr-app; esconde na tela pública
-      const appVisible = document.getElementById('scr-app')?.classList.contains('on');
-      toggle.style.display = appVisible ? '' : 'none';
-    }
-
-    // Chamar ao entrar/sair
-    const _origEnter = window.enter;
-    window.enter = async function() {
-      await _origEnter();
-      updateMenuToggle();
-    };
-
-    const _origLogout = window.logout;
-    window.logout = async function() {
-      await _origLogout();
-      updateMenuToggle();
-      closeSidebar();
-    };
-
-    const _origShow = window.show;
-    window.show = function(s) {
-      _origShow(s);
-      updateMenuToggle();
-      if (isMobile()) closeSidebar();
-    };
-
-    // Ajuste ao redimensionar
-    window.addEventListener('resize', () => {
-      if (!isMobile()) {
-        closeSidebar();
-        // Restaurar layout de msgs no desktop
-        const layout = document.querySelector('.mlayout');
-        if (layout) {
-          layout.classList.remove('mobile-show-list', 'mobile-show-chat');
-        }
-      }
-    });
-
-    // Init
-    updateMenuToggle();
   </script>
 </body>
 
