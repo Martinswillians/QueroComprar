@@ -1715,61 +1715,66 @@
       padding: 1.8rem
     }
 
-    /* ═══════════════════════════════════════════
-       RESPONSIVO — MOBILE
-    ═══════════════════════════════════════════ */
-    .menu-toggle{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;flex-shrink:0}
-    .side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:149}
-    .side-overlay.on{display:block}
-
-    @media(max-width:768px){
-      nav{padding:0 .8rem;gap:7px}
-      .logo{font-size:1.1rem}
-      .nsearch{flex:1;max-width:none;margin-left:0}
-      .nsearch input{font-size:12px;padding:6px 10px 6px 30px}
-      .uname{display:none}
-      .upill{padding:3px 6px 3px 3px;gap:5px}
-      .nbtn{padding:5px 9px;font-size:12px}
-      .menu-toggle{display:flex}
-      .lay{grid-template-columns:1fr}
-      .side{position:fixed;top:56px;left:0;bottom:0;width:220px;z-index:150;transform:translateX(-100%);transition:transform .25s ease;box-shadow:4px 0 24px rgba(0,0,0,.18);overflow-y:auto}
-      .side.open{transform:translateX(0)}
-      .cnt{padding:1rem;max-height:none;min-height:calc(100vh - 56px);overflow-y:auto}
-      .cnt.msgs-view{padding:0;height:calc(100vh - 56px)}
-      .grid{grid-template-columns:1fr}
-      .fhead{flex-direction:column;align-items:flex-start;gap:.5rem}
-      .fhead>div:last-child{width:100%;justify-content:space-between}
-      .chips{gap:4px}
-      .chip{padding:4px 10px;font-size:12px}
-      .pub-wrap{padding:1rem}
-      .wcard{padding:.85rem}
-      .wcf{flex-wrap:wrap;gap:6px}
-      .mlayout{grid-template-columns:1fr;height:calc(100vh - 56px);overflow:hidden}
-      .mlist{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:50;background:#fff;display:none;flex-direction:column}
-      .mlist.show{display:flex}
-      .chat{height:calc(100vh - 56px);display:flex;flex-direction:column}
-      .bubble{max-width:85%}
-      .chinput{padding:.5rem .6rem}
-      .chscroll{padding:.8rem}
-      .back-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;color:var(--tx);font-size:18px;flex-shrink:0}
-      .phero{padding:1.2rem;gap:.9rem}
-      .pbav{width:50px;height:50px;font-size:1.1rem}
-      .pname{font-size:1rem}
-      .stats{gap:.5rem}
-      .snum{font-size:1.3rem}
-      .fld2{grid-template-columns:1fr}
-      .dash-grid{grid-template-columns:repeat(2,1fr)}
-      .mover{padding:.5rem;align-items:flex-end}
-      .modal{border-radius:14px 14px 0 0;max-height:92vh}
-      .notif-panel{left:8px;right:8px;width:auto}
-      .match-banner{flex-direction:column;gap:.7rem;padding:1rem}
-      .mcard{flex-wrap:wrap}
+    /* ── PERFIL V2 ── */
+    .prof-page { max-width: 520px; margin: 0 auto; }
+    .prof-hero2 {
+      background: linear-gradient(135deg, var(--dk), #1a3a2e);
+      border-radius: 16px; padding: 1.6rem; margin-bottom: 1rem;
+      position: relative;
     }
+    .prof-av-wrap {
+      position: relative; width: 80px; height: 80px;
+      margin: 0 auto 1rem; display: block;
+    }
+    .prof-av-img {
+      width: 80px; height: 80px; border-radius: 50%;
+      object-fit: cover; border: 3px solid rgba(255,255,255,.2);
+      display: block;
+    }
+    .prof-av-init {
+      width: 80px; height: 80px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 1.8rem; color: #fff;
+      border: 3px solid rgba(255,255,255,.2);
+    }
+    .prof-av-edit {
+      position: absolute; bottom: 2px; right: 2px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--g); border: 2px solid #fff;
+      color: #fff; font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .prof-av-edit:hover { background: var(--gd); }
+    .prof-info { text-align: center; }
+    .prof-name2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.25rem; color: #fff; }
+    .prof-email2 { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 3px; }
+    .prof-role2 {
+      font-size: 12px; background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.85); padding: 3px 12px;
+      border-radius: 14px; display: inline-block; margin-top: 8px;
+    }
+    .prof-actions {
+      display: flex; gap: 8px; margin-top: 1.2rem; justify-content: center;
+    }
+    .prof-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 8px; font-size: 13.5px;
+      font-weight: 500; cursor: pointer; border: none; transition: .2s;
+    }
+    .prof-btn.edit { background: rgba(255,255,255,.12); color: #fff; }
+    .prof-btn.edit:hover { background: rgba(255,255,255,.22); }
+    .prof-btn.logout { background: rgba(216,90,48,.2); color: #ffb3a0; }
+    .prof-btn.logout:hover { background: rgba(216,90,48,.35); }
+
+    /* Modal de edição de perfil */
+    .edit-prof-modal { max-width: 460px; }
+
     @media(max-width:480px){
-      .dash-grid{grid-template-columns:1fr 1fr}
-      .stats{gap:.4rem}
-      .stat{padding:.7rem .5rem}
-      nav{padding:0 .6rem;gap:5px}
+      .prof-av-wrap { width: 68px; height: 68px; }
+      .prof-av-img, .prof-av-init { width: 68px; height: 68px; font-size: 1.5rem; }
+      .prof-name2 { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -1847,33 +1852,50 @@
   </div>
 
 
-  <!-- LOGOUT CONFIRM MODAL -->
-  <div class="mover" id="logoutMod">
-    <div class="modal" style="max-width:360px;text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:.8rem">👋</div>
-      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Sair da conta?</div>
-      <div style="font-size:14px;color:var(--txm);margin-bottom:1.5rem;line-height:1.5">
-        Você será desconectado e precisará fazer login novamente para acessar sua conta.
+  <!-- EDIT PROFILE MODAL -->
+  <div class="mover" id="editProfMod">
+    <div class="modal edit-prof-modal">
+      <div class="mhd">
+        <span class="mtitle">Editar perfil</span>
+        <button class="xbtn" onclick="document.getElementById('editProfMod').classList.remove('on')">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <!-- Foto de perfil -->
+      <div style="text-align:center;margin-bottom:1.3rem">
+        <div style="position:relative;display:inline-block">
+          <div id="editAvWrap" style="width:72px;height:72px;margin:0 auto;border-radius:50%;overflow:hidden;border:3px solid var(--bd)"></div>
+          <button onclick="document.getElementById('avatarInp').click()"
+            style="position:absolute;bottom:2px;right:2px;width:24px;height:24px;border-radius:50%;background:var(--g);border:2px solid #fff;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <i class="ti ti-camera"></i>
+          </button>
+          <input type="file" id="avatarInp" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+        </div>
+        <div style="font-size:12px;color:var(--txl);margin-top:6px">Toque na câmera para alterar a foto</div>
+      </div>
+      <div class="fld"><label>Nome</label><input type="text" id="en" placeholder="Seu nome"></div>
+      <div class="fld"><label>Telefone</label><input type="text" id="ep" placeholder="(11) 99999-9999"></div>
+      <div class="fld"><label>Cidade</label><input type="text" id="ec" placeholder="São Paulo - SP"></div>
+      <div class="fld"><label>Papel na plataforma</label>
+        <select id="erole">
+          <option value="buyer">Comprador</option>
+          <option value="seller">Vendedor</option>
+          <option value="both">Ambos — Compro e vendo</option>
+        </select>
       </div>
       <div style="display:flex;gap:8px">
-        <button class="btn out full" onclick="document.getElementById('logoutMod').classList.remove('on')">
-          <i class="ti ti-x"></i>Cancelar
+        <button class="btn out full" onclick="document.getElementById('editProfMod').classList.remove('on')">
+          Cancelar
         </button>
-        <button class="btn full" onclick="confirmLogout()" style="background:var(--c);color:#fff">
-          <i class="ti ti-logout"></i>Sair da conta
+        <button class="btn g full" onclick="saveProf()">
+          <i class="ti ti-check"></i>Salvar alterações
         </button>
       </div>
     </div>
   </div>
 
   <!-- NAV -->
-  <!-- Overlay mobile sidebar -->
-  <div class="side-overlay" id="sideOverlay" onclick="closeSidebar()"></div>
-
   <nav>
-    <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
-      <i class="ti ti-menu-2"></i>
-    </button>
     <a class="logo" href="#" onclick="CU?view('feed'):showPublic();return false">quero<em>comprar</em></a>
     <div class="nsearch" id="navSearch">
       <i class="ti ti-search si"></i>
@@ -1911,7 +1933,7 @@
   <!-- APP (logado) -->
   <div class="scr" id="scr-app">
     <div class="lay">
-      <div class="side" id="sideBar">
+      <div class="side">
         <div class="ssec">Descobrir</div>
         <button class="si-btn on" id="sn-feed" onclick="view('feed')"><i class="ti ti-layout-grid"></i>Explorar</button>
         <button class="si-btn" id="sn-match" onclick="view('match')"><i class="ti ti-sparkles"></i>Match por IA<span
@@ -1925,7 +1947,7 @@
         <button class="si-btn" id="sn-dash" onclick="view('dash')"><i class="ti ti-chart-bar"></i>Analytics</button>
         <button class="si-btn" id="sn-prof" onclick="view('prof')"><i class="ti ti-user"></i>Perfil</button>
         <div style="margin-top:auto;padding-top:1rem;border-top:.5px solid var(--bd)">
-          <button class="si-btn" style="color:var(--c)" onclick="askLogout()"><i class="ti ti-logout"></i>Sair</button>
+          <button class="si-btn" style="color:var(--c)" onclick="logout()"><i class="ti ti-logout"></i>Sair</button>
         </div>
       </div>
       <div class="cnt" id="cnt"></div>
@@ -1992,7 +2014,7 @@
         // Profile not yet created (first login via OAuth etc) — skip
         return;
       }
-      CU = { id: user.id, email: user.email, name: prof.name, role: prof.role, city: prof.city || '', phone: prof.phone || '' };
+      CU = { id: user.id, email: user.email, name: prof.name, role: prof.role, city: prof.city || '', phone: prof.phone || '', avatar: prof.avatar_url || null };
       CUProfile = prof;
       PROFILES[CU.id] = CU;
       enter();
@@ -2112,43 +2134,6 @@
     }
 
     /* ════════════════════════════════════════════════
-       LOGOUT COM CONFIRMAÇÃO
-    ════════════════════════════════════════════════ */
-    function askLogout() {
-      document.getElementById('logoutMod').classList.add('on');
-    }
-
-    async function confirmLogout() {
-      // Fechar modal imediatamente
-      document.getElementById('logoutMod').classList.remove('on');
-
-      try {
-        // Encerrar canal realtime se existir
-        if (typeof msgChannel !== 'undefined' && msgChannel) {
-          sb.removeChannel(msgChannel);
-          msgChannel = null;
-        }
-        // Deslogar do Supabase
-        await sb.auth.signOut();
-      } catch (err) {
-        console.error('Erro ao fazer logout:', err);
-      } finally {
-        // Limpar estado local
-        CU          = null;
-        CUProfile   = null;
-        activeConv  = null;
-        CONVS       = [];
-        WISHES      = [];
-        NOTIFS      = [];
-        // Voltar para tela pública
-        show('public');
-        refreshNavPublic();
-        buildPubGrid();
-        toast('Você saiu da conta. Até logo!');
-      }
-    }
-
-    /* ════════════════════════════════════════════════
        NAV
     ════════════════════════════════════════════════ */
     function refreshNavPublic() {
@@ -2162,7 +2147,11 @@
     <div style="display:flex;align-items:center;gap:9px">
       <button class="navico" onclick="toggleNotif()" id="notifBtn"><i class="ti ti-bell"></i></button>
       <div class="upill" onclick="view('prof')">
-        <div class="av" style="background:${colorFor(CU.id)}">${initials}</div>
+        <div class="av" style="background:${CU.avatar?'transparent':colorFor(CU.id)};overflow:hidden;padding:0">
+        ${CU.avatar
+          ? `<img src="${CU.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+          : initials}
+      </div>
         <span class="uname">${CU.name.split(' ')[0]}</span>
       </div>
     </div>`;
@@ -3045,47 +3034,128 @@
     }
 
     /* ── PROFILE ── */
+    function avatarHTML(size=80){
+      const s = size+'px';
+      const fs = Math.round(size*.38)+'px';
+      if(CU.avatar){
+        return `<img class="prof-av-img" src="${CU.avatar}" style="width:${s};height:${s}" alt="Foto">`;
+      }
+      return `<div class="prof-av-init" style="background:${colorFor(CU.id)};width:${s};height:${s};font-size:${fs}">${CU.name[0].toUpperCase()}</div>`;
+    }
+
     function renderProf(el) {
-      const myW = WISHES.filter(w => w.uid === CU.id).length;
-      const convs = CONVS.filter(c => c.buyer_id === CU.id || c.seller_id === CU.id).length;
-      const roleLabel = { buyer: 'Comprador', seller: 'Vendedor', both: 'Comprador & Vendedor' };
+      const myW  = WISHES.filter(w => w.uid === CU.id).length;
+      const convs = CONVS.filter(c => c.buyer_id===CU.id||c.seller_id===CU.id).length;
+      const closed = WISHES.filter(w => w.uid===CU.id&&w.closed).length;
+      const roleLabel = { buyer:'Comprador', seller:'Vendedor', both:'Comprador & Vendedor' };
       el.innerHTML = `
-  <div class="phero fi">
-    <div class="pbav" style="background:${colorFor(CU.id)}">${CU.name[0]}</div>
-    <div>
-      <div class="pname">${CU.name}</div>
-      <div class="pemail">${CU.email}</div>
-      <div class="prole">${roleLabel[CU.role] || 'Usuário'}</div>
+  <div class="prof-page fi">
+    <!-- HERO -->
+    <div class="prof-hero2">
+      <div class="prof-av-wrap" style="margin:0 auto 1rem">
+        ${avatarHTML(80)}
+      </div>
+      <div class="prof-info">
+        <div class="prof-name2">${esc(CU.name)}</div>
+        <div class="prof-email2">${esc(CU.email)}</div>
+        <div class="prof-role2">${roleLabel[CU.role]||'Usuário'}</div>
+      </div>
+      <div class="prof-actions">
+        <button class="prof-btn edit" onclick="openEditProf()">
+          <i class="ti ti-pencil"></i>Editar perfil
+        </button>
+        <button class="prof-btn logout" onclick="askLogout()">
+          <i class="ti ti-logout"></i>Sair da conta
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="stats fi">
-    <div class="stat"><div class="snum">${myW}</div><div class="slbl">Desejos publicados</div></div>
-    <div class="stat"><div class="snum">${convs}</div><div class="slbl">Conversas</div></div>
-    <div class="stat"><div class="snum">${WISHES.filter(w => w.uid === CU.id && w.closed).length}</div><div class="slbl">Negócios fechados</div></div>
-  </div>
-  <div class="fcard fi" style="max-width:510px">
-    <div class="fctitle">Editar perfil</div>
-    <div class="fld"><label>Nome</label><input type="text" id="en" value="${CU.name}"></div>
-    <div class="fld2">
-      <div><label>Telefone</label><input type="text" id="ep" value="${CU.phone || ''}" placeholder="(11) 99999-9999"></div>
-      <div><label>Cidade</label><input type="text" id="ec" value="${CU.city || ''}" placeholder="São Paulo"></div>
+
+    <!-- STATS -->
+    <div class="stats fi">
+      <div class="stat"><div class="snum">${myW}</div><div class="slbl">Desejos publicados</div></div>
+      <div class="stat"><div class="snum">${convs}</div><div class="slbl">Conversas</div></div>
+      <div class="stat"><div class="snum">${closed}</div><div class="slbl">Negócios fechados</div></div>
     </div>
-    <div class="fld"><label>Papel na plataforma</label>
-      <select id="erole">
-        <option value="buyer" ${CU.role === 'buyer' ? 'selected' : ''}>Comprador</option>
-        <option value="seller" ${CU.role === 'seller' ? 'selected' : ''}>Vendedor</option>
-        <option value="both" ${CU.role === 'both' ? 'selected' : ''}>Ambos</option>
-      </select>
-    </div>
-    <button class="btn g" onclick="saveProf()"><i class="ti ti-check"></i>Salvar alterações</button>
+
+    <!-- DESEJOS DO USUÁRIO -->
+    ${myW > 0 ? `
+    <div class="fcard fi" style="margin-top:.2rem">
+      <div class="fctitle" style="margin-bottom:.8rem"><i class="ti ti-heart" style="color:var(--c);margin-right:5px"></i>Meus desejos</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        ${WISHES.filter(w=>w.uid===CU.id).slice(0,5).map(w=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .9rem;background:var(--bg);border-radius:9px;gap:.7rem;cursor:pointer" onclick="showDetail(${w.id})">
+            <div style="min-width:0">
+              <div style="font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(w.title)}</div>
+              <div style="font-size:12px;color:var(--txm);margin-top:2px">${w.cat} · ${w.cond}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ ${fmt(w.price)}</div>
+              ${w.closed?'<span style="font-size:11px;color:var(--gd)">✓ Fechado</span>':''}
+            </div>
+          </div>`).join('')}
+      </div>
+      ${myW>5?`<div style="text-align:center;margin-top:.7rem"><button class="btn out sm" onclick="view('mine')">Ver todos (${myW})</button></div>`:''}
+    </div>` : ''}
   </div>`;
     }
+    /* ── Abrir modal de edição preenchido ── */
+    function openEditProf() {
+      document.getElementById('en').value    = CU.name  || '';
+      document.getElementById('ep').value    = CU.phone || '';
+      document.getElementById('ec').value    = CU.city  || '';
+      const sel = document.getElementById('erole');
+      if(sel) sel.value = CU.role || 'buyer';
+      // Mostrar avatar atual no modal
+      const wrap = document.getElementById('editAvWrap');
+      if(wrap){
+        wrap.innerHTML = CU.avatar
+          ? `<img src="${CU.avatar}" style="width:72px;height:72px;object-fit:cover;border-radius:50%">`
+          : `<div style="width:72px;height:72px;border-radius:50%;background:${colorFor(CU.id)};display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:#fff">${CU.name[0].toUpperCase()}</div>`;
+      }
+      document.getElementById('editProfMod').classList.add('on');
+    }
+
+    /* ── Preview avatar antes de salvar ── */
+    let _newAvatarB64 = null;
+    function previewAvatar(inp) {
+      const file = inp.files[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        _newAvatarB64 = e.target.result;
+        const wrap = document.getElementById('editAvWrap');
+        if(wrap) wrap.innerHTML = `<img src="${_newAvatarB64}" style="width:72px;height:72px;object-fit:cover;border-radius:50%">`;
+      };
+      reader.readAsDataURL(file);
+    }
+
     async function saveProf() {
-      const name = val('en'), phone = val('ep'), city = val('ec'), role = document.getElementById('erole').value;
-      const { error } = await sb.from('profiles').update({ name, phone, city, role }).eq('id', CU.id);
-      if (error) { toast('Erro: ' + error.message, 'er'); return; }
-      CU.name = name; CU.phone = phone; CU.city = city; CU.role = role;
-      toast('Perfil atualizado!'); renderProf(document.getElementById('cnt')); refreshNavLoggedIn();
+      const name  = val('en');
+      const phone = val('ep');
+      const city  = val('ec');
+      const role  = document.getElementById('erole')?.value || CU.role;
+      if(!name){ toast('Informe seu nome','er'); return; }
+
+      // Montar objeto de update
+      const updates = { name, phone, city, role };
+      // Se há nova foto, salva em base64 no campo avatar_url (localStorage como fallback)
+      if(_newAvatarB64){
+        updates.avatar_url = _newAvatarB64;
+      }
+
+      const { error } = await sb.from('profiles').update(updates).eq('id', CU.id);
+      if(error){ toast('Erro: ' + error.message, 'er'); return; }
+
+      // Atualizar estado local
+      CU.name  = name;
+      CU.phone = phone;
+      CU.city  = city;
+      CU.role  = role;
+      if(_newAvatarB64){ CU.avatar = _newAvatarB64; _newAvatarB64 = null; }
+
+      document.getElementById('editProfMod').classList.remove('on');
+      toast('Perfil atualizado! ✓');
+      renderProf(document.getElementById('cnt'));
+      refreshNavLoggedIn();
     }
 
     /* ════════════════ UTILS ════════════════ */
@@ -3115,111 +3185,6 @@
         notifOpen = false; document.getElementById('notifPanel').classList.remove('on');
       }
     });
-
-    /* ═══════════════════════════════════════════
-       RESPONSIVO — SIDEBAR + MSGS MOBILE JS
-    ═══════════════════════════════════════════ */
-    function isMobile(){ return window.innerWidth <= 768; }
-
-    function toggleSidebar(){
-      const side = document.getElementById('sideBar');
-      side && side.classList.contains('open') ? closeSidebar() : openSidebar();
-    }
-    function openSidebar(){
-      document.getElementById('sideBar')?.classList.add('open');
-      document.getElementById('sideOverlay')?.classList.add('on');
-    }
-    function closeSidebar(){
-      document.getElementById('sideBar')?.classList.remove('open');
-      document.getElementById('sideOverlay')?.classList.remove('on');
-    }
-
-    // Fecha sidebar ao clicar em item do menu
-    document.addEventListener('click', e => {
-      if(isMobile() && e.target.closest('.si-btn') && document.getElementById('sideBar')?.classList.contains('open')){
-        setTimeout(closeSidebar, 150);
-      }
-    });
-
-    // Mostra/esconde hamburguer
-    function updateMenuToggle(){
-      const t = document.getElementById('menuToggle');
-      if(!t) return;
-      t.style.display = document.getElementById('scr-app')?.classList.contains('on') ? '' : 'none';
-    }
-
-    // Msgs mobile: lista <-> chat
-    function mobileShowList(){
-      if(!isMobile()) return;
-      document.querySelector('.mlist')?.classList.add('show');
-      document.querySelector('.chat') && (document.querySelector('.chat').style.display='none');
-    }
-    function mobileShowChat(){
-      if(!isMobile()) return;
-      document.querySelector('.mlist')?.classList.remove('show');
-      document.querySelector('.chat') && (document.querySelector('.chat').style.display='flex');
-    }
-    function addBackBtn(){
-      if(!isMobile()) return;
-      const chh = document.querySelector('.chh');
-      if(!chh || chh.querySelector('.back-btn')) return;
-      const btn = document.createElement('button');
-      btn.className = 'back-btn';
-      btn.innerHTML = '<i class="ti ti-arrow-left"></i>';
-      btn.onclick = mobileShowList;
-      chh.insertBefore(btn, chh.firstChild);
-    }
-
-    // Patch view() para msgs
-    const _origView = window.view;
-    window.view = function(vn){
-      _origView(vn);
-      if(vn==='msgs' && isMobile()){
-        setTimeout(()=>{ mobileShowList(); },60);
-      }
-      if(vn!=='msgs') closeSidebar();
-      updateMenuToggle();
-    };
-
-    // Patch openConv / openConvById para mobile
-    const _origOpenConv = window.openConv;
-    if(_origOpenConv){
-      window.openConv = async function(c){
-        await _origOpenConv(c);
-        mobileShowChat();
-        addBackBtn();
-      };
-    }
-    const _origOpenConvById = window.openConvById;
-    if(_origOpenConvById){
-      window.openConvById = async function(cid){
-        await _origOpenConvById(cid);
-        mobileShowChat();
-        addBackBtn();
-      };
-    }
-
-    // Patch show() para atualizar hamburguer
-    const _origShow = window.show;
-    window.show = function(s){
-      _origShow(s);
-      updateMenuToggle();
-      if(isMobile()) closeSidebar();
-    };
-
-    // Resize: restaurar desktop layout
-    window.addEventListener('resize', ()=>{
-      if(!isMobile()){
-        closeSidebar();
-        const ml = document.querySelector('.mlist');
-        const ch = document.querySelector('.chat');
-        if(ml) ml.classList.remove('show');
-        if(ch) ch.style.display='';
-      }
-    });
-
-    updateMenuToggle();
-
   </script>
 </body>
 
