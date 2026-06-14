@@ -1720,11 +1720,11 @@
     .prof-hero2{background:linear-gradient(135deg,var(--dk),#1a3a2e);border-radius:16px;padding:1.6rem;margin-bottom:1rem;position:relative}
     .prof-av-wrap{position:relative;width:80px;height:80px;margin:0 auto 1rem}
     .prof-av-img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.2);display:block}
-    .prof-av-init{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-weight:800;font-size:1.8rem;color:#fff;border:3px solid rgba(255,255,255,.2)}
+    .prof-av-init{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;border:3px solid rgba(255,255,255,.2)}
     .prof-av-btn{position:absolute;bottom:2px;right:2px;width:26px;height:26px;border-radius:50%;background:var(--g);border:2px solid #fff;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
     .prof-av-btn:hover{background:var(--gd)}
     .prof-info{text-align:center}
-    .prof-name2{font-family:Syne,sans-serif;font-weight:700;font-size:1.2rem;color:#fff}
+    .prof-name2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;color:#fff}
     .prof-email2{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .prof-role2{font-size:12px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);padding:3px 12px;border-radius:14px;display:inline-block;margin-top:8px}
     .prof-actions{display:flex;gap:8px;margin-top:1.2rem;justify-content:center;flex-wrap:wrap}
@@ -1735,12 +1735,10 @@
     .prof-btn.logout-btn:hover{background:rgba(216,90,48,.38)}
     .prof-back{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.7);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:.2s}
     .prof-back:hover{background:rgba(255,255,255,.2);color:#fff}
-
-    /* ── RESPONSIVO MOBILE ── */
+    /* ── RESPONSIVO ── */
     .menu-toggle{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;flex-shrink:0}
     .side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:149}
     .side-overlay.on{display:block}
-
     @media(max-width:768px){
       nav{padding:0 .8rem;gap:7px}
       .logo{font-size:1.1rem}
@@ -1909,14 +1907,12 @@
     </div>
   </div>
 
-  <!-- Overlay sidebar mobile -->
-  <div class="side-overlay" id="sideOverlay" onclick="closeSidebar()"></div>
 
   <!-- MODAL LOGOUT -->
   <div class="mover" id="logoutMod">
     <div class="modal" style="max-width:360px;text-align:center">
       <div style="font-size:2.5rem;margin-bottom:.8rem">👋</div>
-      <div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Sair da conta?</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Sair da conta?</div>
       <div style="font-size:14px;color:var(--txm);margin-bottom:1.5rem;line-height:1.5">
         Você será desconectado e precisará fazer login novamente.
       </div>
@@ -1965,6 +1961,9 @@
       </div>
     </div>
   </div>
+
+  <!-- SIDEBAR OVERLAY MOBILE -->
+  <div class="side-overlay" id="sideOverlay" onclick="closeSidebar()"></div>
 
   <!-- APP (logado) -->
   <div class="scr" id="scr-app">
@@ -2037,8 +2036,11 @@
         if (event === 'SIGNED_IN' && session) {
           await setSession(session.user);
         } else if (event === 'SIGNED_OUT') {
-          CU = null; CUProfile = null;
-          show('public'); refreshNavPublic();
+          CU = null; CUProfile = null; activeConv = null;
+          CONVS = []; NOTIFS = [];
+          await loadPublicWishes();
+          show('public');
+          refreshNavPublic();
         }
       });
     });
@@ -2856,7 +2858,7 @@
         <div style="font-size:12px;color:var(--txl)">${w.ucity || 'Localização não informada'} · ${relTime(w.ts)}</div>
       </div>
     </div>
-    <h2 style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem">${w.title}</h2>
+    <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem">${w.title}</h2>
     <div style="display:flex;gap:7px;margin-bottom:.9rem">
       <span class="cat">${w.cat}</span>
       <span style="font-size:11px;background:var(--bg);color:var(--txm);padding:3px 9px;border-radius:8px">${w.cond}</span>
@@ -2866,11 +2868,11 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.1rem">
       <div style="background:var(--gl);border-radius:9px;padding:.9rem;text-align:center">
         <div style="font-size:11px;color:var(--gd);margin-bottom:3px">Valor máximo</div>
-        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.25rem;color:var(--gd)">R$ ${fmt(w.price)}</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:var(--gd)">R$ ${fmt(w.price)}</div>
       </div>
       <div style="background:var(--bg);border-radius:9px;padding:.9rem;text-align:center">
         <div style="font-size:11px;color:var(--txm);margin-bottom:3px">Ofertas recebidas</div>
-        <div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.25rem">${w.offers || 0}</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem">${w.offers || 0}</div>
       </div>
     </div>
     ${w.closed
@@ -2889,7 +2891,7 @@
       document.getElementById('detContent').innerHTML = `
     <div style="text-align:center;padding:1rem 0">
       <div style="font-size:3rem;margin-bottom:.5rem">\uD83C\uDF89</div>
-      <div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Fechar negócio</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Fechar negócio</div>
       <div style="font-size:14px;color:var(--txm);margin-bottom:1.3rem">Confirme que o produto foi vendido/comprado.</div>
       <div style="background:var(--gl);border-radius:10px;padding:1rem;margin-bottom:1.3rem">
         <div style="font-weight:600;font-size:15px">${w.title}</div>
@@ -2951,14 +2953,14 @@
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.3rem">
       <div class="av" style="background:${colorFor(uid)};width:52px;height:52px;border-radius:50%;font-size:1.2rem;flex-shrink:0">${prof.name[0]}</div>
       <div>
-        <div style="font-family:Syne,sans-serif;font-weight:700;font-size:1.1rem">${prof.name}</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem">${prof.name}</div>
         <div style="font-size:13px;color:var(--txl);margin-top:2px">${prof.city || 'Localização não informada'}</div>
         <div style="font-size:11px;margin-top:5px;display:inline-block;padding:2px 10px;border-radius:12px;background:var(--gl);color:var(--gd)">
           ${isBuyer && isSeller ? 'Comprador & Vendedor' : isBuyer ? 'Comprador' : 'Vendedor'}</div>
       </div>
     </div>`;
       if (isBuyer && open.length) {
-        content += `<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
+        content += `<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
       <i class="ti ti-heart" style="color:var(--c)"></i>Deseja comprar (${open.length})</div>
       <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
         ${open.map(w => `
@@ -2969,14 +2971,14 @@
               <div style="font-size:12px;color:var(--txm);margin-top:2px">${w.cat} · ${w.cond}</div>
             </div>
             <div style="text-align:right;flex-shrink:0">
-              <div style="font-family:Syne,sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ ${fmt(w.price)}</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ ${fmt(w.price)}</div>
               <div style="font-size:11px;color:var(--txl)">${w.offers || 0} ofertas</div>
             </div>
           </div>`).join('')}
       </div>`;
       }
       if (isSeller && sellerConvs.length) {
-        content += `<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
+        content += `<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
       <i class="ti ti-tag" style="color:var(--g)"></i>Ofertas enviadas (${sellerConvs.length})</div>
       <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
         ${sellerConvs.map(c => {
@@ -2989,7 +2991,7 @@
       </div>`;
       }
       if (closed.length) {
-        content += `<div style="font-family:Syne,sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
+        content += `<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.7rem;display:flex;align-items:center;gap:6px">
       <i class="ti ti-check" style="color:var(--gd)"></i>Negócios fechados (${closed.length})</div>
       <div style="display:flex;flex-direction:column;gap:.5rem">
         ${closed.map(w => `
@@ -3066,112 +3068,118 @@
     }
 
     /* ── PROFILE ── */
-    /* ── Gera HTML do avatar (foto ou inicial) ── */
     function avatarHTML(size) {
       size = size || 80;
-      const s = size + 'px', fs = Math.round(size * .38) + 'px';
-      if (CU.avatar) {
-        return '<img class="prof-av-img" src="' + CU.avatar + '" style="width:' + s + ';height:' + s + '" alt="Foto">';
+      var s = size+'px', fs = Math.round(size*.38)+'px';
+      if (CU && CU.avatar) {
+        return '<img class="prof-av-img" src="'+CU.avatar+'" style="width:'+s+';height:'+s+'" alt="Foto">';
       }
-      return '<div class="prof-av-init" style="background:' + colorFor(CU.id) + ';width:' + s + ';height:' + s + ';font-size:' + fs + '">' + CU.name[0].toUpperCase() + '</div>';
+      var init = (CU && CU.name) ? CU.name[0].toUpperCase() : '?';
+      var bg = CU ? colorFor(CU.id) : '#1D9E75';
+      return '<div class="prof-av-init" style="background:'+bg+';width:'+s+';height:'+s+';font-size:'+fs+'">'+init+'</div>';
     }
 
     function renderProf(el) {
-      const myW    = WISHES.filter(w => w.uid === CU.id).length;
-      const convs  = CONVS.filter(c => c.buyer_id === CU.id || c.seller_id === CU.id).length;
-      const closed = WISHES.filter(w => w.uid === CU.id && w.closed).length;
-      const roleLabel = { buyer: 'Comprador', seller: 'Vendedor', both: 'Comprador & Vendedor' };
-      const myWishes = WISHES.filter(w => w.uid === CU.id).slice(0, 5);
+      var myW    = WISHES.filter(function(w){ return w.uid===CU.id; }).length;
+      var convs  = CONVS.filter(function(c){ return c.buyer_id===CU.id||c.seller_id===CU.id; }).length;
+      var closed = WISHES.filter(function(w){ return w.uid===CU.id&&w.closed; }).length;
+      var roleLabel = { buyer:'Comprador', seller:'Vendedor', both:'Comprador & Vendedor' };
+      var myWishes = WISHES.filter(function(w){ return w.uid===CU.id; }).slice(0,5);
+
+      var wishItems = myWishes.map(function(w) {
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .9rem;background:var(--bg);border-radius:9px;gap:.7rem;cursor:pointer" data-wid="'+w.id+'">' +
+          '<div style="min-width:0"><div style="font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(w.title)+'</div>' +
+          '<div style="font-size:12px;color:var(--txm);margin-top:2px">'+w.cat+' · '+w.cond+'</div></div>' +
+          '<div style="text-align:right;flex-shrink:0"><div style="font-family:Syne,sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ '+fmt(w.price)+'</div>' +
+          (w.closed ? '<span style="font-size:11px;color:var(--gd)">✓ Fechado</span>' : '') + '</div></div>';
+      }).join('');
+
+      var wishSection = myWishes.length ? (
+        '<div class="fcard fi" style="margin-top:.2rem">' +
+        '<div class="fctitle" style="margin-bottom:.8rem"><i class="ti ti-heart" style="color:var(--c);margin-right:5px"></i>Meus desejos</div>' +
+        '<div id="profWishList" style="display:flex;flex-direction:column;gap:.5rem">'+wishItems+'</div>' +
+        (myW>5 ? '<div style="text-align:center;margin-top:.7rem"><button class="btn out sm" id="viewAllBtn">Ver todos ('+myW+')</button></div>' : '') +
+        '</div>'
+      ) : '';
+
       el.innerHTML = '<div class="prof-page fi">' +
-        /* HERO */
         '<div class="prof-hero2">' +
-          '<button class="prof-back" id="profBackBtn" title="Voltar"><i class="ti ti-x"></i></button>' +
-          '<div class="prof-av-wrap" style="margin:0 auto 1rem">' + avatarHTML(80) + '</div>' +
+          '<button class="prof-back" id="profBackBtn" title="Fechar"><i class="ti ti-x"></i></button>' +
+          '<div class="prof-av-wrap" style="margin:0 auto 1rem">'+avatarHTML(80)+'</div>' +
           '<div class="prof-info">' +
-            '<div class="prof-name2">' + esc(CU.name) + '</div>' +
-            '<div class="prof-email2">' + esc(CU.email) + '</div>' +
-            '<div class="prof-role2">' + (roleLabel[CU.role] || 'Usuário') + '</div>' +
+            '<div class="prof-name2">'+esc(CU.name)+'</div>' +
+            '<div class="prof-email2">'+esc(CU.email)+'</div>' +
+            '<div class="prof-role2">'+(roleLabel[CU.role]||'Usuário')+'</div>' +
           '</div>' +
           '<div class="prof-actions">' +
-            '<button class="prof-btn edit" onclick="openEditProf()">' +
-              '<i class="ti ti-pencil"></i>Editar perfil</button>' +
-            '<button class="prof-btn logout-btn" onclick="askLogout()">' +
-              '<i class="ti ti-logout"></i>Sair da conta</button>' +
+            '<button class="prof-btn edit" id="editProfBtn"><i class="ti ti-pencil"></i>Editar perfil</button>' +
+            '<button class="prof-btn logout-btn" id="logoutProfBtn"><i class="ti ti-logout"></i>Sair da conta</button>' +
           '</div>' +
         '</div>' +
-        /* STATS */
         '<div class="stats fi">' +
-          '<div class="stat"><div class="snum">' + myW + '</div><div class="slbl">Desejos publicados</div></div>' +
-          '<div class="stat"><div class="snum">' + convs + '</div><div class="slbl">Conversas</div></div>' +
-          '<div class="stat"><div class="snum">' + closed + '</div><div class="slbl">Negócios fechados</div></div>' +
+          '<div class="stat"><div class="snum">'+myW+'</div><div class="slbl">Desejos publicados</div></div>' +
+          '<div class="stat"><div class="snum">'+convs+'</div><div class="slbl">Conversas</div></div>' +
+          '<div class="stat"><div class="snum">'+closed+'</div><div class="slbl">Negócios fechados</div></div>' +
         '</div>' +
-        /* DESEJOS */
-        (myWishes.length ? '<div class="fcard fi" style="margin-top:.2rem">' +
-          '<div class="fctitle" style="margin-bottom:.8rem"><i class="ti ti-heart" style="color:var(--c);margin-right:5px"></i>Meus desejos</div>' +
-          '<div style="display:flex;flex-direction:column;gap:.5rem">' +
-          myWishes.map(function(w) {
-            return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .9rem;background:var(--bg);border-radius:9px;gap:.7rem;cursor:pointer" onclick="showDetail(' + w.id + ')">' +
-              '<div style="min-width:0"><div style="font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.title) + '</div>' +
-              '<div style="font-size:12px;color:var(--txm);margin-top:2px">' + w.cat + ' · ' + w.cond + '</div></div>' +
-              '<div style="text-align:right;flex-shrink:0"><div style="font-family:Syne,sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ ' + fmt(w.price) + '</div>' +
-              (w.closed ? '<span style="font-size:11px;color:var(--gd)">✓ Fechado</span>' : '') + '</div></div>';
-          }).join('') +
-          '</div>' +
-          (myW > 5 ? '<div style="text-align:center;margin-top:.7rem"><button class="btn out sm" id="viewAllBtn">Ver todos (' + myW + ')</button></div>' : '') +
-        '</div>' : '') +
+        wishSection +
       '</div>';
-      // Bind back button safely
-      var backBtn = el.querySelector('#profBackBtn');
-      if (backBtn) backBtn.onclick = function() { view('feed'); };
-      var viewAllBtn = el.querySelector('#viewAllBtn');
-      if (viewAllBtn) viewAllBtn.onclick = function() { view('mine'); };
+
+      // Bind buttons safely (sem conflito de aspas)
+      var back = el.querySelector('#profBackBtn');
+      if (back) back.onclick = function(){ view('feed'); };
+      var editBtn = el.querySelector('#editProfBtn');
+      if (editBtn) editBtn.onclick = openEditProf;
+      var logBtn = el.querySelector('#logoutProfBtn');
+      if (logBtn) logBtn.onclick = askLogout;
+      var viewAll = el.querySelector('#viewAllBtn');
+      if (viewAll) viewAll.onclick = function(){ view('mine'); };
+      var wishItems2 = el.querySelectorAll('[data-wid]');
+      wishItems2.forEach(function(item){
+        item.onclick = function(){ showDetail(parseInt(item.dataset.wid)); };
+      });
     }
 
-    /* ── Abre modal de edição preenchido ── */
     function openEditProf() {
-      var en = document.getElementById('en');
-      var ep = document.getElementById('ep');
-      var ec = document.getElementById('ec');
-      var sel = document.getElementById('erole');
-      if (en) en.value = CU.name  || '';
-      if (ep) ep.value = CU.phone || '';
-      if (ec) ec.value = CU.city  || '';
-      if (sel) sel.value = CU.role || 'buyer';
+      var en=document.getElementById('en'), ep=document.getElementById('ep'),
+          ec=document.getElementById('ec'), sel=document.getElementById('erole');
+      if(en) en.value = CU.name||'';
+      if(ep) ep.value = CU.phone||'';
+      if(ec) ec.value = CU.city||'';
+      if(sel) sel.value = CU.role||'buyer';
       var wrap = document.getElementById('editAvWrap');
-      if (wrap) {
+      if(wrap){
+        var bg = colorFor(CU.id);
+        var init = CU.name[0].toUpperCase();
         wrap.innerHTML = CU.avatar
-          ? '<img src="' + CU.avatar + '" style="width:72px;height:72px;object-fit:cover;border-radius:50%">'
-          : '<div style="width:72px;height:72px;border-radius:50%;background:' + colorFor(CU.id) + ';display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-weight:800;font-size:1.6rem;color:#fff">' + CU.name[0].toUpperCase() + '</div>';
+          ? '<img src="'+CU.avatar+'" style="width:72px;height:72px;object-fit:cover;border-radius:50%">'
+          : '<div style="width:72px;height:72px;border-radius:50%;background:'+bg+';display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-weight:800;font-size:1.6rem;color:#fff">'+init+'</div>';
       }
       document.getElementById('editProfMod').classList.add('on');
     }
 
-    /* ── Preview foto antes de salvar ── */
     var _newAvatarB64 = null;
     function previewAvatar(inp) {
-      var file = inp.files[0]; if (!file) return;
+      var file = inp.files[0]; if(!file) return;
       var reader = new FileReader();
       reader.onload = function(e) {
         _newAvatarB64 = e.target.result;
         var wrap = document.getElementById('editAvWrap');
-        if (wrap) wrap.innerHTML = '<img src="' + _newAvatarB64 + '" style="width:72px;height:72px;object-fit:cover;border-radius:50%">';
+        if(wrap) wrap.innerHTML = '<img src="'+_newAvatarB64+'" style="width:72px;height:72px;object-fit:cover;border-radius:50%">';
       };
       reader.readAsDataURL(file);
     }
 
     async function saveProf() {
-      var name  = val('en');
-      var phone = val('ep');
-      var city  = val('ec');
-      var sel   = document.getElementById('erole');
-      var role  = sel ? sel.value : (CU.role || 'buyer');
-      if (!name) { toast('Informe seu nome', 'er'); return; }
-      var updates = { name: name, phone: phone, city: city, role: role };
-      if (_newAvatarB64) updates.avatar_url = _newAvatarB64;
-      const { error } = await sb.from('profiles').update(updates).eq('id', CU.id);
-      if (error) { toast('Erro: ' + error.message, 'er'); return; }
-      CU.name = name; CU.phone = phone; CU.city = city; CU.role = role;
-      if (_newAvatarB64) { CU.avatar = _newAvatarB64; _newAvatarB64 = null; }
+      var name=val('en'), phone=val('ep'), city=val('ec');
+      var sel=document.getElementById('erole');
+      var role=sel?sel.value:(CU.role||'buyer');
+      if(!name){ toast('Informe seu nome','er'); return; }
+      var updates={name:name,phone:phone,city:city,role:role};
+      if(_newAvatarB64) updates.avatar_url=_newAvatarB64;
+      const {error}=await sb.from('profiles').update(updates).eq('id',CU.id);
+      if(error){ toast('Erro: '+error.message,'er'); return; }
+      CU.name=name; CU.phone=phone; CU.city=city; CU.role=role;
+      if(_newAvatarB64){ CU.avatar=_newAvatarB64; _newAvatarB64=null; }
       document.getElementById('editProfMod').classList.remove('on');
       toast('Perfil atualizado! ✓');
       renderProf(document.getElementById('cnt'));
@@ -3220,8 +3228,10 @@
       } catch(e) { console.error(e); }
       finally {
         CU = null; CUProfile = null; activeConv = null;
-        CONVS = []; WISHES = []; NOTIFS = [];
-        show('public'); refreshNavPublic(); buildPubGrid();
+        CONVS = []; NOTIFS = [];
+        await loadPublicWishes();
+        show('public');
+        refreshNavPublic();
         closeSidebar();
         toast('Você saiu da conta. Até logo!');
       }
@@ -3234,98 +3244,80 @@
       s && s.classList.contains('open') ? closeSidebar() : openSidebar();
     }
     function openSidebar() {
-      document.getElementById('sideBar')?.classList.add('open');
-      document.getElementById('sideOverlay')?.classList.add('on');
+      var s=document.getElementById('sideBar'), o=document.getElementById('sideOverlay');
+      if(s) s.classList.add('open');
+      if(o) o.classList.add('on');
     }
     function closeSidebar() {
-      document.getElementById('sideBar')?.classList.remove('open');
-      document.getElementById('sideOverlay')?.classList.remove('on');
+      var s=document.getElementById('sideBar'), o=document.getElementById('sideOverlay');
+      if(s) s.classList.remove('open');
+      if(o) o.classList.remove('on');
     }
     function updateMenuToggle() {
-      var t = document.getElementById('menuToggle'); if (!t) return;
+      var t = document.getElementById('menuToggle'); if(!t) return;
       t.style.display = document.getElementById('scr-app')?.classList.contains('on') ? '' : 'none';
     }
-    // Fechar sidebar ao clicar item do menu
     document.addEventListener('click', function(e) {
-      if (isMobile() && e.target.closest('.si-btn') && document.getElementById('sideBar')?.classList.contains('open')) {
+      if(isMobile() && e.target.closest('.si-btn') && document.getElementById('sideBar')?.classList.contains('open')){
         setTimeout(closeSidebar, 150);
       }
     });
 
     /* ════════════ MSGS MOBILE ════════════ */
     function mobileShowList() {
-      if (!isMobile()) return;
-      var ml = document.querySelector('.mlist');
-      var ch = document.querySelector('.chat');
-      if (ml) ml.classList.add('show');
-      if (ch) ch.style.display = 'none';
+      if(!isMobile()) return;
+      var ml=document.querySelector('.mlist'), ch=document.querySelector('.chat');
+      if(ml) ml.classList.add('show');
+      if(ch) ch.style.display='none';
     }
     function mobileShowChat() {
-      if (!isMobile()) return;
-      var ml = document.querySelector('.mlist');
-      var ch = document.querySelector('.chat');
-      if (ml) ml.classList.remove('show');
-      if (ch) ch.style.display = 'flex';
+      if(!isMobile()) return;
+      var ml=document.querySelector('.mlist'), ch=document.querySelector('.chat');
+      if(ml) ml.classList.remove('show');
+      if(ch) ch.style.display='flex';
     }
     function addBackBtn() {
-      if (!isMobile()) return;
-      var chh = document.querySelector('.chh');
-      if (!chh || chh.querySelector('.back-btn')) return;
-      var btn = document.createElement('button');
-      btn.className = 'back-btn';
-      btn.innerHTML = '<i class="ti ti-arrow-left"></i>';
-      btn.onclick = mobileShowList;
-      chh.insertBefore(btn, chh.firstChild);
+      if(!isMobile()) return;
+      var chh=document.querySelector('.chh');
+      if(!chh||chh.querySelector('.back-btn')) return;
+      var btn=document.createElement('button');
+      btn.className='back-btn';
+      btn.innerHTML='<i class="ti ti-arrow-left"></i>';
+      btn.onclick=mobileShowList;
+      chh.insertBefore(btn,chh.firstChild);
     }
 
-    /* ════════════ PATCH view/openConv/show/enter ════════════ */
+    /* ════════════ PATCHES ════════════ */
     var _origView = window.view;
     window.view = function(vn) {
       _origView(vn);
-      if (vn === 'msgs' && isMobile()) setTimeout(mobileShowList, 60);
+      if(vn==='msgs' && isMobile()) setTimeout(mobileShowList, 60);
       updateMenuToggle();
     };
     var _origOpenConv = window.openConv;
-    if (_origOpenConv) window.openConv = async function(c) {
+    if(_origOpenConv) window.openConv = async function(c) {
       await _origOpenConv(c); mobileShowChat(); addBackBtn();
     };
     var _origOpenConvById = window.openConvById;
-    if (_origOpenConvById) window.openConvById = async function(cid) {
+    if(_origOpenConvById) window.openConvById = async function(cid) {
       await _origOpenConvById(cid); mobileShowChat(); addBackBtn();
     };
     var _origShow = window.show;
     window.show = function(s) {
       _origShow(s); updateMenuToggle();
-      if (isMobile()) closeSidebar();
+      if(isMobile()) closeSidebar();
     };
     var _origEnter = window.enter;
     window.enter = async function() {
       await _origEnter(); updateMenuToggle();
     };
 
-    // Atualizar avatar na navbar se tiver foto
-    var _origRefreshNav = window.refreshNavLoggedIn;
-    if (_origRefreshNav) window.refreshNavLoggedIn = function() {
-      _origRefreshNav();
-      // Patch avatar depois de atualizar o nav
-      if (CU && CU.avatar) {
-        var avEl = document.querySelector('.upill .av');
-        if (avEl) {
-          avEl.style.background = 'transparent';
-          avEl.style.overflow = 'hidden';
-          avEl.style.padding = '0';
-          avEl.innerHTML = '<img src="' + CU.avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-        }
-      }
-    };
-
     window.addEventListener('resize', function() {
-      if (!isMobile()) {
+      if(!isMobile()){
         closeSidebar();
-        var ml = document.querySelector('.mlist');
-        var ch = document.querySelector('.chat');
-        if (ml) ml.classList.remove('show');
-        if (ch) ch.style.display = '';
+        var ml=document.querySelector('.mlist'), ch=document.querySelector('.chat');
+        if(ml) ml.classList.remove('show');
+        if(ch) ch.style.display='';
       }
     });
 
