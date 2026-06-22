@@ -1715,20 +1715,61 @@
       padding: 1.8rem
     }
 
-    /* ── PERFIL V2 ── */
+    /* ── V2 HERO PÚBLICO ── */
+    .hero-section{background:linear-gradient(135deg,var(--gd) 0%,#0f4a3a 50%,#1a3a2e 100%);padding:2.5rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+    .hero-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:#fff;letter-spacing:-.5px;margin-bottom:.3rem}
+    .hero-logo em{color:var(--gm);font-style:normal}
+    .hero-tagline{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:1.5rem}
+    .hero-search{position:relative;max-width:480px;margin:0 auto 1.5rem}
+    .hero-search input{width:100%;padding:14px 50px 14px 18px;border-radius:12px;border:none;font-size:15px;outline:none;box-shadow:0 4px 20px rgba(0,0,0,.2);color:var(--tx)}
+    .hero-search button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--g);color:#fff;border:none;border-radius:8px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
+    .hero-search button:hover{background:var(--gd)}
+    .hero-cats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .hero-cat{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;transition:.2s}
+    .hero-cat:hover,.hero-cat.on{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.5)}
+    /* ── V2 CARDS MARKETPLACE ── */
+    .mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem}
+    .mkt-card{background:#fff;border-radius:12px;border:.5px solid var(--bd);overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+    .mkt-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.1);border-color:var(--gm)}
+    .mkt-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+    .mkt-placeholder{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,#f0f0f0,#e8e8e8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--txl)}
+    .mkt-placeholder i{font-size:32px;opacity:.35}
+    .mkt-placeholder span{font-size:11px;opacity:.6}
+    .mkt-body{padding:.85rem;flex:1;display:flex;flex-direction:column}
+    .mkt-cat{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:7px;background:var(--al);color:var(--a);display:inline-block;margin-bottom:.45rem;white-space:nowrap}
+    .mkt-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;line-height:1.3;margin-bottom:.35rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .mkt-desc{font-size:12px;color:var(--txm);line-height:1.4;margin-bottom:.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+    .mkt-stats{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--txl);margin-bottom:.5rem;flex-wrap:wrap}
+    .mkt-stat{display:flex;align-items:center;gap:3px}
+    .mkt-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.55rem;border-top:.5px solid var(--bd);margin-top:auto;gap:6px}
+    .mkt-price{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--gd)}
+    .mkt-cond{font-size:10px;color:var(--txl);margin-top:1px}
+    .mkt-tenho{background:var(--g);color:#fff;border:none;border-radius:7px;padding:6px 10px;font-size:12px;font-weight:500;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0}
+    .mkt-tenho:hover{background:var(--gd)}
+    .closed-badge{background:var(--gl);color:var(--gd);font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;white-space:nowrap}
+    /* ── V2 UPLOAD ── */
+    .upload-zone{border:2px dashed var(--bd);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;transition:.2s;background:var(--bg)}
+    .upload-zone:hover,.upload-zone.drag{border-color:var(--g);background:var(--gl)}
+    .upload-zone i{font-size:2rem;color:var(--txl);margin-bottom:.5rem;display:block}
+    .upload-zone p{font-size:13px;color:var(--txm)}
+    .upload-zone .sub{font-size:11px;color:var(--txl);margin-top:3px}
+    .img-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:.8rem}
+    .img-prev-item{position:relative;width:78px;height:78px;border-radius:8px;overflow:hidden;border:.5px solid var(--bd);flex-shrink:0}
+    .img-prev-item img{width:100%;height:100%;object-fit:cover}
+    .img-prev-item .rm-img{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:11px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .img-prev-item .main-badge{position:absolute;bottom:3px;left:3px;background:var(--g);color:#fff;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:600}
+    /* ── V2 PERFIL V2 ── */
     .prof-page{max-width:520px;margin:0 auto}
     .prof-hero2{background:linear-gradient(135deg,var(--dk),#1a3a2e);border-radius:16px;padding:1.6rem;margin-bottom:1rem;position:relative}
     .prof-av-wrap{position:relative;width:80px;height:80px;margin:0 auto 1rem}
     .prof-av-img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.2);display:block}
     .prof-av-init{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;border:3px solid rgba(255,255,255,.2)}
-    .prof-av-btn{position:absolute;bottom:2px;right:2px;width:26px;height:26px;border-radius:50%;background:var(--g);border:2px solid #fff;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
-    .prof-av-btn:hover{background:var(--gd)}
     .prof-info{text-align:center}
     .prof-name2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;color:#fff}
     .prof-email2{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .prof-role2{font-size:12px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);padding:3px 12px;border-radius:14px;display:inline-block;margin-top:8px}
     .prof-actions{display:flex;gap:8px;margin-top:1.2rem;justify-content:center;flex-wrap:wrap}
-    .prof-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;border:none;transition:.2s;white-space:nowrap}
+    .prof-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:500;cursor:pointer;border:none;transition:.2s}
     .prof-btn.edit{background:rgba(255,255,255,.14);color:#fff}
     .prof-btn.edit:hover{background:rgba(255,255,255,.24)}
     .prof-btn.logout-btn{background:rgba(216,90,48,.22);color:#ffb3a0}
@@ -1753,14 +1794,15 @@
       .side.open{transform:translateX(0)}
       .cnt{padding:1rem;max-height:none;min-height:calc(100vh - 56px);overflow-y:auto}
       .cnt.msgs-view{padding:0;height:calc(100vh - 56px)}
+      .mkt-grid{grid-template-columns:repeat(2,1fr);gap:.65rem}
+      .mkt-body{padding:.7rem}
+      .mkt-title{font-size:.82rem}
       .grid{grid-template-columns:1fr}
       .fhead{flex-direction:column;align-items:flex-start;gap:.5rem}
       .fhead>div:last-child{width:100%;justify-content:space-between}
       .chips{gap:4px}
       .chip{padding:4px 10px;font-size:12px}
       .pub-wrap{padding:1rem}
-      .wcard{padding:.85rem}
-      .wcf{flex-wrap:wrap;gap:6px}
       .mlayout{grid-template-columns:1fr;height:calc(100vh - 56px);overflow:hidden}
       .mlist{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:50;background:#fff;display:none;flex-direction:column}
       .mlist.show{display:flex}
@@ -1769,9 +1811,6 @@
       .chinput{padding:.5rem .6rem}
       .chscroll{padding:.8rem}
       .back-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;color:var(--tx);font-size:18px;flex-shrink:0}
-      .phero{padding:1.2rem;gap:.9rem}
-      .pbav{width:50px;height:50px;font-size:1.1rem}
-      .pname{font-size:1rem}
       .stats{gap:.5rem}
       .snum{font-size:1.3rem}
       .fld2{grid-template-columns:1fr}
@@ -1780,14 +1819,15 @@
       .modal{border-radius:14px 14px 0 0;max-height:92vh}
       .notif-panel{left:8px;right:8px;width:auto}
       .match-banner{flex-direction:column;gap:.7rem;padding:1rem}
-      .mcard{flex-wrap:wrap}
       .prof-actions{gap:6px}
       .prof-btn{padding:8px 14px;font-size:13px}
-      .prof-av-wrap{width:68px;height:68px}
-      .prof-av-img,.prof-av-init{width:68px;height:68px;font-size:1.5rem}
-      .prof-name2{font-size:1.05rem}
+      .hero-section{padding:1.8rem 1rem 1.4rem}
+      .hero-logo{font-size:1.5rem}
+      .hero-cats{gap:5px}
+      .hero-cat{padding:5px 10px;font-size:12px}
     }
     @media(max-width:480px){
+      .mkt-grid{grid-template-columns:repeat(2,1fr);gap:.5rem}
       .dash-grid{grid-template-columns:1fr 1fr}
       nav{padding:0 .6rem;gap:5px}
       .prof-actions{flex-direction:column;align-items:stretch}
@@ -1870,9 +1910,7 @@
 
   <!-- NAV -->
   <nav>
-    <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
-      <i class="ti ti-menu-2"></i>
-    </button>
+    <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
     <a class="logo" href="#" onclick="CU?view('feed'):showPublic();return false">quero<em>comprar</em></a>
     <div class="nsearch" id="navSearch">
       <i class="ti ti-search si"></i>
@@ -1888,41 +1926,17 @@
   </nav>
 
   <!-- TELA PÚBLICA (feed sem login) -->
-  <div class="scr on" id="scr-public">
-    <div class="pub-wrap">
-      <div class="fhead fi">
-        <div class="ftitle">Explorar desejos</div>
-        <div style="display:flex;gap:7px;align-items:center">
-          <select onchange="pubSortMode=this.value;buildPubGrid()"
-            style="font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;outline:none;cursor:pointer">
-            <option value="new">Mais recentes</option>
-            <option value="price">Maior valor</option>
-            <option value="offers">Mais ofertas</option>
-          </select>
-          <button class="btn g sm" onclick="showAuthModal('login')"><i class="ti ti-plus"></i>Publicar desejo</button>
-        </div>
-      </div>
-      <div class="chips" id="pubChips"></div>
-      <div class="grid" id="pubGrid"></div>
-    </div>
-  </div>
-
+  <div class="side-overlay" id="sideOverlay" onclick="closeSidebar()"></div>
 
   <!-- MODAL LOGOUT -->
   <div class="mover" id="logoutMod">
     <div class="modal" style="max-width:360px;text-align:center">
       <div style="font-size:2.5rem;margin-bottom:.8rem">👋</div>
       <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.4rem">Sair da conta?</div>
-      <div style="font-size:14px;color:var(--txm);margin-bottom:1.5rem;line-height:1.5">
-        Você será desconectado e precisará fazer login novamente.
-      </div>
+      <div style="font-size:14px;color:var(--txm);margin-bottom:1.5rem;line-height:1.5">Você será desconectado e precisará fazer login novamente.</div>
       <div style="display:flex;gap:8px">
-        <button class="btn out full" onclick="document.getElementById('logoutMod').classList.remove('on')">
-          <i class="ti ti-x"></i>Cancelar
-        </button>
-        <button class="btn full" onclick="doLogout()" style="background:var(--c);color:#fff">
-          <i class="ti ti-logout"></i>Confirmar saída
-        </button>
+        <button class="btn out full" onclick="document.getElementById('logoutMod').classList.remove('on')"><i class="ti ti-x"></i>Cancelar</button>
+        <button class="btn full" onclick="doLogout()" style="background:var(--c);color:#fff"><i class="ti ti-logout"></i>Confirmar saída</button>
       </div>
     </div>
   </div>
@@ -1937,10 +1951,7 @@
       <div style="text-align:center;margin-bottom:1.2rem">
         <div style="position:relative;display:inline-block">
           <div id="editAvWrap" style="width:72px;height:72px;border-radius:50%;overflow:hidden;border:3px solid var(--bd);margin:0 auto"></div>
-          <button onclick="document.getElementById('avatarInp').click()"
-            style="position:absolute;bottom:2px;right:2px;width:26px;height:26px;border-radius:50%;background:var(--g);border:2px solid #fff;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">
-            <i class="ti ti-camera"></i>
-          </button>
+          <button onclick="document.getElementById('avatarInp').click()" style="position:absolute;bottom:2px;right:2px;width:26px;height:26px;border-radius:50%;background:var(--g);border:2px solid #fff;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ti ti-camera"></i></button>
           <input type="file" id="avatarInp" accept="image/*" style="display:none" onchange="previewAvatar(this)">
         </div>
         <div style="font-size:12px;color:var(--txl);margin-top:6px">Toque na câmera para alterar a foto</div>
@@ -1952,7 +1963,7 @@
         <select id="erole">
           <option value="buyer">Comprador</option>
           <option value="seller">Vendedor</option>
-          <option value="both">Ambos — Compro e vendo</option>
+          <option value="both">Ambos</option>
         </select>
       </div>
       <div style="display:flex;gap:8px">
@@ -1962,10 +1973,40 @@
     </div>
   </div>
 
-  <!-- SIDEBAR OVERLAY MOBILE -->
-  <div class="side-overlay" id="sideOverlay" onclick="closeSidebar()"></div>
-
-  <!-- APP (logado) -->
+  <div class="scr on" id="scr-public">
+    <div class="hero-section">
+      <div class="hero-logo">quero<em>comprar</em></div>
+      <div class="hero-tagline">Publique o que quer comprar. Vendedores te encontram.</div>
+      <div class="hero-search">
+        <input type="text" id="heroSearch" placeholder="🔍 O que você quer comprar?" oninput="heroSearchFn(this.value)" onkeydown="if(event.key==='Enter')heroSearchFn(this.value)">
+        <button onclick="heroSearchFn(document.getElementById('heroSearch').value)"><i class="ti ti-search"></i></button>
+      </div>
+      <div class="hero-cats">
+        <div class="hero-cat on" data-cat="Todos">🏷️ Todos</div>
+        <div class="hero-cat" data-cat="Eletrônicos">📱 Eletrônicos</div>
+        <div class="hero-cat" data-cat="Veículos">🚗 Veículos</div>
+        <div class="hero-cat" data-cat="Imóveis">🏠 Imóveis</div>
+        <div class="hero-cat" data-cat="Roupas">👕 Roupas</div>
+        <div class="hero-cat" data-cat="Esportes">⚽ Esportes</div>
+        <div class="hero-cat" data-cat="Móveis">🛋️ Móveis</div>
+      </div>
+    </div>
+    <div class="pub-wrap" style="padding-top:1.2rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;flex-wrap:wrap;gap:.5rem">
+        <div id="pubCount" style="font-size:13px;color:var(--txm)"></div>
+        <div style="display:flex;gap:7px;align-items:center">
+          <select onchange="pubSortMode=this.value;buildPubGrid()" style="font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--bd);background:#fff;outline:none;cursor:pointer">
+            <option value="new">Mais recentes</option>
+            <option value="price">Maior valor</option>
+            <option value="offers">Mais ofertas</option>
+          </select>
+          <button class="btn g sm" onclick="showAuthModal('login')"><i class="ti ti-plus"></i>Publicar</button>
+        </div>
+      </div>
+      <div class="mkt-grid" id="pubGrid"></div>
+    </div>
+  </div>
+    <!-- APP (logado) -->
   <div class="scr" id="scr-app">
     <div class="lay">
       <div class="side" id="sideBar">
@@ -2039,8 +2080,7 @@
           CU = null; CUProfile = null; activeConv = null;
           CONVS = []; NOTIFS = [];
           await loadPublicWishes();
-          show('public');
-          refreshNavPublic();
+          show('public'); refreshNavPublic();
         }
       });
     });
@@ -2246,20 +2286,14 @@
     function mapWish(r, profMap) {
       const prof = (profMap && profMap[r.user_id]) || PROFILES[r.user_id] || {};
       return {
-        id: r.id,
-        uid: r.user_id,
-        uname: prof.name || '?',
-        urole: prof.role || 'buyer',
-        ucity: prof.city || '',
-        title: r.title,
-        cat: r.category,
-        cond: r.condition,
-        price: Number(r.price),
-        desc: r.description || '',
+        id: r.id, uid: r.user_id,
+        uname: prof.name || '?', urole: prof.role || 'buyer', ucity: prof.city || '',
+        title: r.title, cat: r.category, cond: r.condition,
+        price: Number(r.price), desc: r.description || '',
         ts: new Date(r.created_at).getTime(),
-        views: r.views || 0,
-        offers: r.offers || 0,
-        closed: r.closed || false
+        views: r.views || 0, offers: r.offers || 0,
+        closed: r.closed || false,
+        images: r.images || null
       };
     }
 
@@ -3068,122 +3102,47 @@
     }
 
     /* ── PROFILE ── */
-    function avatarHTML(size) {
-      size = size || 80;
-      var s = size+'px', fs = Math.round(size*.38)+'px';
-      if (CU && CU.avatar) {
-        return '<img class="prof-av-img" src="'+CU.avatar+'" style="width:'+s+';height:'+s+'" alt="Foto">';
-      }
-      var init = (CU && CU.name) ? CU.name[0].toUpperCase() : '?';
-      var bg = CU ? colorFor(CU.id) : '#1D9E75';
-      return '<div class="prof-av-init" style="background:'+bg+';width:'+s+';height:'+s+';font-size:'+fs+'">'+init+'</div>';
-    }
-
     function renderProf(el) {
-      var myW    = WISHES.filter(function(w){ return w.uid===CU.id; }).length;
-      var convs  = CONVS.filter(function(c){ return c.buyer_id===CU.id||c.seller_id===CU.id; }).length;
-      var closed = WISHES.filter(function(w){ return w.uid===CU.id&&w.closed; }).length;
-      var roleLabel = { buyer:'Comprador', seller:'Vendedor', both:'Comprador & Vendedor' };
-      var myWishes = WISHES.filter(function(w){ return w.uid===CU.id; }).slice(0,5);
-
-      var wishItems = myWishes.map(function(w) {
-        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .9rem;background:var(--bg);border-radius:9px;gap:.7rem;cursor:pointer" data-wid="'+w.id+'">' +
-          '<div style="min-width:0"><div style="font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(w.title)+'</div>' +
-          '<div style="font-size:12px;color:var(--txm);margin-top:2px">'+w.cat+' · '+w.cond+'</div></div>' +
-          '<div style="text-align:right;flex-shrink:0"><div style="font-family:Syne,sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ '+fmt(w.price)+'</div>' +
-          (w.closed ? '<span style="font-size:11px;color:var(--gd)">✓ Fechado</span>' : '') + '</div></div>';
-      }).join('');
-
-      var wishSection = myWishes.length ? (
-        '<div class="fcard fi" style="margin-top:.2rem">' +
-        '<div class="fctitle" style="margin-bottom:.8rem"><i class="ti ti-heart" style="color:var(--c);margin-right:5px"></i>Meus desejos</div>' +
-        '<div id="profWishList" style="display:flex;flex-direction:column;gap:.5rem">'+wishItems+'</div>' +
-        (myW>5 ? '<div style="text-align:center;margin-top:.7rem"><button class="btn out sm" id="viewAllBtn">Ver todos ('+myW+')</button></div>' : '') +
-        '</div>'
-      ) : '';
-
-      el.innerHTML = '<div class="prof-page fi">' +
-        '<div class="prof-hero2">' +
-          '<button class="prof-back" id="profBackBtn" title="Fechar"><i class="ti ti-x"></i></button>' +
-          '<div class="prof-av-wrap" style="margin:0 auto 1rem">'+avatarHTML(80)+'</div>' +
-          '<div class="prof-info">' +
-            '<div class="prof-name2">'+esc(CU.name)+'</div>' +
-            '<div class="prof-email2">'+esc(CU.email)+'</div>' +
-            '<div class="prof-role2">'+(roleLabel[CU.role]||'Usuário')+'</div>' +
-          '</div>' +
-          '<div class="prof-actions">' +
-            '<button class="prof-btn edit" id="editProfBtn"><i class="ti ti-pencil"></i>Editar perfil</button>' +
-            '<button class="prof-btn logout-btn" id="logoutProfBtn"><i class="ti ti-logout"></i>Sair da conta</button>' +
-          '</div>' +
-        '</div>' +
-        '<div class="stats fi">' +
-          '<div class="stat"><div class="snum">'+myW+'</div><div class="slbl">Desejos publicados</div></div>' +
-          '<div class="stat"><div class="snum">'+convs+'</div><div class="slbl">Conversas</div></div>' +
-          '<div class="stat"><div class="snum">'+closed+'</div><div class="slbl">Negócios fechados</div></div>' +
-        '</div>' +
-        wishSection +
-      '</div>';
-
-      // Bind buttons safely (sem conflito de aspas)
-      var back = el.querySelector('#profBackBtn');
-      if (back) back.onclick = function(){ view('feed'); };
-      var editBtn = el.querySelector('#editProfBtn');
-      if (editBtn) editBtn.onclick = openEditProf;
-      var logBtn = el.querySelector('#logoutProfBtn');
-      if (logBtn) logBtn.onclick = askLogout;
-      var viewAll = el.querySelector('#viewAllBtn');
-      if (viewAll) viewAll.onclick = function(){ view('mine'); };
-      var wishItems2 = el.querySelectorAll('[data-wid]');
-      wishItems2.forEach(function(item){
-        item.onclick = function(){ showDetail(parseInt(item.dataset.wid)); };
-      });
+      const myW = WISHES.filter(w => w.uid === CU.id).length;
+      const convs = CONVS.filter(c => c.buyer_id === CU.id || c.seller_id === CU.id).length;
+      const roleLabel = { buyer: 'Comprador', seller: 'Vendedor', both: 'Comprador & Vendedor' };
+      el.innerHTML = `
+  <div class="phero fi">
+    <div class="pbav" style="background:${colorFor(CU.id)}">${CU.name[0]}</div>
+    <div>
+      <div class="pname">${CU.name}</div>
+      <div class="pemail">${CU.email}</div>
+      <div class="prole">${roleLabel[CU.role] || 'Usuário'}</div>
+    </div>
+  </div>
+  <div class="stats fi">
+    <div class="stat"><div class="snum">${myW}</div><div class="slbl">Desejos publicados</div></div>
+    <div class="stat"><div class="snum">${convs}</div><div class="slbl">Conversas</div></div>
+    <div class="stat"><div class="snum">${WISHES.filter(w => w.uid === CU.id && w.closed).length}</div><div class="slbl">Negócios fechados</div></div>
+  </div>
+  <div class="fcard fi" style="max-width:510px">
+    <div class="fctitle">Editar perfil</div>
+    <div class="fld"><label>Nome</label><input type="text" id="en" value="${CU.name}"></div>
+    <div class="fld2">
+      <div><label>Telefone</label><input type="text" id="ep" value="${CU.phone || ''}" placeholder="(11) 99999-9999"></div>
+      <div><label>Cidade</label><input type="text" id="ec" value="${CU.city || ''}" placeholder="São Paulo"></div>
+    </div>
+    <div class="fld"><label>Papel na plataforma</label>
+      <select id="erole">
+        <option value="buyer" ${CU.role === 'buyer' ? 'selected' : ''}>Comprador</option>
+        <option value="seller" ${CU.role === 'seller' ? 'selected' : ''}>Vendedor</option>
+        <option value="both" ${CU.role === 'both' ? 'selected' : ''}>Ambos</option>
+      </select>
+    </div>
+    <button class="btn g" onclick="saveProf()"><i class="ti ti-check"></i>Salvar alterações</button>
+  </div>`;
     }
-
-    function openEditProf() {
-      var en=document.getElementById('en'), ep=document.getElementById('ep'),
-          ec=document.getElementById('ec'), sel=document.getElementById('erole');
-      if(en) en.value = CU.name||'';
-      if(ep) ep.value = CU.phone||'';
-      if(ec) ec.value = CU.city||'';
-      if(sel) sel.value = CU.role||'buyer';
-      var wrap = document.getElementById('editAvWrap');
-      if(wrap){
-        var bg = colorFor(CU.id);
-        var init = CU.name[0].toUpperCase();
-        wrap.innerHTML = CU.avatar
-          ? '<img src="'+CU.avatar+'" style="width:72px;height:72px;object-fit:cover;border-radius:50%">'
-          : '<div style="width:72px;height:72px;border-radius:50%;background:'+bg+';display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-weight:800;font-size:1.6rem;color:#fff">'+init+'</div>';
-      }
-      document.getElementById('editProfMod').classList.add('on');
-    }
-
-    var _newAvatarB64 = null;
-    function previewAvatar(inp) {
-      var file = inp.files[0]; if(!file) return;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        _newAvatarB64 = e.target.result;
-        var wrap = document.getElementById('editAvWrap');
-        if(wrap) wrap.innerHTML = '<img src="'+_newAvatarB64+'" style="width:72px;height:72px;object-fit:cover;border-radius:50%">';
-      };
-      reader.readAsDataURL(file);
-    }
-
     async function saveProf() {
-      var name=val('en'), phone=val('ep'), city=val('ec');
-      var sel=document.getElementById('erole');
-      var role=sel?sel.value:(CU.role||'buyer');
-      if(!name){ toast('Informe seu nome','er'); return; }
-      var updates={name:name,phone:phone,city:city,role:role};
-      if(_newAvatarB64) updates.avatar_url=_newAvatarB64;
-      const {error}=await sb.from('profiles').update(updates).eq('id',CU.id);
-      if(error){ toast('Erro: '+error.message,'er'); return; }
-      CU.name=name; CU.phone=phone; CU.city=city; CU.role=role;
-      if(_newAvatarB64){ CU.avatar=_newAvatarB64; _newAvatarB64=null; }
-      document.getElementById('editProfMod').classList.remove('on');
-      toast('Perfil atualizado! ✓');
-      renderProf(document.getElementById('cnt'));
-      refreshNavLoggedIn();
+      const name = val('en'), phone = val('ep'), city = val('ec'), role = document.getElementById('erole').value;
+      const { error } = await sb.from('profiles').update({ name, phone, city, role }).eq('id', CU.id);
+      if (error) { toast('Erro: ' + error.message, 'er'); return; }
+      CU.name = name; CU.phone = phone; CU.city = city; CU.role = role;
+      toast('Perfil atualizado!'); renderProf(document.getElementById('cnt')); refreshNavLoggedIn();
     }
 
     /* ════════════════ UTILS ════════════════ */
@@ -3214,113 +3173,464 @@
       }
     });
 
-    /* ════════════ LOGOUT ════════════ */
-    function askLogout() {
-      document.getElementById('logoutMod').classList.add('on');
+    /* ════════════ V2: CARDS + IMAGENS ════════════ */
+    function mktPlaceholder(cat) {
+      const icons = {'Eletrônicos':'ti-device-laptop','Veículos':'ti-car','Imóveis':'ti-home','Roupas':'ti-shirt','Móveis':'ti-armchair','Esportes':'ti-ball-football','Livros':'ti-book'};
+      const ico = icons[cat] || 'ti-tag';
+      return '<div class="mkt-placeholder"><i class="ti ' + ico + '"></i><span>' + (cat||'') + '</span></div>';
     }
+    function mktImgHTML(w) {
+      if (w.images && w.images.length > 0) {
+        var none = 'none';
+        return '<img class="mkt-img" src="' + w.images[0] + '" loading="lazy" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">';
+      }
+      return mktPlaceholder(w.cat);
+    }
+
+    /* ════════════ V2: HERO PÚBLICO ════════════ */
+    let _heroSearch = '';
+    function heroSearchFn(q) {
+      _heroSearch = q.trim().toLowerCase();
+      buildPubGrid();
+    }
+    function heroFilter(cat) {
+      pubFilter = cat;
+      document.querySelectorAll('.hero-cat').forEach(el => {
+        el.classList.toggle('on', el.dataset.cat === cat);
+      });
+      _heroSearch = '';
+      const inp = document.getElementById('heroSearch');
+      if (inp) inp.value = '';
+      buildPubGrid();
+    }
+    // Bind hero cat clicks after DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.hero-cat').forEach(el => {
+        el.onclick = () => heroFilter(el.dataset.cat);
+      });
+    });
+
+    /* ════════════ V2: buildPubGrid atualizado ════════════ */
+    const _origBuildPubGrid = window.buildPubGrid;
+    window.buildPubGrid = function() {
+      const g = document.getElementById('pubGrid'); if (!g) return;
+      let ws = [...WISHES].filter(w => !w.closed);
+      if (pubFilter && pubFilter !== 'Todos') ws = ws.filter(w => w.cat === pubFilter);
+      if (_heroSearch) ws = ws.filter(w =>
+        w.title.toLowerCase().includes(_heroSearch) ||
+        w.desc.toLowerCase().includes(_heroSearch) ||
+        w.cat.toLowerCase().includes(_heroSearch)
+      );
+      if (pubSortMode === 'price') ws.sort((a,b) => b.price - a.price);
+      else if (pubSortMode === 'offers') ws.sort((a,b) => (b.offers||0) - (a.offers||0));
+      else ws.sort((a,b) => b.ts - a.ts);
+      const cnt = document.getElementById('pubCount');
+      if (cnt) cnt.textContent = ws.length + ' desejo' + (ws.length !== 1 ? 's' : '') + ' encontrado' + (ws.length !== 1 ? 's' : '');
+      g.innerHTML = ws.length
+        ? ws.map(pubCardHTML).join('')
+        : '<div class="empty" style="grid-column:1/-1"><i class="ti ti-mood-empty"></i><p>Nenhum desejo encontrado</p></div>';
+    };
+
+    /* ════════════ V2: pubCardHTML marketplace ════════════ */
+    const _origPubCardHTML = window.pubCardHTML;
+    window.pubCardHTML = function(w) {
+      return '<div class="mkt-card fi" onclick="showDetail(' + w.id + ')">' +
+        mktImgHTML(w) +
+        '<div class="mkt-body">' +
+          '<span class="mkt-cat">' + esc(w.cat) + '</span>' +
+          '<div class="mkt-title">' + esc(w.title) + '</div>' +
+          '<div class="mkt-desc">' + esc(w.desc) + '</div>' +
+          '<div class="mkt-stats">' +
+            '<span class="mkt-stat"><i class="ti ti-eye" style="font-size:12px"></i>' + (w.views||0) + '</span>' +
+            '<span class="mkt-stat"><i class="ti ti-message-2" style="font-size:12px"></i>' + (w.offers||0) + '</span>' +
+            '<span class="mkt-stat"><i class="ti ti-clock" style="font-size:12px"></i>' + relTime(w.ts) + '</span>' +
+          '</div>' +
+          '<div class="mkt-footer">' +
+            '<div><div class="mkt-price">R$ ' + fmt(w.price) + '</div><div class="mkt-cond">' + esc(w.cond) + '</div></div>' +
+            '<button class="mkt-tenho" onclick="event.stopPropagation();requireLogin(function(){openMsgMod(' + w.id + ')})">' +
+              '<i class="ti ti-send" style="font-size:12px"></i>Tenho!' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    };
+
+    /* ════════════ V2: cardHTML marketplace (feed logado) ════════════ */
+    const _origCardHTML = window.cardHTML;
+    window.cardHTML = function(w) {
+      const mine = CU && w.uid === CU.id;
+      if (w.closed) return '<div class="mkt-card fi" style="opacity:.55" onclick="showDetail(' + w.id + ')">' +
+        mktImgHTML(w) +
+        '<div class="mkt-body">' +
+          '<span class="mkt-cat">' + esc(w.cat) + '</span>' +
+          '<div class="mkt-title" style="text-decoration:line-through;color:var(--txl)">' + esc(w.title) + '</div>' +
+          '<div class="mkt-footer" style="margin-top:auto"><div class="mkt-price" style="color:var(--txl)">R$ ' + fmt(w.price) + '</div>' +
+          '<span class="closed-badge">✓ Fechado</span></div>' +
+        '</div></div>';
+      return '<div class="mkt-card fi" onclick="showDetail(' + w.id + ')">' +
+        mktImgHTML(w) +
+        '<div class="mkt-body">' +
+          '<span class="mkt-cat">' + esc(w.cat) + '</span>' +
+          '<div class="mkt-title">' + esc(w.title) + '</div>' +
+          '<div class="mkt-desc">' + esc(w.desc) + '</div>' +
+          '<div class="mkt-stats">' +
+            '<span class="mkt-stat"><i class="ti ti-eye" style="font-size:12px"></i>' + (w.views||0) + '</span>' +
+            '<span class="mkt-stat"><i class="ti ti-message-2" style="font-size:12px"></i>' + (w.offers||0) + '</span>' +
+            '<span class="mkt-stat">' +
+              '<i class="ti ti-user" style="font-size:12px"></i>' + esc(w.uname.split(' ')[0]) +
+            '</span>' +
+          '</div>' +
+          '<div class="mkt-footer">' +
+            '<div><div class="mkt-price">R$ ' + fmt(w.price) + '</div><div class="mkt-cond">' + esc(w.cond) + '</div></div>' +
+            (mine
+              ? '<button class="mkt-tenho" style="background:var(--a)" onclick="event.stopPropagation();confirmCloseDeal(' + w.id + ')"><i class="ti ti-check" style="font-size:12px"></i>Fechar</button>'
+              : '<button class="mkt-tenho" onclick="event.stopPropagation();openMsgMod(' + w.id + ')"><i class="ti ti-send" style="font-size:12px"></i>Tenho!</button>') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    };
+
+    /* ════════════ V2: buildGrid usa mkt-grid ════════════ */
+    const _origBuildGrid = window.buildGrid;
+    window.buildGrid = function() {
+      const g = document.getElementById('wgrid'); if (!g) return;
+      // Troca classe para mkt-grid
+      g.className = 'mkt-grid fi';
+      _origBuildGrid();
+    };
+
+    /* ════════════ V2: renderNew com upload de fotos ════════════ */
+    let _wishImages = [];
+    const _origRenderNew = window.renderNew;
+    window.renderNew = function(el) {
+      _wishImages = [];
+      el.innerHTML = '';
+      var wrap = document.createElement('div');
+      wrap.innerHTML = [
+        '<div class="ftitle fi" style="margin-bottom:1.2rem">Publicar desejo de compra</div>',
+        '<div class="fcard fi" style="max-width:580px">',
+          '<div class="fld"><label>O que você procura?</label>',
+            '<input type="text" id="wt" placeholder="Ex: iPhone 15 Pro Max 256GB"></div>',
+          '<div class="fld2">',
+            '<div><label>Categoria</label><select id="wc">',
+              '<option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option>',
+              '<option>Roupas</option><option>Móveis</option><option>Esportes</option>',
+              '<option>Livros</option><option>Outros</option>',
+            '</select></div>',
+            '<div><label>Condição aceita</label><select id="wco">',
+              '<option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option>',
+            '</select></div>',
+          '</div>',
+          '<div class="fld"><label>Valor máximo</label>',
+            '<div class="pricewrap"><span>R$</span><input type="number" id="wp" placeholder="0" min="0"></div></div>',
+          '<div class="fld"><label>Descrição</label>',
+            '<textarea id="wd" rows="3" placeholder="Cor, capacidade, versão, estado mínimo..."></textarea></div>',
+          '<div class="fld">',
+            '<label>Fotos de referência <span style="font-weight:400;color:var(--txl)">(opcional — até 4)</span></label>',
+            '<div class="upload-zone" id="uploadZone">',
+              '<i class="ti ti-photo-plus"></i>',
+              '<p>Toque para adicionar fotos</p>',
+              '<div class="sub">JPG, PNG · máx 4 fotos · 2MB cada</div>',
+            '</div>',
+            '<input type="file" id="wishImgInp" accept="image/*" multiple style="display:none">',
+            '<div class="img-previews" id="wishImgPreviews"></div>',
+          '</div>',
+          '<div style="background:var(--gl);border-radius:8px;padding:.7rem 1rem;font-size:13px;color:var(--gd);margin-bottom:1rem;display:flex;gap:7px">',
+            '<i class="ti ti-bulb" style="flex-shrink:0;margin-top:1px"></i>Quanto mais detalhar, mais rápido recebe ofertas!',
+          '</div>',
+          '<div style="display:flex;gap:8px">',
+            '<button class="btn g" id="pubBtn"><i class="ti ti-plus"></i>Publicar desejo</button>',
+            '<button class="btn out" id="cancelPubBtn">Cancelar</button>',
+          '</div>',
+        '</div>'
+      ].join('');
+      el.appendChild(wrap);
+      // Bind events safely
+      el.querySelector('#uploadZone').onclick = function(){ el.querySelector('#wishImgInp').click(); };
+      el.querySelector('#uploadZone').ondragover = function(e){ e.preventDefault(); this.classList.add('drag'); };
+      el.querySelector('#uploadZone').ondragleave = function(){ this.classList.remove('drag'); };
+      el.querySelector('#uploadZone').ondrop = function(e){ e.preventDefault(); this.classList.remove('drag'); handleWishFiles(e.dataTransfer.files); };
+      el.querySelector('#wishImgInp').onchange = function(){ handleWishFiles(this.files); };
+      el.querySelector('#pubBtn').onclick = publish;
+      el.querySelector('#cancelPubBtn').onclick = function(){ view('feed'); };
+    };
+    function handleWishFiles(files) {
+      const arr = Array.from(files);
+      const remaining = 4 - _wishImages.length;
+      if (remaining <= 0) { toast('Máximo de 4 fotos atingido','er'); return; }
+      arr.slice(0, remaining).forEach(f => {
+        if (f.size > 2*1024*1024) { toast('Foto grande demais (máx 2MB)','er'); return; }
+        const r = new FileReader();
+        r.onload = e => { _wishImages.push(e.target.result); renderWishPreviews(); };
+        r.readAsDataURL(f);
+      });
+      document.getElementById('wishImgInp').value = '';
+    }
+    function renderWishPreviews() {
+      const wrap = document.getElementById('wishImgPreviews'); if (!wrap) return;
+      wrap.innerHTML = _wishImages.map((src,i) =>
+        '<div class="img-prev-item">' +
+          '<img src="' + src + '" alt="Foto ' + (i+1) + '">' +
+          (i===0 ? '<div class="main-badge">Principal</div>' : '') +
+          '<button class="rm-img" onclick="removeWishImg(' + i + ')"><i class="ti ti-x" style="font-size:9px"></i></button>' +
+        '</div>'
+      ).join('');
+      const zone = document.getElementById('uploadZone');
+      if (zone) zone.style.display = _wishImages.length >= 4 ? 'none' : '';
+    }
+    function removeWishImg(i) {
+      _wishImages.splice(i,1); renderWishPreviews();
+      const zone = document.getElementById('uploadZone');
+      if (zone) zone.style.display = '';
+    }
+
+    /* ════════════ V2: publish com imagens ════════════ */
+    const _origPublish = window.publish;
+    window.publish = async function() {
+      const title=val('wt'), category=val('wc'), condition=val('wco'), price=val('wp'), description=val('wd');
+      if (!title||!price) { toast('Preencha produto e valor máximo','er'); return; }
+      const btn = document.getElementById('pubBtn');
+      btn.disabled=true; btn.innerHTML='<i class="ti ti-loader spin"></i> Publicando...';
+      let imageUrls = [];
+      if (_wishImages.length > 0) {
+        btn.innerHTML='<i class="ti ti-loader spin"></i> Enviando fotos...';
+        for (let i=0;i<_wishImages.length;i++) {
+          try {
+            const res=await fetch(_wishImages[i]);
+            const blob=await res.blob();
+            const ext=blob.type.split('/')[1]||'jpg';
+            const path='wishes/'+CU.id+'/'+Date.now()+'_'+i+'.'+ext;
+            const {error:upErr}=await sb.storage.from('wish-images').upload(path,blob,{contentType:blob.type,upsert:true});
+            if (upErr) { imageUrls.push(_wishImages[i]); }
+            else { const {data:ud}=sb.storage.from('wish-images').getPublicUrl(path); imageUrls.push(ud.publicUrl); }
+          } catch(e) { imageUrls.push(_wishImages[i]); }
+        }
+      }
+      const {data,error}=await sb.from('wishes').insert({
+        user_id:CU.id, title, category, condition, price:parseFloat(price),
+        description:description||'', views:0, offers:0, closed:false,
+        images:imageUrls.length>0?imageUrls:null
+      }).select('*').single();
+      btn.disabled=false; btn.innerHTML='<i class="ti ti-plus"></i>Publicar desejo';
+      if (error){toast('Erro: '+error.message,'er');return;}
+      _wishImages=[];
+      WISHES.unshift(mapWish(data,{[CU.id]:CU}));
+      buildPubGrid(); toast('Desejo publicado! 🎉'); view('feed');
+    };
+
+    /* ════════════ V2: renderDash com tiles de ícone ════════════ */
+    const _origRenderDash = window.renderDash;
+    window.renderDash = async function(el) {
+      await loadWishes();
+      const myW=WISHES.filter(w=>w.uid===CU.id);
+      const active=myW.filter(w=>!w.closed).length;
+      const convs=CONVS.length;
+      const views=myW.reduce((a,w)=>a+(w.views||0),0);
+      const offers=myW.reduce((a,w)=>a+(w.offers||0),0);
+      const catC={};WISHES.forEach(w=>{catC[w.cat]=(catC[w.cat]||0)+1;});
+      const topC=Object.entries(catC).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const maxC=Math.max(...topC.map(x=>x[1]),1);
+      const pr=[{l:'<500',n:0},{l:'500-1k',n:0},{l:'1k-3k',n:0},{l:'3k+',n:0}];
+      WISHES.forEach(w=>{if(w.price<500)pr[0].n++;else if(w.price<1000)pr[1].n++;else if(w.price<3000)pr[2].n++;else pr[3].n++;});
+      const maxP=Math.max(...pr.map(x=>x.n),1);
+      el.innerHTML=
+        '<div class="ftitle fi" style="margin-bottom:1rem">Analytics da plataforma</div>'+
+        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1rem">' +
+          dashTile('ti-heart','Desejos ativos',active,'var(--c)','var(--cl)')+
+          dashTile('ti-message-2','Conversas',convs,'var(--b)','var(--bl)')+
+          dashTile('ti-eye','Visualizações',views,'var(--g)','var(--gl)')+
+          dashTile('ti-currency-dollar','Ofertas recebidas',offers,'var(--a)','var(--al)')+
+        '</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem">'+
+          '<div class="chart-card fi"><div class="chart-title">Desejos por categoria</div>'+
+            '<div class="bar-chart">'+topC.map(([cat,n])=>'<div class="bar-col"><div class="bar-val">'+n+'</div><div class="bar" style="height:'+Math.round((n/maxC)*95)+'px;background:var(--g)"></div><div class="bar-lbl">'+cat.substring(0,6)+'</div></div>').join('')+'</div></div>'+
+          '<div class="chart-card fi"><div class="chart-title">Distribuição de orçamentos</div>'+
+            '<div class="bar-chart">'+pr.map(r=>'<div class="bar-col"><div class="bar-val">'+r.n+'</div><div class="bar" style="height:'+Math.round((r.n/maxP)*95)+'px;background:var(--b)"></div><div class="bar-lbl">'+r.l+'</div></div>').join('')+'</div></div>'+
+        '</div>'+
+        '<div class="ai-insights fi" id="aiIns">'+
+          '<div class="ai-ins-hd" id="insHd"><i class="ti ti-sparkles"></i>Insights da IA <i class="ti ti-loader spin" style="font-size:13px;margin-left:auto;color:var(--g)"></i></div>'+
+          '<div id="insItems"><p style="font-size:13px;color:var(--txm)">Analisando...</p></div>'+
+        '</div>';
+      fetchInsights(topC,active,offers);
+    };
+    function dashTile(icon,label,value,color,bg) {
+      return '<div class="dcard" style="text-align:center;padding:1.1rem .8rem">'+
+        '<div style="width:44px;height:44px;border-radius:12px;background:'+bg+';display:flex;align-items:center;justify-content:center;margin:0 auto .7rem">'+
+          '<i class="ti '+icon+'" style="font-size:22px;color:'+color+'"></i>'+
+        '</div>'+
+        '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:1.7rem;line-height:1;color:'+color+'">'+value+'</div>'+
+        '<div style="font-size:12px;color:var(--txm);margin-top:5px">'+label+'</div>'+
+      '</div>';
+    }
+
+    /* ════════════ V2: renderProf novo ════════════ */
+    function avatarHTML(size) {
+      size=size||80;
+      var s=size+'px',fs=Math.round(size*.38)+'px';
+      if(CU&&CU.avatar) return '<img class="prof-av-img" src="'+CU.avatar+'" style="width:'+s+';height:'+s+'" alt="Foto">';
+      var init=(CU&&CU.name)?CU.name[0].toUpperCase():'?';
+      var bg=CU?colorFor(CU.id):'#1D9E75';
+      return '<div class="prof-av-init" style="background:'+bg+';width:'+s+';height:'+s+';font-size:'+fs+'">'+init+'</div>';
+    }
+    const _origRenderProf = window.renderProf;
+    window.renderProf = function(el) {
+      var myW=WISHES.filter(function(w){return w.uid===CU.id;}).length;
+      var convs=CONVS.filter(function(c){return c.buyer_id===CU.id||c.seller_id===CU.id;}).length;
+      var closed=WISHES.filter(function(w){return w.uid===CU.id&&w.closed;}).length;
+      var roleLabel={buyer:'Comprador',seller:'Vendedor',both:'Comprador & Vendedor'};
+      var myWishes=WISHES.filter(function(w){return w.uid===CU.id;}).slice(0,5);
+      var wishItems=myWishes.map(function(w){
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.65rem .9rem;background:var(--bg);border-radius:9px;gap:.7rem;cursor:pointer" data-wid="'+w.id+'">'+
+          '<div style="min-width:0"><div style="font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(w.title)+'</div>'+
+          '<div style="font-size:12px;color:var(--txm);margin-top:2px">'+w.cat+' · '+w.cond+'</div></div>'+
+          '<div style="text-align:right;flex-shrink:0"><div style="font-family:Syne,sans-serif;font-weight:700;color:var(--gd);font-size:.9rem">R$ '+fmt(w.price)+'</div>'+
+          (w.closed?'<span style="font-size:11px;color:var(--gd)">✓ Fechado</span>':'')+'</div></div>';
+      }).join('');
+      var wishSection=myWishes.length?
+        '<div class="fcard fi" style="margin-top:.2rem">'+
+          '<div class="fctitle" style="margin-bottom:.8rem"><i class="ti ti-heart" style="color:var(--c);margin-right:5px"></i>Meus desejos</div>'+
+          '<div id="profWishList" style="display:flex;flex-direction:column;gap:.5rem">'+wishItems+'</div>'+
+          (myW>5?'<div style="text-align:center;margin-top:.7rem"><button class="btn out sm" id="viewAllBtn">Ver todos ('+myW+')</button></div>':'')+
+        '</div>':'';
+      el.innerHTML=
+        '<div class="prof-page fi">'+
+          '<div class="prof-hero2">'+
+            '<button class="prof-back" id="profBackBtn" title="Fechar"><i class="ti ti-x"></i></button>'+
+            '<div class="prof-av-wrap" style="margin:0 auto 1rem">'+avatarHTML(80)+'</div>'+
+            '<div class="prof-info">'+
+              '<div class="prof-name2">'+esc(CU.name)+'</div>'+
+              '<div class="prof-email2">'+esc(CU.email)+'</div>'+
+              '<div class="prof-role2">'+(roleLabel[CU.role]||'Usuário')+'</div>'+
+            '</div>'+
+            '<div class="prof-actions">'+
+              '<button class="prof-btn edit" id="editProfBtn"><i class="ti ti-pencil"></i>Editar perfil</button>'+
+              '<button class="prof-btn logout-btn" id="logoutProfBtn"><i class="ti ti-logout"></i>Sair da conta</button>'+
+            '</div>'+
+          '</div>'+
+          '<div class="stats fi">'+
+            '<div class="stat"><div class="snum">'+myW+'</div><div class="slbl">Desejos publicados</div></div>'+
+            '<div class="stat"><div class="snum">'+convs+'</div><div class="slbl">Conversas</div></div>'+
+            '<div class="stat"><div class="snum">'+closed+'</div><div class="slbl">Negócios fechados</div></div>'+
+          '</div>'+
+          wishSection+
+        '</div>';
+      var back=el.querySelector('#profBackBtn');
+      if(back) back.onclick=function(){view('feed');};
+      var editBtn=el.querySelector('#editProfBtn');
+      if(editBtn) editBtn.onclick=openEditProf;
+      var logBtn=el.querySelector('#logoutProfBtn');
+      if(logBtn) logBtn.onclick=askLogout;
+      var viewAll=el.querySelector('#viewAllBtn');
+      if(viewAll) viewAll.onclick=function(){view('mine');};
+      el.querySelectorAll('[data-wid]').forEach(function(item){
+        item.onclick=function(){showDetail(parseInt(item.dataset.wid));};
+      });
+    };
+
+    /* ════════════ LOGOUT + PERFIL EDIT ════════════ */
+    function askLogout() { document.getElementById('logoutMod').classList.add('on'); }
     async function doLogout() {
       document.getElementById('logoutMod').classList.remove('on');
       try {
-        if (typeof msgChannel !== 'undefined' && msgChannel) {
-          sb.removeChannel(msgChannel); msgChannel = null;
-        }
+        if(typeof msgChannel!=='undefined'&&msgChannel){sb.removeChannel(msgChannel);msgChannel=null;}
         await sb.auth.signOut();
-      } catch(e) { console.error(e); }
+      } catch(e){console.error(e);}
       finally {
-        CU = null; CUProfile = null; activeConv = null;
-        CONVS = []; NOTIFS = [];
+        CU=null;CUProfile=null;activeConv=null;CONVS=[];NOTIFS=[];
         await loadPublicWishes();
-        show('public');
-        refreshNavPublic();
-        closeSidebar();
+        show('public'); refreshNavPublic(); closeSidebar();
         toast('Você saiu da conta. Até logo!');
       }
     }
+    function openEditProf() {
+      var en=document.getElementById('en'),ep=document.getElementById('ep'),
+          ec=document.getElementById('ec'),sel=document.getElementById('erole');
+      if(en) en.value=CU.name||'';
+      if(ep) ep.value=CU.phone||'';
+      if(ec) ec.value=CU.city||'';
+      if(sel) sel.value=CU.role||'buyer';
+      var wrap=document.getElementById('editAvWrap');
+      if(wrap){
+        var bg=colorFor(CU.id),init=CU.name[0].toUpperCase();
+        wrap.innerHTML=CU.avatar
+          ?'<img src="'+CU.avatar+'" style="width:72px;height:72px;object-fit:cover;border-radius:50%">'
+          :'<div style="width:72px;height:72px;border-radius:50%;background:'+bg+';display:flex;align-items:center;justify-content:center;font-family:Syne,sans-serif;font-weight:800;font-size:1.6rem;color:#fff">'+init+'</div>';
+      }
+      document.getElementById('editProfMod').classList.add('on');
+    }
+    var _newAvatarB64=null;
+    function previewAvatar(inp) {
+      var file=inp.files[0];if(!file)return;
+      var reader=new FileReader();
+      reader.onload=function(e){
+        _newAvatarB64=e.target.result;
+        var wrap=document.getElementById('editAvWrap');
+        if(wrap) wrap.innerHTML='<img src="'+_newAvatarB64+'" style="width:72px;height:72px;object-fit:cover;border-radius:50%">';
+      };
+      reader.readAsDataURL(file);
+    }
 
     /* ════════════ SIDEBAR MOBILE ════════════ */
-    function isMobile() { return window.innerWidth <= 768; }
-    function toggleSidebar() {
-      var s = document.getElementById('sideBar');
-      s && s.classList.contains('open') ? closeSidebar() : openSidebar();
+    function isMobile(){return window.innerWidth<=768;}
+    function toggleSidebar(){
+      var s=document.getElementById('sideBar');
+      s&&s.classList.contains('open')?closeSidebar():openSidebar();
     }
-    function openSidebar() {
-      var s=document.getElementById('sideBar'), o=document.getElementById('sideOverlay');
-      if(s) s.classList.add('open');
-      if(o) o.classList.add('on');
+    function openSidebar(){
+      var s=document.getElementById('sideBar'),o=document.getElementById('sideOverlay');
+      if(s)s.classList.add('open');if(o)o.classList.add('on');
     }
-    function closeSidebar() {
-      var s=document.getElementById('sideBar'), o=document.getElementById('sideOverlay');
-      if(s) s.classList.remove('open');
-      if(o) o.classList.remove('on');
+    function closeSidebar(){
+      var s=document.getElementById('sideBar'),o=document.getElementById('sideOverlay');
+      if(s)s.classList.remove('open');if(o)o.classList.remove('on');
     }
-    function updateMenuToggle() {
-      var t = document.getElementById('menuToggle'); if(!t) return;
-      t.style.display = document.getElementById('scr-app')?.classList.contains('on') ? '' : 'none';
+    function updateMenuToggle(){
+      var t=document.getElementById('menuToggle');if(!t)return;
+      t.style.display=document.getElementById('scr-app')?.classList.contains('on')?'':'none';
     }
-    document.addEventListener('click', function(e) {
-      if(isMobile() && e.target.closest('.si-btn') && document.getElementById('sideBar')?.classList.contains('open')){
-        setTimeout(closeSidebar, 150);
-      }
+    document.addEventListener('click',function(e){
+      if(isMobile()&&e.target.closest('.si-btn')&&document.getElementById('sideBar')?.classList.contains('open'))
+        setTimeout(closeSidebar,150);
     });
-
-    /* ════════════ MSGS MOBILE ════════════ */
-    function mobileShowList() {
-      if(!isMobile()) return;
-      var ml=document.querySelector('.mlist'), ch=document.querySelector('.chat');
-      if(ml) ml.classList.add('show');
-      if(ch) ch.style.display='none';
+    function mobileShowList(){
+      if(!isMobile())return;
+      var ml=document.querySelector('.mlist'),ch=document.querySelector('.chat');
+      if(ml)ml.classList.add('show');if(ch)ch.style.display='none';
     }
-    function mobileShowChat() {
-      if(!isMobile()) return;
-      var ml=document.querySelector('.mlist'), ch=document.querySelector('.chat');
-      if(ml) ml.classList.remove('show');
-      if(ch) ch.style.display='flex';
+    function mobileShowChat(){
+      if(!isMobile())return;
+      var ml=document.querySelector('.mlist'),ch=document.querySelector('.chat');
+      if(ml)ml.classList.remove('show');if(ch)ch.style.display='flex';
     }
-    function addBackBtn() {
-      if(!isMobile()) return;
+    function addBackBtn(){
+      if(!isMobile())return;
       var chh=document.querySelector('.chh');
-      if(!chh||chh.querySelector('.back-btn')) return;
+      if(!chh||chh.querySelector('.back-btn'))return;
       var btn=document.createElement('button');
-      btn.className='back-btn';
-      btn.innerHTML='<i class="ti ti-arrow-left"></i>';
-      btn.onclick=mobileShowList;
-      chh.insertBefore(btn,chh.firstChild);
+      btn.className='back-btn';btn.innerHTML='<i class="ti ti-arrow-left"></i>';
+      btn.onclick=mobileShowList;chh.insertBefore(btn,chh.firstChild);
     }
-
-    /* ════════════ PATCHES ════════════ */
-    var _origView = window.view;
-    window.view = function(vn) {
+    var _origView=window.view;
+    window.view=function(vn){
       _origView(vn);
-      if(vn==='msgs' && isMobile()) setTimeout(mobileShowList, 60);
+      if(vn==='msgs'&&isMobile())setTimeout(mobileShowList,60);
       updateMenuToggle();
     };
-    var _origOpenConv = window.openConv;
-    if(_origOpenConv) window.openConv = async function(c) {
-      await _origOpenConv(c); mobileShowChat(); addBackBtn();
-    };
-    var _origOpenConvById = window.openConvById;
-    if(_origOpenConvById) window.openConvById = async function(cid) {
-      await _origOpenConvById(cid); mobileShowChat(); addBackBtn();
-    };
-    var _origShow = window.show;
-    window.show = function(s) {
-      _origShow(s); updateMenuToggle();
-      if(isMobile()) closeSidebar();
-    };
-    var _origEnter = window.enter;
-    window.enter = async function() {
-      await _origEnter(); updateMenuToggle();
-    };
-
-    window.addEventListener('resize', function() {
+    var _origOpenConv=window.openConv;
+    if(_origOpenConv) window.openConv=async function(c){await _origOpenConv(c);mobileShowChat();addBackBtn();};
+    var _origOpenConvById=window.openConvById;
+    if(_origOpenConvById) window.openConvById=async function(cid){await _origOpenConvById(cid);mobileShowChat();addBackBtn();};
+    var _origShow=window.show;
+    window.show=function(s){_origShow(s);updateMenuToggle();if(isMobile())closeSidebar();};
+    var _origEnter=window.enter;
+    window.enter=async function(){await _origEnter();updateMenuToggle();};
+    window.addEventListener('resize',function(){
       if(!isMobile()){
         closeSidebar();
-        var ml=document.querySelector('.mlist'), ch=document.querySelector('.chat');
-        if(ml) ml.classList.remove('show');
-        if(ch) ch.style.display='';
+        var ml=document.querySelector('.mlist'),ch=document.querySelector('.chat');
+        if(ml)ml.classList.remove('show');if(ch)ch.style.display='';
       }
     });
-
     updateMenuToggle();
 
   </script>
