@@ -1833,6 +1833,11 @@
       .prof-actions{flex-direction:column;align-items:stretch}
       .prof-btn{justify-content:center}
     }
+
+    .buy-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--g);background:var(--gl);border:1px solid var(--gm);border-radius:6px;padding:2px 7px;margin-bottom:.45rem;letter-spacing:.01em}
+    .buy-badge i{font-size:10px}
+    .loc-tag{display:flex;align-items:center;gap:3px;font-size:10.5px;color:var(--txl);margin-top:2px}
+    .loc-tag i{font-size:11px;flex-shrink:0}
   </style>
 </head>
 
@@ -1976,7 +1981,7 @@
   <div class="scr on" id="scr-public">
     <div class="hero-section">
       <div class="hero-logo">quero<em>comprar</em></div>
-      <div class="hero-tagline">Publique o que quer comprar. Vendedores te encontram.</div>
+      <div class="hero-tagline">📢 Anúncios de <strong style="color:#fff">compra</strong> — publique o que você procura e vendedores te contactam</div>
       <div class="hero-search">
         <input type="text" id="heroSearch" placeholder="🔍 O que você quer comprar?" oninput="heroSearchFn(this.value)" onkeydown="if(event.key==='Enter')heroSearchFn(this.value)">
         <button onclick="heroSearchFn(document.getElementById('heroSearch').value)"><i class="ti ti-search"></i></button>
@@ -1989,6 +1994,7 @@
         <div class="hero-cat" data-cat="Roupas">👕 Roupas</div>
         <div class="hero-cat" data-cat="Esportes">⚽ Esportes</div>
         <div class="hero-cat" data-cat="Móveis">🛋️ Móveis</div>
+        <div class="hero-cat" data-cat="Serviços">🛠️ Serviços</div>
       </div>
     </div>
     <div class="pub-wrap" style="padding-top:1.2rem">
@@ -2044,6 +2050,7 @@
     const COLS = ['#1D9E75', '#BA7517', '#D85A30', '#378ADD', '#639922', '#534AB7', '#D4537E'];
     const CATS = ['Todos', 'Eletrônicos', 'Veículos', 'Imóveis', 'Roupas', 'Móveis', 'Esportes', 'Livros', 'Outros'];
     let CU = null;           // { id, email, name, role, city, phone }
+    let SELLER_ITEMS = {};   // uid -> [{wish_id, title, cat, price, ts}]
     let CUProfile = null;    // raw profile row
     let selRole = 'buyer';
     let activeFilter = 'Todos';
@@ -2568,7 +2575,7 @@
   <div class="fcard fi" style="max-width:560px">
     <div class="fld"><label>O que você procura?</label><input type="text" id="wt" placeholder="Ex: iPhone 15 Pro Max 256GB"></div>
     <div class="fld2">
-      <div><label>Categoria</label><select id="wc"><option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option><option>Roupas</option><option>Móveis</option><option>Esportes</option><option>Livros</option><option>Outros</option></select></div>
+      <div><label>Categoria</label><select id="wc"><option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option><option>Roupas</option><option>Móveis</option><option>Esportes</option><option>Livros</option><option>Serviços</option><option>Outros</option></select></div>
       <div><label>Condição</label><select id="wco"><option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option></select></div>
     </div>
     <div class="fld"><label>Valor máximo</label><div class="pricewrap"><span>R$</span><input type="number" id="wp" placeholder="0" min="0"></div></div>
@@ -2854,27 +2861,47 @@
       const text = document.getElementById('modMsg').value.trim();
       if (!text) { toast('Digite uma mensagem', 'er'); return; }
       const w = WISHES.find(x => x.id === modWishId); if (!w) return;
+      // Pegar preço de oferta se preenchido
+      const offerPriceEl = document.getElementById('modOfferPrice');
+      const offerPrice = offerPriceEl && offerPriceEl.value ? parseFloat(offerPriceEl.value) : null;
       let { data: existing } = await sb.from('conversations')
         .select('*, wishes(title,price)')
         .eq('wish_id', modWishId).eq('seller_id', CU.id).maybeSingle();
       if (!existing) {
-        const { data: newConv, error } = await sb.from('conversations').insert({
-          wish_id: modWishId, buyer_id: w.uid, seller_id: CU.id
-        }).select('*, wishes(title,price)').single();
+        // Criar conversa com metadata do item ofertado
+        const convData = {
+          wish_id: modWishId, buyer_id: w.uid, seller_id: CU.id,
+          seller_item: JSON.stringify({
+            title: w.title, cat: w.cat, cond: w.cond,
+            price: offerPrice || w.price,
+            seller_name: CU.name, seller_id: CU.id,
+            wish_title: w.title, ts: Date.now()
+          })
+        };
+        const { data: newConv, error } = await sb.from('conversations').insert(convData).select('*, wishes(title,price)').single();
         if (error) { toast('Erro: ' + error.message, 'er'); return; }
-        // Enrich with profiles
         newConv.buyer = PROFILES[newConv.buyer_id] || { name: w.uname || '?' };
         newConv.seller = PROFILES[newConv.seller_id] || { name: CU.name };
+        // Registrar item de venda localmente
+        if (!SELLER_ITEMS[CU.id]) SELLER_ITEMS[CU.id] = [];
+        SELLER_ITEMS[CU.id].push({
+          wish_id: w.id, title: w.title, cat: w.cat, cond: w.cond,
+          price: offerPrice || w.price, ts: Date.now(), conv_id: newConv.id
+        });
         CONVS.unshift(newConv); existing = newConv;
       } else {
         existing.buyer = existing.buyer || PROFILES[existing.buyer_id] || { name: '?' };
         existing.seller = existing.seller || PROFILES[existing.seller_id] || { name: CU.name };
       }
-      const { error } = await sb.from('messages').insert({ conversation_id: existing.id, sender_id: CU.id, text });
+      const msgData = offerPrice ? { type: 'offer', price: offerPrice } : null;
+      const { error } = await sb.from('messages').insert({
+        conversation_id: existing.id, sender_id: CU.id, text,
+        data: msgData
+      });
       if (error) { toast('Erro: ' + error.message, 'er'); return; }
       await sb.from('wishes').update({ offers: (w.offers || 0) + 1 }).eq('id', modWishId);
       w.offers = (w.offers || 0) + 1;
-      closeMsgMod(); toast('Mensagem enviada!');
+      closeMsgMod(); toast('Oferta enviada! O comprador será notificado. ✓');
       activeConv = existing; view('msgs');
     }
 
@@ -2892,8 +2919,9 @@
         <div style="font-size:12px;color:var(--txl)">${w.ucity || 'Localização não informada'} · ${relTime(w.ts)}</div>
       </div>
     </div>
+    <div style="margin-bottom:.5rem">${w.cat==='Serviços'?'<span class="buy-badge"><i class="ti ti-tool"></i>Quero contratar</span>'  :'<span class="buy-badge"><i class="ti ti-shopping-cart"></i>Quero comprar</span>'}</div>
     <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.5rem">${w.title}</h2>
-    <div style="display:flex;gap:7px;margin-bottom:.9rem">
+    <div style="display:flex;gap:7px;margin-bottom:.5rem;flex-wrap:wrap">
       <span class="cat">${w.cat}</span>
       <span style="font-size:11px;background:var(--bg);color:var(--txm);padding:3px 9px;border-radius:8px">${w.cond}</span>
       ${w.closed ? '<span style="font-size:11px;background:var(--gl);color:var(--gd);padding:3px 9px;border-radius:8px;font-weight:600">\u2713 Fechado</span>' : ''}
@@ -3173,9 +3201,28 @@
       }
     });
 
+
+    /* Badge dinâmico por categoria */
+
+    function updateNewFormBadge(cat) {
+      var badge = document.getElementById('newFormBadge');
+      var title = document.getElementById('newFormHeader');
+      if (!badge) return;
+      var isService = cat === 'Serviços';
+      badge.innerHTML = isService
+        ? '<i class="ti ti-tool"></i>Você está anunciando um DESEJO DE CONTRATAÇÃO'
+        : '<i class="ti ti-shopping-cart"></i>Você está anunciando um DESEJO DE COMPRA';
+      // Update tenho button label in modal too
+    }
+    function buyBadge(cat) {
+      var isService = cat === 'Serviços';
+      var icon = isService ? 'ti-tool' : 'ti-shopping-cart';
+      var label = isService ? 'Quero contratar' : 'Quero comprar';
+      return '<span class="buy-badge"><i class="ti ' + icon + '"></i>' + label + '</span>';
+    }
     /* ════════════ V2: CARDS + IMAGENS ════════════ */
     function mktPlaceholder(cat) {
-      const icons = {'Eletrônicos':'ti-device-laptop','Veículos':'ti-car','Imóveis':'ti-home','Roupas':'ti-shirt','Móveis':'ti-armchair','Esportes':'ti-ball-football','Livros':'ti-book'};
+      const icons = {'Eletrônicos':'ti-device-laptop','Veículos':'ti-car','Imóveis':'ti-home','Roupas':'ti-shirt','Móveis':'ti-armchair','Esportes':'ti-ball-football','Livros':'ti-book','Serviços':'ti-tool'};
       const ico = icons[cat] || 'ti-tag';
       return '<div class="mkt-placeholder"><i class="ti ' + ico + '"></i><span>' + (cat||'') + '</span></div>';
     }
@@ -3234,10 +3281,14 @@
     /* ════════════ V2: pubCardHTML marketplace ════════════ */
     const _origPubCardHTML = window.pubCardHTML;
     window.pubCardHTML = function(w) {
+      var loc = w.ucity ? '<div class="loc-tag"><i class="ti ti-map-pin"></i>' + esc(w.ucity) + '</div>' : '';
       return '<div class="mkt-card fi" onclick="showDetail(' + w.id + ')">' +
         mktImgHTML(w) +
         '<div class="mkt-body">' +
-          '<span class="mkt-cat">' + esc(w.cat) + '</span>' +
+          '<div style="display:flex;align-items:center;gap:5px;margin-bottom:.4rem;flex-wrap:wrap">' +
+            buyBadge(w.cat) +
+            '<span class="mkt-cat">' + esc(w.cat) + '</span>' +
+          '</div>' +
           '<div class="mkt-title">' + esc(w.title) + '</div>' +
           '<div class="mkt-desc">' + esc(w.desc) + '</div>' +
           '<div class="mkt-stats">' +
@@ -3245,8 +3296,9 @@
             '<span class="mkt-stat"><i class="ti ti-message-2" style="font-size:12px"></i>' + (w.offers||0) + '</span>' +
             '<span class="mkt-stat"><i class="ti ti-clock" style="font-size:12px"></i>' + relTime(w.ts) + '</span>' +
           '</div>' +
+          loc +
           '<div class="mkt-footer">' +
-            '<div><div class="mkt-price">R$ ' + fmt(w.price) + '</div><div class="mkt-cond">' + esc(w.cond) + '</div></div>' +
+            '<div><div class="mkt-price">até R$ ' + fmt(w.price) + '</div><div class="mkt-cond">' + esc(w.cond) + '</div></div>' +
             '<button class="mkt-tenho" onclick="event.stopPropagation();requireLogin(function(){openMsgMod(' + w.id + ')})">' +
               '<i class="ti ti-send" style="font-size:12px"></i>Tenho!' +
             '</button>' +
@@ -3267,21 +3319,24 @@
           '<div class="mkt-footer" style="margin-top:auto"><div class="mkt-price" style="color:var(--txl)">R$ ' + fmt(w.price) + '</div>' +
           '<span class="closed-badge">✓ Fechado</span></div>' +
         '</div></div>';
+      var loc2 = w.ucity ? '<div class="loc-tag"><i class="ti ti-map-pin"></i>' + esc(w.ucity) + '</div>' : '';
       return '<div class="mkt-card fi" onclick="showDetail(' + w.id + ')">' +
         mktImgHTML(w) +
         '<div class="mkt-body">' +
-          '<span class="mkt-cat">' + esc(w.cat) + '</span>' +
+          '<div style="display:flex;align-items:center;gap:5px;margin-bottom:.4rem;flex-wrap:wrap">' +
+            buyBadge(w.cat) +
+            '<span class="mkt-cat">' + esc(w.cat) + '</span>' +
+          '</div>' +
           '<div class="mkt-title">' + esc(w.title) + '</div>' +
           '<div class="mkt-desc">' + esc(w.desc) + '</div>' +
           '<div class="mkt-stats">' +
             '<span class="mkt-stat"><i class="ti ti-eye" style="font-size:12px"></i>' + (w.views||0) + '</span>' +
             '<span class="mkt-stat"><i class="ti ti-message-2" style="font-size:12px"></i>' + (w.offers||0) + '</span>' +
-            '<span class="mkt-stat">' +
-              '<i class="ti ti-user" style="font-size:12px"></i>' + esc(w.uname.split(' ')[0]) +
-            '</span>' +
+            '<span class="mkt-stat"><i class="ti ti-user" style="font-size:12px"></i>' + esc(w.uname.split(' ')[0]) + '</span>' +
           '</div>' +
+          loc2 +
           '<div class="mkt-footer">' +
-            '<div><div class="mkt-price">R$ ' + fmt(w.price) + '</div><div class="mkt-cond">' + esc(w.cond) + '</div></div>' +
+            '<div><div class="mkt-price">até R$ ' + fmt(w.price) + '</div><div class="mkt-cond">' + esc(w.cond) + '</div></div>' +
             (mine
               ? '<button class="mkt-tenho" style="background:var(--a)" onclick="event.stopPropagation();confirmCloseDeal(' + w.id + ')"><i class="ti ti-check" style="font-size:12px"></i>Fechar</button>'
               : '<button class="mkt-tenho" onclick="event.stopPropagation();openMsgMod(' + w.id + ')"><i class="ti ti-send" style="font-size:12px"></i>Tenho!</button>') +
@@ -3307,7 +3362,10 @@
       el.innerHTML = '';
       var wrap = document.createElement('div');
       wrap.innerHTML = [
-        '<div class="ftitle fi" style="margin-bottom:1.2rem">Publicar desejo de compra</div>',
+        '<div class="fi" style="margin-bottom:1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap" id="newFormHeader">',
+          '<div class="ftitle">Publicar desejo de compra</div>',
+          '<span class="buy-badge" style="font-size:11px;padding:3px 10px" id="newFormBadge"><i class="ti ti-shopping-cart"></i>Você está anunciando um DESEJO DE COMPRA</span>',
+        '</div>',
         '<div class="fcard fi" style="max-width:580px">',
           '<div class="fld"><label>O que você procura?</label>',
             '<input type="text" id="wt" placeholder="Ex: iPhone 15 Pro Max 256GB"></div>',
@@ -3315,7 +3373,7 @@
             '<div><label>Categoria</label><select id="wc">',
               '<option>Eletrônicos</option><option>Veículos</option><option>Imóveis</option>',
               '<option>Roupas</option><option>Móveis</option><option>Esportes</option>',
-              '<option>Livros</option><option>Outros</option>',
+              '<option>Livros</option><option>Serviços</option><option>Outros</option>',
             '</select></div>',
             '<div><label>Condição aceita</label><select id="wco">',
               '<option>Novo</option><option>Seminovo</option><option>Usado</option><option>Qualquer</option>',
@@ -3389,6 +3447,12 @@
     window.publish = async function() {
       const title=val('wt'), category=val('wc'), condition=val('wco'), price=val('wp'), description=val('wd');
       if (!title||!price) { toast('Preencha produto e valor máximo','er'); return; }
+      if (!_wishImages || _wishImages.length === 0) {
+        toast('Adicione ao menos uma foto de referência', 'er');
+        const zone = document.getElementById('uploadZone');
+        if (zone) { zone.style.borderColor='var(--c)'; zone.style.background='var(--cl)'; setTimeout(()=>{zone.style.borderColor='';zone.style.background='';},2000); }
+        return;
+      }
       const btn = document.getElementById('pubBtn');
       btn.disabled=true; btn.innerHTML='<i class="ti ti-loader spin"></i> Publicando...';
       let imageUrls = [];
